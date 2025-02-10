@@ -61,7 +61,7 @@ Sử dụng npm hoặc yarn:<br>
   npm run dev<br> 
   Hoặc <br>
   yarn dev
-## Truy cập ứng dụng tại [deploy later ]
+## Truy cập ứng dụng tại [https://skintimeclinic.netlify.app/]
 ## ✨ Đóng góp<br>
   Fork repository.<br>
   Tạo nhánh mới (git checkout -b feature/tính-năng-mới).<br>
