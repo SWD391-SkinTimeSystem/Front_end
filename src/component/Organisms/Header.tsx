@@ -47,7 +47,7 @@ const Header: React.FC = () => {
     <nav className="hidden md:flex items-center space-x-6 text-gray-600 mt-4 md:mt-0">
         <a href="#" className="flex items-center space-x-1 text-purple-600 font-medium">
           {/* <LucideUser /> */}
-          <span>About Us</span>
+          <span>About Us</span> 
         </a>
         <a href="#" className="hover:text-purple-600">Services</a>
         <a href="#" className="hover:text-purple-600">Pricing</a>
