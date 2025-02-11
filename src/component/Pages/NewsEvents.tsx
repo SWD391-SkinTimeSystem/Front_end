@@ -6,7 +6,7 @@ const NewsEvents: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"news" | "event">("news");
   const [news, setNews] = useState([]);
   const [events, setEvents] = useState([]);
-
+//evensjhdgfcuyr
   useEffect(() => {
     fetch("/news-events.json")
       .then((response) => response.json())
