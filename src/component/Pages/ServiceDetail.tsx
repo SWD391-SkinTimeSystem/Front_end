@@ -191,7 +191,7 @@ const ServiceDetail = () => {
 
             </div>
             <div className="bg-orange-500 text-white p-2 mb-4 mt-4 rounded-md flex justify-between items-center">
-              <CalendarDays size={20} /> <span className=""> THỰC HIỆN SAU NGÀY THỨ <span className="bg-black rounded py-1 px-3">2</span></span>
+              <CalendarDays size={20} /> <span className=""> THỰC HIỆN SAU <span className="bg-black rounded py-1 px-3">2</span> NGÀY</span>
             </div>
 
 
