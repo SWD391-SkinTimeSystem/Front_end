@@ -32,6 +32,7 @@ footer {
 /* #breadcrumb {
   background-color: 
 } */
-#body { 
+#body, .Seperator { 
   background-color: var(--background-body);
 }
+

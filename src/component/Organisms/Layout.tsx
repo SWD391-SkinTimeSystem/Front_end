@@ -18,7 +18,7 @@ const Layout: React.FC = () => {
       </div>
     <div className="flex flex-row min-h-screen w-[80%] mx-auto">
       <div className="w-[70%] bg-white mr-3"><Outlet /></div>
-      <div className="w-[30%]"><Sidebar /></div>
+      <div className="w-[30%] bg-white"><Sidebar /></div>
     </div>
     <Footer />
     </div>
