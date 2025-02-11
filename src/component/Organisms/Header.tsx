@@ -1,15 +1,19 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import '../../styles/global.css';
+import { LucideSearch } from "lucide-react";
 // import { LucideSearch, LucidePhone, LucideUser } from "lucide-react";
 
 const Header: React.FC = () => {
   return (
      <>
-    <header className="flex items-center justify-between px-6 py-4 shadow-md">
+    <header className="flex items-center justify-between px-6 py-4 shadow-md HeaderBackground">
       {/* Logo */}
       <div className="flex items-center space-x-2">
-        <div className="text-xl font-bold text-purple-600">GlowUp</div>
+        <div className="w-[13rem]">
+          <img src="https://hasaki.vn/v3/images/graphics/logo_site_2024_2.svg" alt="" />
+        </div>
       </div>
 
       {/* Center Section: Search bar and Navigation menu */}
@@ -18,10 +22,10 @@ const Header: React.FC = () => {
         <div className="relative w-full max-w-md">
           <Input
             type="text"
-            placeholder="Search ..."
-            className="pl-10"
+            placeholder="Nhập vào loại da hoặc tên dịch vụ bạn muốn ..."
+            className="pl-10 rounded-2xl bg-white"
           />
-          {/* <LucideSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" /> */}
+          <LucideSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
 
         {/* Navigation menu */}
@@ -30,33 +34,35 @@ const Header: React.FC = () => {
 
       {/* Action buttons */}
       <div className="flex items-center space-x-4">
-        <Button variant="outline" className="text-purple-600 border-purple-600">
+        <Button variant="outline" className="skinCheck border-purple-600">
           Skin Check
         </Button>
-        <Button variant="ghost" className="flex items-center space-x-2">
+        <Button variant="ghost" className="flex items-center space-x-2 text-white">
           {/* <LucidePhone /> */}
           <span>Hỗ trợ khách hàng</span>
         </Button>
-        <Button variant="ghost" className="flex items-center space-x-2">
+        <Button variant="ghost" className="flex items-center text-white space-x-2">
           {/* <LucideUser /> */}
           <span>Login / Sign up</span>
         </Button>
       </div>
+
     </header>
-    <div className="flex items-center justify-center px-6 py-4">
-    <nav className="hidden md:flex items-center space-x-6 text-gray-600 mt-4 md:mt-0">
-        <a href="#" className="flex items-center space-x-1 text-purple-600 font-medium">
-          {/* <LucideUser /> */}
-          <span>About Us</span> 
-        </a>
-        <a href="#" className="hover:text-purple-600">Services</a>
-        <a href="#" className="hover:text-purple-600">Pricing</a>
-        <a href="#" className="hover:text-purple-600">Guides</a>
-        <a href="#" className="hover:text-purple-600">Real Images</a>
-        <a href="#" className="hover:text-purple-600">Contact Us</a>
-        <a href="#" className="hover:text-purple-600">News & Events</a>
-      </nav>
-      </div>
+    <div id="main_menu" className="flex">
+    {/* items-center justify-center */}
+        <nav className="hidden md:flex items-center text-gray-600 mt-4 md:mt-0 w-[80%] mx-auto">
+            <a href="#" className="flex items-center space-x-1 text-purple-600 font-medium">
+              {/* <LucideUser /> */}
+              <span>Giới thiệu</span>
+            </a>
+            <a href="#" className="hover:text-purple-600">Dịch vụ</a>
+            <a href="#" className="hover:text-purple-600">Bảng giá</a>
+            <a href="#" className="hover:text-purple-600">Lộ trình</a>
+            <a href="#" className="hover:text-purple-600">Hình ảnh quảng cáo</a>
+            <a href="#" className="hover:text-purple-600">Liên hệ</a>
+            <a href="#" className="hover:text-purple-600">Sự kiện</a>
+        </nav>
+    </div>
     </>
   );
 };

@@ -1,69 +1,58 @@
-import React from "react";
+import '../../styles/global.css';
 
-const Footer: React.FC = () => {
+export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-400 py-8">
-      <div className="container mx-auto px-4">
-        {/* Top Section */}
-        <div className="flex flex-col lg:flex-row items-center justify-between border-b border-gray-700 pb-6 mb-6">
-          <h2 className="text-white text-lg font-semibold mb-4 lg:mb-0">
-            Subscribe to our newsletter
-          </h2>
-          <div className="flex items-center w-full lg:w-auto">
-            <input
-              type="email"
-              placeholder="Input your email"
-              className="w-full lg:w-64 px-4 py-2 rounded-l-md bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <footer className="text-white py-8">
+      <div className="container mx-auto grid grid-cols-4 gap-8 px-8">
+        {/* Hỗ trợ khách hàng */}
+        <div>
+          <h3 className="font-bold mb-3">HỖ TRỢ KHÁCH HÀNG</h3>
+          <p className="text-orange-400 font-semibold">Hotline: <span className="text-orange-500">1800 6324</span></p>
+          <p className="text-sm">(miễn phí, 08-22h kể cả T7, CN)</p>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li>Các câu hỏi thường gặp</li>
+            <li>Gửi yêu cầu hỗ trợ</li>
+            <li>Hướng dẫn đặt hàng</li>
+            <li>Phương thức vận chuyển</li>
+            <li>Chính sách đổi trả</li>
+          </ul>
+        </div>
+
+        {/* Về Hasaki.vn */}
+        <div>
+          <h3 className="font-bold mb-3">VỀ HASAKI.VN</h3>
+          <ul className="space-y-2 text-sm">
+            <li>Giới thiệu Hasaki.vn</li>
+            <li>Tuyển dụng</li>
+            <li>Chính sách bảo mật</li>
+            <li>Điều khoản sử dụng</li>
+            <li>Liên hệ</li>
+          </ul>
+        </div>
+
+        {/* Hợp tác & Liên kết */}
+        <div>
+          <h3 className="font-bold mb-3">HỢP TÁC & LIÊN KẾT</h3>
+          <ul className="space-y-2 text-sm">
+            <li><a href="https://hasaki.vn/clinic" className="text-blue-400">https://hasaki.vn/clinic</a></li>
+            <li>Hasaki cẩm nang</li>
+          </ul>
+          <h3 className="font-bold mt-4">THANH TOÁN</h3>
+        </div>
+
+        {/* Cập nhật thông tin khuyến mãi */}
+        <div>
+          <h3 className="font-bold mb-3">CẬP NHẬT THÔNG TIN KHUYẾN MÃI</h3>
+          <div className="flex">
+            <input 
+              type="email" 
+              placeholder="email của bạn" 
+              className="p-2 flex-1 rounded-l-lg border border-gray-300 text-black"
             />
-            <button className="px-6 py-2 bg-blue-500 text-white font-medium rounded-r-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-              Subscribe
-            </button>
-          </div>
-        </div>
-
-        {/* Middle Section */}
-        <div className="flex flex-col lg:flex-row items-center justify-between text-sm mb-6">
-          <div className="flex items-center space-x-6 mb-4 lg:mb-0">
-            {/* <img
-              src="/logo.png"
-              alt="Logo"
-              className="w-8 h-8"
-            /> */}
-            <span className="text-white font-bold text-lg">GlowUp</span>
-          </div>
-          <nav className="flex space-x-6 text-gray-400">
-            <a href="#" className="hover:text-white">Pricing</a>
-            <a href="#" className="hover:text-white">About us</a>
-            <a href="#" className="hover:text-white">Features</a>
-            <a href="#" className="hover:text-white">Help Center</a>
-            <a href="#" className="hover:text-white">Contact us</a>
-            <a href="#" className="hover:text-white">FAQs</a>
-            <a href="#" className="hover:text-white">Careers</a>
-          </nav>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="flex flex-col lg:flex-row items-center justify-between text-xs text-gray-500">
-          <div className="flex items-center space-x-4 mb-4 lg:mb-0">
-            <select
-              className="bg-gray-800 text-gray-400 px-3 py-1 rounded-md border border-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            >
-              <option>English</option>
-              <option>Vietnamese</option>
-              <option>French</option>
-            </select>
-          </div>
-          <p>© 2024 Brand, Inc. · Privacy · Terms · Sitemap</p>
-          <div className="flex space-x-4 text-gray-500">
-            <a href="#" className="hover:text-white">{/* Twitter Icon */}</a>
-            <a href="#" className="hover:text-white">{/* Facebook Icon */}</a>
-            <a href="#" className="hover:text-white">{/* LinkedIn Icon */}</a>
-            <a href="#" className="hover:text-white">{/* YouTube Icon */}</a>
+            <button className="bg-orange-500 px-4 rounded-r-lg text-white font-semibold">Đăng ký</button>
           </div>
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

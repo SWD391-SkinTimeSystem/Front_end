@@ -1,0 +1,37 @@
+:root {
+     --primary-color: #3498db;
+     --secondary-color: #70877a;
+     /* --font-main: "Arial", sans-serif; */
+     --font-family: "Montserrat", serif;
+     --background-color: #326e51;
+     --background-body: #f1f1f1;
+   }
+.HeaderBackground {
+     background-color: var(--background-color);
+   }
+.skinCheck {
+  color: var(--background-color)
+}
+#main_menu{
+  background-color: #e5fbf1;
+}
+#main_menu a {
+  color: var(--background-color);
+  /* text-transform: uppercase; */
+  font-size: 14px;
+  padding: 10px 20px;
+}
+#main_menu a:hover {
+  background-color: var(--background-color);
+  color: #e5fbf1;
+}
+footer {
+  background-color: var(--background-color);
+  color: #e5fbf1;
+}
+/* #breadcrumb {
+  background-color: 
+} */
+#body { 
+  background-color: var(--background-body);
+}

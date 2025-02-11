@@ -8,43 +8,48 @@ import {
   // CardHeader,
   // CardTitle,
 } from "@/components/ui/card"
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 
 const ServiceDetail = () => {
   // const { id } = useParams(); // Lấy ID từ URL
-  const product = {
-    id: 11,
-    name: "Nước Hoa Hồng Klairs",
-    price: 250000,
-    description: "Nước hoa hồng không mùi dành cho da nhạy cảm.",
-    image: "https://via.placeholder.com/400",
-  };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <Card className="shadow-lg">
-        <CardContent className="p-6 flex flex-col md:flex-row gap-6">
-          {/* Hình ảnh sản phẩm */}
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full md:w-1/2 rounded-lg"
-          />
-
-          {/* Thông tin sản phẩm */}
-          <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold">{product.name}</h1>
-            <Separator />
-            <p className="text-gray-600">{product.description}</p>
-            <h2 className="text-xl font-semibold text-red-500">
-              {product.price.toLocaleString()} VND
-            </h2>
-            <Button className="w-full md:w-auto">Thêm vào giỏ hàng</Button>
-          </div>
-        </CardContent>
-      </Card>
+    <>
+    <div className="flex flex-row">
+        <div className="w-[50%] min-h-[300px] p-5">
+          <img src="https://media.hcdn.vn/catalog/product/s/u/sua-chong-nang-anessa-duong-da-kiem-dau-60ml-moi-2-1710472390_img_385x385_622873_fit_center.jpg" alt="" />
+        </div>
+        <div className="w-[50%]">
+        <Card className="w-full max-w-md border border-gray-200 rounded-lg shadow-lg p-4">
+      <CardContent>
+        <h2 className="text-lg font-semibold text-gray-900">
+          Sữa Chống Nắng Anessa Dưỡng Da Kiềm Dầu 60ml (Bản Mới 2024)
+        </h2>
+        <p className="text-sm text-gray-600">
+          Perfect UV Sunscreen Skincare Milk N SPF50+ PA++++
+        </p>
+        <div className="flex items-center mt-2">
+          <span className="text-yellow-500">★★★★★</span>
+          <span className="text-gray-600 text-sm ml-2">14 đánh giá | 68 Hỏi đáp</span>
+        </div>
+        <div className="bg-orange-500 text-white p-2 mt-4 rounded-md flex justify-between items-center">
+          <span className="font-bold">⚡ FLASH DEAL</span>
+          {/* <span className="text-lg font-semibold">KẾT THÚC TRONG {formatTime(timeLeft)}</span> */}
+        </div>
+        <div className="mt-4">
+          <span className="text-red-500 text-2xl font-bold">503.000 đ</span>
+          <span className="text-gray-500 text-sm ml-2">(Đã bao gồm VAT)</span>
+        </div>
+        <p className="text-gray-500 text-sm mt-1">
+          Giá thị trường: <s>715.000 đ</s> - Tiết kiệm: <span className="text-red-500">212.000 đ (-30%)</span>
+        </p>
+      </CardContent>
+    </Card>
+        </div>
     </div>
+    <div>
+
+    </div>
+    </>
   );
 }
 

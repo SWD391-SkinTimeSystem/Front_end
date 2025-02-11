@@ -3,33 +3,26 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-
+import { BreadcrumbDemo } from "../Atoms/Breadcrumbs";
+import "../../styles/global.css";
 
 const Layout: React.FC = () => {
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      {/* <Sidebar /> */}
-
-      <div className="flex flex-col flex-1">
-        {/* Header */}
-        <Header />
-
-        {/* Nội dung chính */} 
-        <div className="flex flex-row	">
-        <Sidebar />
-        <main className="flex-1 p-3 overflow-y-auto">
-      
-
-          <Outlet />
-        </main>
-
-        </div>
-       
-        {/* Footer */}
-        <Footer />
+    <>
+    <div id="body">
+    <Header />
+    <div className="w-[80%] mx-auto">
+      <div id = "breadcrumb" className="pl-[20px] py-3">
+      <BreadcrumbDemo />
       </div>
+      </div>
+    <div className="flex flex-row min-h-screen w-[80%] mx-auto">
+      <div className="w-[70%] bg-white mr-3"><Outlet /></div>
+      <div className="w-[30%]"><Sidebar /></div>
     </div>
+    <Footer />
+    </div>
+    </>
   );
 };
 
