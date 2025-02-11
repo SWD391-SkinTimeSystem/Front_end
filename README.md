@@ -35,6 +35,7 @@
 -- Hỗ trợ check-in check-out <br>
 
 ## Cấu trúc thư mục <br>
+```
 ├── hooks/          # Custom hooks <br>
 ├── components/     # Các components của ShadCN UI<br>
 ├── component/      # Các component của ứng dụng ( Tuân theo nguyên tắc Antomic design ) <br>
@@ -44,27 +45,42 @@
 ├── services/       # Xu ly nhung API<br>
 ├── App.tsx         # Thành phần chính của ứng dụng<br>
 ├── main.tsx        # Điểm vào ứng dụng<br>
-
+```
 
 ## 🔧 Cài đặt và chạy
 **Yêu cầu**:<br>
   Node.js: Phiên bản >= 16<br>
   NPM hoặc Yarn<br>
 **Bước 1: Clone repository**<br>
+```
   git clone https://github.com/<tên-tài-khoản>/<tên-dự-án>.git<br>
   cd <tên-dự-án><br>
+```
 **Bước 2: Cài đặt các dependencies**<br>
 Sử dụng npm hoặc yarn:<br>
+```
   npm install<br>
   yarn<br>
+```
 **Bước 3: Chạy ứng dụng**<br>
+```
   npm run dev<br> 
   Hoặc <br>
   yarn dev
-## Truy cập ứng dụng tại [deploy later ]
+```
+## Truy cập ứng dụng tại [https://skintimeclinic.netlify.app/]
 ## ✨ Đóng góp<br>
   Fork repository.<br>
-  Tạo nhánh mới (git checkout -b feature/tính-năng-mới).<br>
-  Commit thay đổi (git commit -m "Thêm tính năng X").<br>
-  Push nhánh (git push origin feature/tính-năng-mới).<br>
+  Tạo nhánh mới (
+  ```
+git checkout -b feature/tính-năng-mới
+  ```
+  Commit thay đổi
+```
+git commit -m "Thêm tính năng X")
+```
+  Push nhánh 
+  ```
+  git push origin feature/tính-năng-mới
+  ```
   Tạo Pull Request.<br>
