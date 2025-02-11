@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NewsList from "../../components/ui/newslist";
 import EventList from "../../components/ui/eventlist";
-
+// page news and event
 const NewsEvents: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"news" | "event">("news");
   const [news, setNews] = useState([]);
