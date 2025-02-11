@@ -5,7 +5,7 @@ interface News {
   date: string;
   image: string;
 }
-
+//news
 interface Props {
   news: News[];
   onViewDetails: (id: number, type: "news") => void;
