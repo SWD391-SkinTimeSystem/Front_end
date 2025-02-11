@@ -35,6 +35,7 @@
 -- Hỗ trợ check-in check-out <br>
 
 ## Cấu trúc thư mục <br>
+```
 ├── hooks/          # Custom hooks <br>
 ├── components/     # Các components của ShadCN UI<br>
 ├── component/      # Các component của ứng dụng ( Tuân theo nguyên tắc Antomic design ) <br>
@@ -44,7 +45,7 @@
 ├── services/       # Xu ly nhung API<br>
 ├── App.tsx         # Thành phần chính của ứng dụng<br>
 ├── main.tsx        # Điểm vào ứng dụng<br>
-
+```
 
 ## 🔧 Cài đặt và chạy
 **Yêu cầu**:<br>
