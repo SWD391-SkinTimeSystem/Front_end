@@ -5,7 +5,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from './component/Organisms/Layout';
 import ServiceDetail from './component/Pages/ServiceDetail';
-
+import NewsEvent from './component/Pages/NewsEvents';
 
 const App = () => {
   return (
@@ -14,6 +14,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="service-detail" element={<ServiceDetail />} />
+            <Route path="news&event/" element={<NewsEvent />} />
+           
+           
+
           </Route>
         </Routes>
       </Router>
