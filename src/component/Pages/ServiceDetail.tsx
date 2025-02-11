@@ -1,18 +1,15 @@
-// import React from 'react'
-// import { BreadcrumbDemo } from '../Atoms/Breadcrumbs'
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
   CardContent,
-  // CardDescription,
-  // CardFooter,
-  // CardHeader,
-  // CardTitle,
 } from "@/components/ui/card"
 import { formatTime } from "@/lib/utils";
 import { MapPin, CalendarDays, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
+import RatingCard from "../Atoms/Rating";
+import CommentItem from "../Atoms/Comment";
 
 const ServiceDetail = () => {
   // const { id } = useParams(); // Lấy ID từ URL
@@ -70,66 +67,72 @@ const ServiceDetail = () => {
       <div className="Seperator h-[15px]">
 
       </div>
+      <Tabs defaultValue="detail" className="w-full">
+        <TabsList>
+          <TabsTrigger value="detail">Chi tiết</TabsTrigger>
+          <TabsTrigger value="evaluate">Đánh giá</TabsTrigger>
+        </TabsList>
+        <TabsContent value="detail">
+          <div id="ServiceDescription" className="">
 
-      <div id="ServiceDescription" className="">
-        <div className="max-w-4xl mx-auto p-6">
-          {/* Tiêu đề */}
-          <h2 className="text-xl font-bold text-center uppercase text-black">
-            Sáng Mịn Tức Thì - Đánh Bay Thâm Mụn Với Công Nghệ Aqua Mesoderm.
-          </h2>
+            <div className="max-w-4xl mx-auto p-6">
+              {/* Tiêu đề */}
+              <h2 className="text-xl font-bold text-center uppercase text-black">
+                Sáng Mịn Tức Thì - Đánh Bay Thâm Mụn Với Công Nghệ Aqua Mesoderm.
+              </h2>
 
-          {/* Nội dung */}
-          <div className="mt-4 space-y-2 text-black">
-            <p>
-              <span className="font-semibold">Hiệu quả:</span> Làm mờ sạm nám, làm trắng sáng da, duy trì 1 lần da tươi trẻ sắc diện hồng hào.
-            </p>
-            <p>
-              <span className="font-semibold">Thời gian:</span> 61 phút.
-            </p>
-            <p>
-              <span className="font-semibold">Mức độ đau:</span> Không.
-            </p>
-            <p>
-              <span className="font-semibold">Xâm lấn:</span> Không.
-            </p>
-            <p>
-              <span className="font-semibold">Thời gian nghỉ dưỡng:</span> Không.
-            </p>
-            <p>
-              <span className="font-semibold">Cam kết:</span> Hiệu quả.
-            </p>
-            <p>
-              <span className="font-semibold">Chứng nhận máy:</span> FDA Hoa Kỳ chứng nhận an toàn, hiệu quả.
-            </p>
+              {/* Nội dung */}
+              <div className="mt-4 space-y-2 text-black">
+                <p>
+                  <span className="font-semibold">Hiệu quả:</span> Làm mờ sạm nám, làm trắng sáng da, duy trì 1 lần da tươi trẻ sắc diện hồng hào.
+                </p>
+                <p>
+                  <span className="font-semibold">Thời gian:</span> 61 phút.
+                </p>
+                <p>
+                  <span className="font-semibold">Mức độ đau:</span> Không.
+                </p>
+                <p>
+                  <span className="font-semibold">Xâm lấn:</span> Không.
+                </p>
+                <p>
+                  <span className="font-semibold">Thời gian nghỉ dưỡng:</span> Không.
+                </p>
+                <p>
+                  <span className="font-semibold">Cam kết:</span> Hiệu quả.
+                </p>
+                <p>
+                  <span className="font-semibold">Chứng nhận máy:</span> FDA Hoa Kỳ chứng nhận an toàn, hiệu quả.
+                </p>
+              </div>
+
+              {/* Hình ảnh */}
+              <div className="mt-6 flex justify-center">
+                <img
+                  src="https://media.hcdn.vn/wysiwyg/Vinh/meso-duong-sang.jpg"
+                  alt="Aqua Mesoderm"
+                  className="rounded-lg shadow-lg w-full max-w-xl"
+                />
+              </div>
+
+              {/* Banner */}
+              <div className="mt-6 p-6 bg-green-900 text-white rounded-lg text-center">
+                <h3 className="text-lg font-bold uppercase">
+                  Đánh Bay Thâm Mụn - Sáng Mịn Tức Thì
+                </h3>
+                <p className="text-lg font-semibold bg-yellow-400 text-green-900 inline-block px-3 py-1 rounded-md mt-2">
+                  Với Aqua Mesoderm
+                </p>
+                <p className="mt-2 flex items-center justify-center gap-2 text-sm">
+                  ✅ Công nghệ được FDA Hoa Kỳ chứng nhận an toàn, hiệu quả.
+                </p>
+              </div>
+            </div>
           </div>
+          <div className="Seperator h-[15px]">
 
-          {/* Hình ảnh */}
-          <div className="mt-6 flex justify-center">
-            <img
-              src="https://media.hcdn.vn/wysiwyg/Vinh/meso-duong-sang.jpg"
-              alt="Aqua Mesoderm"
-              className="rounded-lg shadow-lg w-full max-w-xl"
-            />
           </div>
-
-          {/* Banner */}
-          <div className="mt-6 p-6 bg-green-900 text-white rounded-lg text-center">
-            <h3 className="text-lg font-bold uppercase">
-              Đánh Bay Thâm Mụn - Sáng Mịn Tức Thì
-            </h3>
-            <p className="text-lg font-semibold bg-yellow-400 text-green-900 inline-block px-3 py-1 rounded-md mt-2">
-              Với Aqua Mesoderm
-            </p>
-            <p className="mt-2 flex items-center justify-center gap-2 text-sm">
-              ✅ Công nghệ được FDA Hoa Kỳ chứng nhận an toàn, hiệu quả.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="Seperator h-[15px]">
-
-      </div>
-      <div>
+          <div>
         <Card className="w-full rounded-none mt-5 border-none shadow-none">
           <CardContent className="">
             <h2 className="text-lg font-semibold text-gray-900">
@@ -175,10 +178,7 @@ const ServiceDetail = () => {
             <p className="text-sm text-gray-600 mt-2 mb-1">
               Perfect UV Sunscreen Skincare Milk N SPF50+ PA++++
             </p>
-            {/* <div className="flex items-center mt-2">
-              <span className="text-yellow-500">★★★★★</span>
-              <span className="text-gray-600 text-sm ml-2">14 đánh giá | 68 Hỏi đáp</span>
-            </div> */}
+
 
 
             <Button className="bg-green-100 text-green-700 flex my-2 items-center gap-2 px-4 py-2 rounded-md">
@@ -192,7 +192,6 @@ const ServiceDetail = () => {
             </div>
             <div className="bg-orange-500 text-white p-2 mb-4 mt-4 rounded-md flex justify-between items-center">
               <CalendarDays size={20} /> <span className=""> THỰC HIỆN SAU NGÀY THỨ <span className="bg-black rounded py-1 px-3">2</span></span>
-              {/* <span className="text-[10px] font-semibold">KẾT THÚC TRONG </span> */}
             </div>
 
 
@@ -205,6 +204,21 @@ const ServiceDetail = () => {
       <div>
 
       </div>
+        </TabsContent>
+        <TabsContent value="evaluate" className="p-5">
+          <RatingCard />
+          <Separator />
+          <CommentItem />
+          <CommentItem />
+          <CommentItem />
+          <CommentItem />
+          <CommentItem />
+          <CommentItem />
+        </TabsContent>
+      </Tabs>
+
+
+      
     </>
   );
 }
