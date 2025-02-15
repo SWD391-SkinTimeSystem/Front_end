@@ -10,17 +10,11 @@ interface User {
   dob: string;
 }
 
-interface RegisterResponse {
-  [x: string]: string;
-  success: boolean;
-}
-
 interface AuthState {
   user: User | null;
   accessToken: string | null;
   login: (user: User, accessToken: string) => void;
-  register: (userData: any) => Promise<{
-    [x: string]: string | boolean;
+  register: (userData: any) => Promise<{ success: boolean;
   }>;
   logout: () => void;
 }

@@ -8,6 +8,7 @@ import ServiceDetail from './component/Pages/ServiceDetail';
 import { ServiceList } from "./component/Pages/ServiceList";
 import Login from "./component/Auth/Login";
 import Register from "./component/Auth/Register";
+import EventPage from "./component/Pages/EventList";
 
 
 const App = () => {
@@ -21,6 +22,10 @@ const App = () => {
           </Route>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
+          
+          <Route path="/event" element={<Layout />}>
+            <Route path="event-page" element={<EventPage />} />
+          </Route>
 
         </Routes>
       </Router>
