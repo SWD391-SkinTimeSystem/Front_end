@@ -32,12 +32,12 @@ const AppointmentPage: React.FC = () => {
 
   const handleViewDetails = (serviceId: number) => {
     console.log(`Xem chi tiết lịch hẹn với serviceId: ${serviceId}`);
-    navigate(`/appointment-detail/${serviceId}`);
-
+    navigate(`/account/appointment-detail/${serviceId}`);
   };
 
   return (
     <div className="max-w-screen-lg mx-auto p-5">
+      <h1 className="text-xl font-semibold mb-5">Booking của tôi</h1>
       {/* Tabs với icon và badges */}
       <div className="flex space-x-4 border-b border-gray-200">
         {/* Tab: Upcoming */}
@@ -46,7 +46,7 @@ const AppointmentPage: React.FC = () => {
           className={`relative px-4 py-2 text-sm font-medium flex items-center 
             ${
               activeFilter === "upcoming"
-                ? "text-indigo-600 border-b-2 border-indigo-500"
+                ? "text-emerald-700 border-b-4 border-emerald-700"
                 : "text-gray-500"
             }
           `}
@@ -68,8 +68,8 @@ const AppointmentPage: React.FC = () => {
           className={`relative px-4 py-2 text-sm font-medium flex items-center 
             ${
               activeFilter === "completed"
-                ? "text-indigo-600 border-b-2 border-indigo-500"
-                : "text-gray-500"
+              ? "text-emerald-700 border-b-2 border-emerald-700"
+              : "text-gray-500"
             }
           `}
         >
@@ -90,8 +90,8 @@ const AppointmentPage: React.FC = () => {
           className={`relative px-4 py-2 text-sm font-medium flex items-center 
             ${
               activeFilter === "cancel"
-                ? "text-indigo-600 border-b-2 border-indigo-500"
-                : "text-gray-500"
+              ? "text-emerald-700 border-b-2 border-emerald-700"
+              : "text-gray-500"
             }
           `}
         >
