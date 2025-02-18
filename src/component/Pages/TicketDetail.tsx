@@ -42,7 +42,7 @@ const getStatusLabel = (status: TicketStatus) => {
 const TicketDetail: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
   const [ticketData, setTicketData] = useState<TicketData | null>(null);
-
+//kkklkkkl
   useEffect(() => {
     fetch("/ticket.json")
       .then((res) => res.json())

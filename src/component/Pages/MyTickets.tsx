@@ -15,7 +15,7 @@ interface Ticket {
   status: TicketStatus;
   qrCodeUrl?: string;
 }
-
+//kkkkkkkk
 const getStatusLabel = (status: TicketStatus) => {
   switch (status) {
     case "paid":
