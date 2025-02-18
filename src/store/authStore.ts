@@ -8,10 +8,21 @@ interface User {
   phone: string;
   gender: string;
   dob: string;
+  role: string;
+}
+
+interface User {
+  id: string;
+  fullname: string;
+  email: string;
+  phone: string;
+  gender: string;
+  dob: string;
+  role: string;
 }
 
 interface AuthState {
-  user: User | null;
+  user:  User | null;
   accessToken: string | null;
   login: (user: User, accessToken: string) => void;
   register: (userData: any) => Promise<{ success: boolean;

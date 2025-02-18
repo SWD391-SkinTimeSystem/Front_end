@@ -1,77 +1,73 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 interface Event {
-  eventId: string;
-  title: string;
-  description: string;
-  start_date: string;
-  end_date: string;
-  location: string;
-  image_url: string;
+  Id: number;
+  Title: string;
+  Content: string;
+  Image: string;
+  Date: string;
+  Location: string;
+  TotalTickets: number;
+  AvailableTickets: number;
+  TicketPrice: number;
+  EventStatus: string;
 }
 
 const events: Event[] = [
   {
-    eventId: "1",
-    title: "Hội thảo chăm sóc da chuyên sâu",
-    description: "Sự kiện đặc biệt giúp bạn hiểu rõ hơn về cách chăm sóc da.",
-    start_date: "2025-02-10T18:00:00",
-    end_date: "2025-02-10T20:00:00",
-    location: "TP. Hồ Chí Minh",
-    image_url: "https://media.hcdn.vn/hsk/1737353441_1737348985702-202253631_img_200x145_c4ef78_fit_center.jpg",
+    Id: 1,
+    Title: "The Skin Confidence Workshop",
+    Content: "Nisi aliquam velit enim in laborit. Minim proident magna eiusmod...",
+    Image: "https://media.hcdn.vn/hsk/1737353441_1737348985702-202253631_img_200x145_c4ef78_fit_center.jpg",
+    Date: "31/02/2025",
+    Location: "123 Main Street, LA, CA",
+    TotalTickets: 100,
+    AvailableTickets: 50,
+    TicketPrice: 50,
+    EventStatus: "Open",
+  },
+  {
+    Id: 2,
+    Title: "The Ultimate Skin Retreat",
+    Content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    Image: "https://media.hcdn.vn/hsk/1737353441_1737348985702-202253631_img_200x145_c4ef78_fit_center.jpg",
+    Date: "31/02/2025",
+    Location: "456 Sunset Blvd, CA",
+    TotalTickets: 200,
+    AvailableTickets: 100,
+    TicketPrice: 100,
+    EventStatus: "Open",
   },
 ];
 
 export default function EventPage() {
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [search, /*setSearch*/] = useState("");
-
-  const filteredEvents = events.filter((event) =>
-    event.title.toLowerCase().includes(search.toLowerCase())
-  );
-
+  const [, setSelectedEvent] = useState<Event | null>(null);
   return (
-    <div className="container mx-auto p-4">
-      <h5 className="text-3xl font-bold mb-4">Events</h5>
-      <div className="flex-1 flex items-center space-x-6 mx-6">
-        {/* Search */}
-        <div className="relative w-full max-w-md">
-          <Input
-            type="text"
-            placeholder="Tìm kiếm sự kiện ..."
-            className="pl-10 rounded-2xl bg-white"
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredEvents.map((event) => (
-          <Card key={event.eventId} className="cursor-pointer" onClick={() => setSelectedEvent(event)}>
-            <CardContent className="p-4">
-              <img src={event.image_url} alt={event.title} className="w-full h-40 object-cover rounded-lg" />
-              <h2 className="text-xl font-semibold mt-2">{event.title}</h2>
-              <p className="text-gray-500">{new Date(event.start_date).toLocaleString()} - {event.location}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
-        <DialogContent className="max-w-lg">
-          {selectedEvent && (
+    <div className="space-y-6">
+      {events.map((event) => (
+        <Link to={`/event/${event.Id}`} key={event.Id}>
+        <Card
+          className="cursor-pointer"
+          onClick={() => setSelectedEvent(event)}
+        >
+          <CardContent className="p-4 flex items-center gap-4">
+            <img
+              src={event.Image}
+              alt={event.Title}
+              className="w-24 h-24 rounded-lg object-cover"
+            />
             <div>
-              <img src={selectedEvent.image_url} alt={selectedEvent.title} className="w-full h-40 object-cover rounded-lg" />
-              <h2 className="text-2xl font-bold mt-2">{selectedEvent.title}</h2>
-              <p className="text-gray-500">{new Date(selectedEvent.start_date).toLocaleString()} - {selectedEvent.location}</p>
-              <p className="text-gray-700 mt-2">{selectedEvent.description}</p>
-              <Button className="mt-4 w-full">Đăng ký ngay</Button>
+              <CardTitle>{event.Title}</CardTitle>
+              <p className="text-sm text-gray-500">
+                {event.Date}
+              </p>
+              <p className="text-sm text-gray-600">{event.Location}</p>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+          </CardContent>
+        </Card>
+        </Link>
+      ))}
     </div>
   );
 }

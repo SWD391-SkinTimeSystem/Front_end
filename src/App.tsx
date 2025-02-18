@@ -9,6 +9,7 @@ import { ServiceList } from "./component/Pages/ServiceList";
 import Login from "./component/Auth/Login";
 import Register from "./component/Auth/Register";
 import EventPage from "./component/Pages/EventList";
+import EventDetail from "./component/Pages/EventDetail";
 
 
 const App = () => {
@@ -24,7 +25,8 @@ const App = () => {
           <Route path="/register" element={<Register/>}/>
           
           <Route path="/event" element={<Layout />}>
-            <Route path="event-page" element={<EventPage />} />
+            <Route path="" element={<EventPage />} />
+            <Route path=":id" element={<EventDetail />} />
           </Route>
 
         </Routes>
