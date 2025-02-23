@@ -14,12 +14,12 @@ import {
      CardHeader,
      CardTitle,
 } from "@/components/ui/card"
-interface TableDataProps {
-     Title: string, 
-     Description: string, 
-     header: object,
-     data: object,
-}
+// interface TableDataProps {
+//      Title: string, 
+//      Description: string, 
+//      header: object,
+//      data: object,
+// }
 const invoices = [
      {
           invoice: "Chăm sóc da mặt",

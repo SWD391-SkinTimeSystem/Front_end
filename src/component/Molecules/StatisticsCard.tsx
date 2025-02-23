@@ -10,7 +10,7 @@ interface ExpenseCardProps {
   unit: string;
 }
 
-const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, amount, percentage, icon, unit }) => {
+const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, amount, percentage,  unit }) => {
   return (
     <Card className="relative border border-purple-200 rounded-2xl shadow-sm p-4">
       <CardContent className="flex flex-col justify-between space-y-2 p-0">
