@@ -43,7 +43,7 @@ const EventList = () => {
               <p className="mt-2 font-bold text-green-600">💰 {event.ticketPrice.toLocaleString()}đ</p>
               <button 
                 className="mt-4 w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition"
-                onClick={() => navigate(`/event-checkout/${event.id}`)}
+                onClick={() => navigate(`/event-detail/${event.id}`)}
               >
                 Mua vé ngay
               </button>

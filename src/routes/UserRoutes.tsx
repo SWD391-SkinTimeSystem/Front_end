@@ -6,7 +6,11 @@ import { ServiceList } from '@/component/Pages/ServiceList';
 import Appointment from '@/component/Pages/Appointment';
 import AppointmentDetail from '@/component/Pages/AppointmentDetail';
 import Booking from '@/component/Pages/Booking';
-
+import MyTickets from '@/component/Pages/MyTickets';
+import TicketDetail from '@/component/Pages/TicketDetail';
+import EventList from '@/component/Pages/EventList';
+import EventDetail from '@/component/Pages/EventDetail';
+import { DisplayServiceList } from '@/features/services';
 const UserRoutes: React.FC = () => {
      return (
           <Layout>
@@ -17,6 +21,11 @@ const UserRoutes: React.FC = () => {
                     <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} />
                     <Route path="*" element={<h1>Not Found</h1>} />
                     <Route path="/booking" element={<Booking />} />
+                    <Route path="/ticket" element={<MyTickets />} />
+                    <Route path="/ticket-detail/:id" element={<TicketDetail />} />
+                    <Route path="/event" element={<EventList />} />
+                    <Route path="/event-detail/:id" element={<EventDetail />} />
+                    <Route path="/testAPI" element={<DisplayServiceList />} />
                </Routes>
           </Layout >
      );
