@@ -22,7 +22,7 @@ const eventData = [
      },
 ];
 
-export const ServiceList = () => {
+export default function ServiceList (){
 
      return (
           <>
