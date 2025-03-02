@@ -83,8 +83,6 @@ const AppointmentDetailPage: React.FC = () => {
                 Đổi lịch
               </Button>
             </div>
-
-
           </div>
           <motion.div
             initial={{ height: 0, opacity: 0 }}
