@@ -1,94 +1,123 @@
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import PaymentMethods from "../Molecules/Payment";
 
 interface Event {
-  Id: number;
-  Title: string;
-  Content: string;
-  Image: string;
-  Date: string;
-  Location: string;
-  TotalTickets: number;
-  AvailableTickets: number;
-  TicketPrice: number;
-  EventStatus: string;
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  image: string;
+  ticketPrice: number;
+  totalTickets: number;
+  availableTickets: number;
+  eventStatus: string;
 }
-
-const events: Event[] = [
-  {
-    Id: 1,
-    Title: "The Skin Confidence Workshop",
-    Content:
-      "Nisi aliquam velit enim in laborit. Minim proident magna eiusmod...",
-    Image:
-      "https://media.hcdn.vn/hsk/1737353441_1737348985702-202253631_img_200x145_c4ef78_fit_center.jpg",
-    Date: "31/02/2025",
-    Location: "123 Main Street, LA, CA",
-    TotalTickets: 100,
-    AvailableTickets: 50,
-    TicketPrice: 50,
-    EventStatus: "Open",
-  },
-  {
-    Id: 2,
-    Title: "The Ultimate Skin Retreat",
-    Content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-    Image:
-      "https://media.hcdn.vn/hsk/1737353441_1737348985702-202253631_img_200x145_c4ef78_fit_center.jpg",
-    Date: "31/02/2025",
-    Location: "456 Sunset Blvd, CA",
-    TotalTickets: 200,
-    AvailableTickets: 100,
-    TicketPrice: 100,
-    EventStatus: "Open",
-  },
-];
 
 export default function EventDetail() {
   const { id } = useParams<{ id: string }>();
   const eventId = parseInt(id as string, 10);
+  const [isOpen, setIsOpen] = useState(false);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+
+    useEffect(() => {
+      fetch("/events.json")
+        .then((res) => res.json())
+        .then((data) => setEvents(data));
+    }, []);
+
+  const event = events.find((event) => event.id === id);
+  
   if (isNaN(eventId)) {
     // xử lý trường hợp id không phải số
     return <div>Invalid event ID</div>;
   }
-  const event = events.find((e) => e.Id === eventId);
 
   if (!event) {
     return <div>Event not found</div>;
   }
 
+  const remainingPayment = event.ticketPrice;
+
+  const handleSelectPaymentMethod = (method: string) => {
+    setSelectedPaymentMethod(method);
+    console.log('Hình thức thanh toán đã được chọn');
+    console.log(selectedPaymentMethod);
+}
+
   return (
     <div className="p-4">
       <img
-        src={event.Image}
-        alt={event.Title}
+        src={event.image}
+        alt={event.title}
         className="w-full h-80 object-cover rounded-lg"
       />
       <div className="p-4 border-b">
-        <h1 className="text-lg font-bold">{event.Title}</h1>
+        <h1 className="text-lg font-bold">{event.title}</h1>
       </div>
       <div className="p-4">
-        <p className="text-lg font-semibold">{event.Date}</p>
-        <p className="text-gray-500">{event.Location}</p>
-        <p className="mt-4">{event.Content}</p>
+        <p className="text-lg font-semibold">{event.date}</p>
+        <p className="text-gray-500">{event.location}</p>
+        <p className="mt-4">{event.description}</p>
         <div className="mt-4">
           <p>
-            <strong>Total Tickets:</strong> {event.TotalTickets}
+            <strong>Total Tickets:</strong> {event.totalTickets}
           </p>
           <p>
-            <strong>Available Tickets:</strong> {event.AvailableTickets}
+            <strong>Available Tickets:</strong> {event.availableTickets}
           </p>
           <p>
-            <strong>Ticket Price:</strong> ${event.TicketPrice}
+            <strong>Ticket Price:</strong> ${event.ticketPrice}
           </p>
           <p>
-            <strong>Event Status:</strong> {event.EventStatus}
+            <strong>Event Status:</strong> {event.eventStatus}
           </p>
         </div>
-        <Button className="mt-4" onClick={() => window.history.back()}>
-          Back to Events
-        </Button>
+        <div className="mt-4 border-t pt-4">
+          <div className="flex justify-between items-center cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+            <strong>Còn cần thanh toán:</strong>
+            <span className="text-lg font-bold text-emerald-700">
+              {remainingPayment.toLocaleString("vi-VN")} đ
+            </span>
+          </div>
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-2 p-4 bg-gray-100 rounded-lg shadow-inner">
+              <p className="flex justify-between">
+                <span>Giá vé:</span>
+                <span>{event.ticketPrice.toLocaleString("vi-VN")} đ</span>
+              </p>
+              <p className="flex justify-between text-emerald-700 font-bold border-t pt-2 mt-2">
+                <span>Cần thanh toán:</span>
+                <span>{remainingPayment.toLocaleString("vi-VN")} đ</span>
+              </p>
+            </div>
+          </motion.div>
+        </div>
       </div>
+      <div className='m-5'>
+                    <PaymentMethods onPaymentMethodChange={handleSelectPaymentMethod} />
+               </div>
+               {/* Button thanh toán  */}
+               <div className="grid place-items-end m-5">
+                    <div className="flex gap-5">
+                         <Button variant="secondary" className="text-emerald-700" onClick={() => window.history.back()}>
+                              Hủy
+                         </Button>
+                         <Button className="bg-emerald-700">
+                              Thanh Toán
+                         </Button>
+                    </div>
+               </div>
     </div>
   );
 }

@@ -6,6 +6,8 @@ import { ServiceList } from '@/component/Pages/ServiceList';
 import Appointment from '@/component/Pages/Appointment';
 import AppointmentDetail from '@/component/Pages/AppointmentDetail';
 import Booking from '@/component/Pages/Booking';
+import EventList from '@/component/Pages/EventList';
+import EventDetail from '@/component/Pages/EventDetail';
 
 const UserRoutes: React.FC = () => {
      return (
@@ -17,6 +19,8 @@ const UserRoutes: React.FC = () => {
                     <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} />
                     <Route path="*" element={<h1>Not Found</h1>} />
                     <Route path="/booking" element={<Booking />} />
+                    <Route path="/event" element={<EventList />} />
+                    <Route path="/event/:id" element={<EventDetail />} />
                </Routes>
           </Layout >
      );

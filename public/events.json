@@ -7,7 +7,10 @@
       "time": "14:00",
       "location": "TP. Hồ Chí Minh",
       "image": "https://source.unsplash.com/400x300/?skincare,workshop",
-      "ticketPrice": 200000
+      "ticketPrice": 200000,
+      "totalTickets": 100,
+      "availableTickets": 50,
+      "eventStatus": "Open"
     },
     {
       "id": "2",
@@ -17,7 +20,10 @@
       "time": "18:00",
       "location": "Hà Nội",
       "image": "https://source.unsplash.com/400x300/?beauty,talkshow",
-      "ticketPrice": 150000
+      "ticketPrice": 150000,
+      "totalTickets": 100,
+      "availableTickets": 50,
+      "eventStatus": "Open"
     }
   ]
   
