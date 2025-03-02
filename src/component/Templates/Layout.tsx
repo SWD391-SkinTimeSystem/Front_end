@@ -1,14 +1,14 @@
 import React from "react";
-import Header from "./Header";
-import Footer from "./Footer";
 import { Outlet, useLocation } from "react-router-dom";
-import Sidebar from "./Sidebar";
 import { BreadcrumbDemo } from "../Atoms/Breadcrumbs";
 import "../../styles/global.css";
-import { AccountSidebar } from "./AccountSidebar";
+import Header from "./Header";
+import { AccountSidebar } from "../Organisms/AccountSidebar";
+import Sidebar from "./Sidebar";
+import Footer from "./Footer";
 const Layout: React.FC = () => {
   const location = useLocation();
-  const hideSidebar = location.pathname === "/";
+  const hideSidebar = location.pathname === "/" || location.pathname === "/booking";
   const isAccountPage = location.pathname.startsWith("/account");
   return (
     <>
