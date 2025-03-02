@@ -1,27 +1,31 @@
 import { FormEvent, useState } from "react";
-// import { login } from "@/services/authService";
-// import { useAuthStore } from "@/store/authStore";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+// import { jwtDecode } from "jwt-decode"; // ✅ Import jwtDecode
 import layerImage from "@/assets/hasaki.png";
-// import GoogleAuth from "./GoogleAuth";
+import { useAuthStore } from "@/store/authStore"; // ✅ Zustand Store
+import authService from "@/services/authService"; // ✅ API Authentication
+// import { GoogleLogin } from "@react-oauth/google";
+import GoogleLoginButton from "./GoogleAuth";
+
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState<string>("");
+  const [account, setAccount] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth); // ✅ Lấy setAuth từ Zustand store
 
-  const validateUsername = (username: string): boolean =>
-    username.trim() !== "";
+  const validateUsername = (account: string): boolean => account.trim() !== "";
   const validatePassword = (password: string): boolean => password.length >= 8;
 
-  const handleSubmit = async (e: FormEvent): Promise<void> => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-    if (!validateUsername(username)) {
+
+    if (!validateUsername(account)) {
       toast.error("Username is empty");
       return;
     }
@@ -33,35 +37,34 @@ const Login: React.FC = () => {
 
     try {
       setLoading(true);
-      const response = await fetch("", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
+      const response = await authService.login(account, password);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Login failed");
-        return;
+      if (!response?.access_token || typeof response.access_token !== "string") {
+        throw new Error("Invalid access token from server");
       }
 
-      const data = await response.json();
-      toast.success(data.message || "Login successful");
+      setAuth(response.access_token, response.refresh_token, response.user);
+      toast.success(`Welcome, ${response.user.fullname}!`);
 
-      localStorage.setItem("username", username);
+      // switch (response.user.role) {
+      //   case "admin":
+      //     navigate("/event");
+      //     break;
+      //   case "staff":
+      //     navigate("/event");
+      //     break;
+      //   case "user":
+      //   default:
+      //     navigate("/event");
+      //     break;
+      // }
+      navigate("/event");
 
-      if (data.role === "user") {
-        navigate("/user-homepage");
-      } else if (data.role === "admin") {
-        navigate("/admin");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Login failed");
+    } catch (error: any) {
+      console.error("Login error:", error.message);
+      toast.error(error.message || "Login failed");
     } finally {
-      setLoading(false);
+      setLoading(false); // Đảm bảo loading luôn tắt
     }
   };
 
@@ -77,7 +80,7 @@ const Login: React.FC = () => {
           />
         </div>
 
-        <div className="hidden flex-1 justify-center text-center md:flex">
+        <div className="flex-1 flex justify-center text-center">
           <div className="flex flex-col w-full items-center">
             <h1 className="text-3xl font-extrabold text-green-700 xl:text-4xl">
               Login
@@ -90,8 +93,8 @@ const Login: React.FC = () => {
                 className="w-full px-5 py-4 text-sm font-medium placeholder-gray-500 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white"
                 type="text"
                 placeholder="Please enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={account}
+                onChange={(e) => setAccount(e.target.value)}
               />
 
               <div className="relative">
@@ -114,9 +117,8 @@ const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`flex items-center justify-center w-full py-4 mt-2 font-semibold tracking-wide text-white transition-all duration-300 ease-in-out rounded-lg focus:outline-none focus:shadow-lg ${
-                  loading ? "bg-gray-500" : "bg-green-700 hover:bg-green-900"
-                }`}
+                className={`flex items-center justify-center w-full py-4 mt-2 font-semibold tracking-wide text-white transition-all duration-300 ease-in-out rounded-lg focus:outline-none focus:shadow-lg ${loading ? "bg-gray-500" : "bg-green-700 hover:bg-green-900"
+                  }`}
               >
                 {loading ? "Đang xử lý..." : "Login"}
               </button>
@@ -129,7 +131,6 @@ const Login: React.FC = () => {
                   Forgot password?
                 </Link>
               </div>
-
               <p className="mt-4 text-sm text-center text-gray-600">
                 Don't have an account?{" "}
                 <Link to="/register">
@@ -137,6 +138,8 @@ const Login: React.FC = () => {
                 </Link>
               </p>
             </form>
+
+            <GoogleLoginButton />
           </div>
         </div>
       </div>
