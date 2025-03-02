@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import '../../styles/global.css';
 import { LucideSearch } from "lucide-react";
+import AuthButton from "@/component/Auth/AuthButton";
 // import { LucideSearch, LucidePhone, LucideUser } from "lucide-react";
 
 const Header: React.FC = () => {
@@ -41,10 +42,11 @@ const Header: React.FC = () => {
           {/* <LucidePhone /> */}
           <span>Hỗ trợ khách hàng</span>
         </Button>
-        <Button variant="ghost" className="flex items-center text-white space-x-2">
+        {/* <Button variant="ghost" className="flex items-center text-white space-x-2"> */}
           {/* <LucideUser /> */}
-          <span>Login / Sign up</span>
-        </Button>
+          {/* <span>Login / Sign up</span> */}
+        {/* </Button>*/}
+        <AuthButton/>
       </div>
 
     </header>
