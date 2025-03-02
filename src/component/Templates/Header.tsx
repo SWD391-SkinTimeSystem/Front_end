@@ -4,9 +4,12 @@ import { Input } from "@/components/ui/input";
 import '../../styles/global.css';
 import { LucideSearch } from "lucide-react";
 import AuthButton from "@/component/Auth/AuthButton";
+import { useNavigate } from "react-router-dom";
+
 // import { LucideSearch, LucidePhone, LucideUser } from "lucide-react";
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
   return (
      <>
     <header className="flex items-center justify-between px-6 py-4 shadow-md HeaderBackground">
@@ -35,7 +38,7 @@ const Header: React.FC = () => {
 
       {/* Action buttons */}
       <div className="flex items-center space-x-4">
-        <Button variant="outline" className="skinCheck border-purple-600">
+        <Button variant="outline" onClick={() => navigate('/question')} className="skinCheck border-purple-600">
           Skin Check
         </Button>
         <Button variant="ghost" className="flex items-center space-x-2 text-white">
