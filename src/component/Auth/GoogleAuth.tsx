@@ -1,9 +1,9 @@
 import { GoogleLogin } from "@react-oauth/google";
 import  authService  from "@/services/authService";
-import { useAuthStore } from "@/store/authStore";
+// import { useAuthStore } from "@/store/authStore";
 
 const GoogleLoginButton = () => {
-  const setAuth = useAuthStore((state) => state.setAuth);
+  // const setAuth = useAuthStore((state) => state.setAuth);
 
   const handleSuccess = async (response: any) => {
     try {
