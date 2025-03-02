@@ -8,6 +8,7 @@ import ServiceDetail from './component/Pages/ServiceDetail';
 import { ServiceList } from "./component/Pages/ServiceList";
 import Appointment from "./component/Pages/Appointment";
 import AppointmentDetail from "./component/Pages/AppointmentDetail";
+import FeedbackPage from "./component/Pages/Feedback";
 
 
 
@@ -21,6 +22,8 @@ const App = () => {
             <Route path="" element={<ServiceList />} />
             <Route path="/account/appointment-list" element={<Appointment/>} />
             <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} />
+            <Route path="/account/feedback/:id" element={<FeedbackPage />} />
+
           </Route>
         </Routes>
       </Router>
