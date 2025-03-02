@@ -133,6 +133,14 @@ const AppointmentDetailPage: React.FC = () => {
           </div>
           <div className="grid place-items-end mt-3">
             {renderActionButtons()}
+            <div className="flex gap-5">
+              <Button  variant="secondary" className="text-emerald-700">
+                Hủy lịch hẹn
+              </Button>
+              <Button className="bg-emerald-700">
+                Đổi lịch
+              </Button>
+            </div>
           </div>
           <motion.div
             initial={{ height: 0, opacity: 0 }}
