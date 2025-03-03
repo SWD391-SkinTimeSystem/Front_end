@@ -4,7 +4,8 @@ interface ListServicesProps {
   services: Service[];
 }
 
-const ListServices = ({ services }: ListServicesProps) => {
+const ListServices = ({ services = [] }: ListServicesProps) => {
+  console.log(services)
   return (
     <div className="grid grid-cols-3 gap-4">
       {services.map((service) => (

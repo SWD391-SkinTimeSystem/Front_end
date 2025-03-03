@@ -8,11 +8,15 @@ export const serviceService = {
      getListServices : async () => {
           const response = await axiosInstance.get(`${API_URL}`);
           if(response.data.success) {
+
                return response.data.data;
           }else {
                throw new Error(response.data.message);
           }
      },
+
+    
+        
      getService : async (id: string) => {
           const response = await axiosInstance.get(`${API_URL}/${id}`);
           return response.data;

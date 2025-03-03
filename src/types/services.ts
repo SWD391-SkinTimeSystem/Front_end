@@ -5,12 +5,14 @@ export type Service = {
      duration: number;       // Giá dịch vụ
      thumbnail: string;    // Thời gian thực hiện (phút)
      price?: number;   // Loại dịch vụ (tuỳ chọn)
-     serviceDetails?: ServiceDetail[];   // Ảnh minh họa (tuỳ chọn)
+     serviceDetails?: ServiceDetailType[];   // Ảnh minh họa (tuỳ chọn)
+     // serviceImages: [],
+     // feedbacks: null
 
 };
 
 
-type ServiceDetail = {
+export type ServiceDetailType = {
      id: string;          // Mã dịch vụ
      name: string;
      description: string;

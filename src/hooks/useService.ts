@@ -21,6 +21,31 @@ export const useService = () => {
      useEffect(() => {
           fetchServices();
      }, []);
+ 
+
+     return { services, loading, error };
+
+}
+
+export const useServiceDetail = (id : string) => {
+     const [services, setServices] = useState<Service[]>([]);
+     const [loading, setLoading] = useState<boolean>(true);
+     const [error, setError] = useState<string | null>(null);
+
+     const fetchServices = async () => {
+          try {
+               const data = await serviceService.getService(id);
+               setServices(data);
+          } catch (error) {
+               setError("failed to fetch services");
+          } finally {
+               setLoading(false);
+          }
+     }
+
+     useEffect(() => {
+          fetchServices();
+     }, []);
 
      return { services, loading, error };
 

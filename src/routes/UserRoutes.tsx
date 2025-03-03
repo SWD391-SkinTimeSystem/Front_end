@@ -12,8 +12,17 @@ const TicketDetail = lazy(() => import("@/component/Pages/TicketDetail"));
 const EventList = lazy(() => import("@/component/Pages/EventList"));
 const EventDetail = lazy(() => import("@/component/Pages/EventDetail"));
 const DisplayServiceList = lazy(() =>
-     import("@/features/services").then((module) => ({ default: module.DisplayServiceList }))
-);
+     import("@/features/services").then((module) => ({
+       default: module.DisplayServiceList,
+     }))
+   );
+   
+   const DisplayServiceDetail= lazy(() =>
+     import("@/features/services").then((module) => ({
+       default: module.DisplayServiceDetail,
+     }))
+   );
+   
 
 const Loading = () => <h1>Loading...</h1>;
 
@@ -22,8 +31,8 @@ const UserRoutes: React.FC = () => {
           <Layout>
                <Suspense fallback={<Loading />}>
                     <Routes>
-                         <Route path="service-detail" element={<ServiceDetail />} />
-                         <Route path="" element={<ServiceList />} />
+                         <Route path="service-detail/:id" element={<DisplayServiceDetail />} />
+                         <Route path="" element={<DisplayServiceList />} />
                          <Route path="/account/appointment-list" element={<Appointment />} />
                          <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} />
                          <Route path="*" element={<h1>Not Found</h1>} />
