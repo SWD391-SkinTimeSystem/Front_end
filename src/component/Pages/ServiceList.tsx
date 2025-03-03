@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { CalendarDays, LucideSearch } from "lucide-react";
 import ServiceCard from "../Molecules/ServiceCard";
 import { Service } from "@/types/services";
-import { useEffect, useState } from "react";
 
 interface ListServicesProps {
      services: Service[];

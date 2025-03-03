@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { Route, Routes } from 'react-router-dom';
 import Layout from '@/component/Templates/Layout';
-
 const ServiceDetail = lazy(() => import("@/component/Pages/ServiceDetail"));
 const ServiceList = lazy(() => import("@/component/Pages/ServiceList"));
 const Appointment = lazy(() => import("@/component/Pages/Appointment"));
@@ -22,7 +21,7 @@ const DisplayServiceList = lazy(() =>
        default: module.DisplayServiceDetail,
      }))
    );
-   
+   // testcommitdane
 
 const Loading = () => <h1>Loading...</h1>;
 

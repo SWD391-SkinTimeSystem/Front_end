@@ -15,7 +15,7 @@ export const DisplayServiceList = () => {
     // return <ListServices services={services || []} />;
 
 };
-
+// testcommitdane
 export const DisplayServiceDetail = () => {
   const { serviceId } = useParams();
   console.log(serviceId)

@@ -25,7 +25,7 @@ export const useService = () => {
 
      return { services, loading, error };
 
-}
+}// testcommitdane
 
 export const useServiceDetail = (id : string) => {
      const [services, setServices] = useState<Service[]>([]);

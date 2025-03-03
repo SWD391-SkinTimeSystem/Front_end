@@ -20,7 +20,6 @@ import CommentItem from "../Atoms/Comment";
 // const ServiceDetail = ({ serviceId } : ServiceIdProps) => {
   const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, serviceId }) => {
     
-  // const { id } = useParams(); // Lấy ID từ URL
   const [timeLeft, setTimeLeft] = useState(45 * 60 + 6);
 
   useEffect(() => {

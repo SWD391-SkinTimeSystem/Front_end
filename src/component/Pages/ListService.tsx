@@ -3,7 +3,7 @@ import { Service } from '@/types/services';
 interface ListServicesProps {
   services: Service[];
 }
-
+// testcommitdane
 const ListServices = ({ services = [] }: ListServicesProps) => {
   console.log(services)
   return (
