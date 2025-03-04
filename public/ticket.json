@@ -1,0 +1,36 @@
+[
+    {
+      "id": "1",
+      "eventTitle": "Workshop Chăm Sóc Da Cơ Bảnn",
+      "eventDescription": "Khám phá bí quyết chăm sóc da từ chuyên gia.",
+      "date": "2025-03-10",
+      "time": "14:00",
+      "location": "Hà Nội",
+      "ticketNumber": "A12345",
+      "status": "paid",
+      "qrCodeUrl": "https://via.placeholder.com/100?text=QR+1"
+    },
+    {
+      "id": "2",
+      "eventTitle": "Talkshow: Bí Quyết Chăm Sóc Da",
+      "eventDescription": "Giao lưu trực tiếp và nhận chia sẻ bổ ích.",
+      "date": "2025-03-15",
+      "time": "18:00",
+      "location": "TP. Hồ Chí Minh",
+      "ticketNumber": "B67890",
+      "status": "checked-in",
+      "qrCodeUrl": "https://via.placeholder.com/100?text=QR+2"
+    },
+    {
+      "id": "3",
+      "eventTitle": "Seminar Chuyên Đề Dưỡng Da",
+      "eventDescription": "Học kỹ thuật dưỡng da hiện đại.",
+      "date": "2025-04-01",
+      "time": "10:00",
+      "location": "Đà Nẵng",
+      "ticketNumber": "C98765",
+      "status": "expired",
+      "qrCodeUrl": "https://via.placeholder.com/100?text=QR+3"
+    }
+  ]
+  

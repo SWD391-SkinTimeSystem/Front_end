@@ -11,8 +11,15 @@ import { useEffect, useState } from "react";
 import RatingCard from "../Atoms/Rating";
 import CommentItem from "../Atoms/Comment";
 
-const ServiceDetail = () => {
-  // const { id } = useParams(); // Lấy ID từ URL
+   interface ServiceDetailProps {
+    service?: ServiceDetailType;  
+    serviceId?: string;
+  }
+  
+
+// const ServiceDetail = ({ serviceId } : ServiceIdProps) => {
+  const ServiceDetail: React.FC<ServiceDetailProps> = ({ service, serviceId }) => {
+    
   const [timeLeft, setTimeLeft] = useState(45 * 60 + 6);
 
   useEffect(() => {
@@ -20,7 +27,9 @@ const ServiceDetail = () => {
     const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
-
+  if (!service) {
+    return <h1>Service with ID {serviceId} not found</h1>;
+  }
   return (
     <>
       <div className="flex flex-row">

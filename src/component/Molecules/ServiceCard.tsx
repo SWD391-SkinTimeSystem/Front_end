@@ -2,22 +2,40 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Phone, User, Clock, CalendarDays } from "lucide-react";
 import "../../styles/global.css";
-export default function ServiceCard() {
+import { Service } from "@/types/services";
+import { useNavigate } from "react-router-dom";
+import { formatCurrency } from "@/lib/utils";
+
+
+interface ServicesProps {
+     services: Service;
+   }
+export default function ServiceCard({ services }: ServicesProps) {
+  const navigate = useNavigate(); 
+
+  const handleViewDetails = (serviceId: string) => {
+    console.log(`Xem chi tiết dịch vụ với serviceId: ${serviceId}`);
+    navigate(`service-detail/${serviceId}`);
+  };
+  const handleViewBooking = () => {
+    navigate(`booking`);
+  };
   return (
     <Card className="border shadow-none rounded-none mt-3]">
       {/* Header */}
       <div className="p-4">
         <p className="text-[10px] text-gray-500">Thẩm mỹ không xâm lấn</p>
-        <h2 className="text-lg font-semibold text-gray-900">
-          Mesoderm Giảm Thâm Nám (F-Melaclear)
+        <h2 className="text-lg font-semibold text-gray-900" onClick={() => handleViewDetails(services.id)}>
+      {services.serviceName}
         </h2>
       </div>
 
       {/* Image */}
       <img
-        src="https://media.hcdn.vn/catalog/product/m/e/meso_f-melaclear_gi_m_th_m_n_m-1709197792_img_380x380_64adc6_fit_center.jpg"
+        src={services.thumbnail}
         alt="Mesoderm Giảm Thâm Nám"
         className="w-full h-[250px]"
+        onClick={() => handleViewDetails(services.id)}
       />
 
       {/* Info */}
@@ -35,7 +53,8 @@ export default function ServiceCard() {
 
         {/* Giá & Thời gian */}
         <div className="flex items-center justify-between">
-          <p className="text-xl font-bold text-orange-600">700.000 đ</p>
+          <p className="text-xl font-bold text-orange-600">{formatCurrency(Number(services.price))
+          }</p>
           <div className="flex items-center justify-between">
             <Clock size={16}/>
             <p className="text-gray-500 text-sm m-2"> 1 lần | 65 phút</p>
@@ -45,8 +64,7 @@ export default function ServiceCard() {
 
         {/* Mô tả */}
         <p className="text-gray-600 text-sm">
-          Meso F-Melaclear Giảm Thâm Nám mang đến giải pháp điều trị an toàn,
-          hiệu quả và không cần xâm lấn.
+        {services.description}
         </p>
 
         {/* Buttons */}
@@ -55,7 +73,7 @@ export default function ServiceCard() {
             <Phone size={16} className="mr-1" /> 1800 6324 <br/>Nhấn phím 2
 
           </Button>
-          <Button className="bg-orange-500 text-white flex-1">
+          <Button className="bg-orange-500 text-white flex-1" onClick={() => handleViewBooking()}>
             <CalendarDays size={17} />Đặt hẹn</Button>
         </div>
       </CardContent>
