@@ -15,7 +15,7 @@ export default function ServiceCard({ services }: ServicesProps) {
 
   const handleViewDetails = (serviceId: string) => {
     console.log(`Xem chi tiết dịch vụ với serviceId: ${serviceId}`);
-    navigate(`service-detail/${serviceId}`);
+    navigate(`/service-detail/${serviceId}`);
   };
   const handleViewBooking = () => {
     navigate(`booking`);

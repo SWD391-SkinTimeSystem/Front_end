@@ -20,3 +20,12 @@ export type ServiceDetailType = {
      duration: number;
      dateToNextStep: number;
 };
+
+export type Feedback = {
+     review_id: string;
+     user_id: string;
+     username: string;
+     rating: number;
+     review: string;
+     date: Date;
+};

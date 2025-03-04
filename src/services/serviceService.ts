@@ -19,7 +19,8 @@ export const serviceService = {
         // testcommitdane
      getService : async (id: string) => {
           const response = await axiosInstance.get(`${API_URL}/${id}`);
-          return response.data;
+          console.log("lỗi ở serviceService",  response.data )
+          return response.data.serviceDetails;
      },
      createService : async (service: Service) => {
           const response = await axiosInstance.post(`${API_URL}`, service);
@@ -31,6 +32,11 @@ export const serviceService = {
      },
      deleteService : async (id: string) => {
           const response = await axiosInstance.delete(`${API_URL}/${id}`);
+          return response.data;
+     },
+         
+     getFeedback : async (id: string) => {
+          const response = await axiosInstance.get(`/feedback/service/${id}`);
           return response.data;
      }
 }

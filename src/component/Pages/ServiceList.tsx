@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { CalendarDays, LucideSearch } from "lucide-react";
 import ServiceCard from "../Molecules/ServiceCard";
 import { Service } from "@/types/services";
+import { useNavigate } from "react-router-dom";
 
 interface ListServicesProps {
      services: Service[];
@@ -11,7 +12,7 @@ interface ListServicesProps {
 
 export default function ServiceList({ services = [] }: ListServicesProps) {
      console.log("Services in ServiceList:", services);
-
+const navigate = useNavigate()
      return (
           <>
                <div>
@@ -68,7 +69,11 @@ export default function ServiceList({ services = [] }: ListServicesProps) {
                                                        <span className="text-xs">21/12/2025</span>
                                                   </div>
                                                   <p className="mt-2 text-sm text-gray-700 hover:text-orange-500 cursor-pointer">{service.serviceName}</p>
-                                                  <Button variant="ghost" className="text-xs text-orange-500">Xem chi tiết</Button>
+                                                  <Button 
+                                                       variant="ghost" 
+                                                       className="text-xs text-orange-500"
+                                                       onClick={() => navigate(`/service-detail/${service.id}`)}
+                                                  >Xem chi tiết</Button>
                                              </CardContent>
                                         </Card>
                                    ))}

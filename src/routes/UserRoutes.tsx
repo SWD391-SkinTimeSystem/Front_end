@@ -15,13 +15,6 @@ const DisplayServiceList = lazy(() =>
        default: module.DisplayServiceList,
      }))
    );
-   
-   const DisplayServiceDetail= lazy(() =>
-     import("@/features/services").then((module) => ({
-       default: module.DisplayServiceDetail,
-     }))
-   );
-   // testcommitdane
 
 const Loading = () => <h1>Loading...</h1>;
 
@@ -30,7 +23,7 @@ const UserRoutes: React.FC = () => {
           <Layout>
                <Suspense fallback={<Loading />}>
                     <Routes>
-                         <Route path="service-detail/:id" element={<DisplayServiceDetail />} />
+                         <Route path="/service-detail/:serviceId" element={<ServiceDetail />} />
                          <Route path="" element={<DisplayServiceList />} />
                          <Route path="/account/appointment-list" element={<Appointment />} />
                          <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} />
