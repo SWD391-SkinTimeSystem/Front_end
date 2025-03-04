@@ -1,75 +1,34 @@
 import { Button } from "@/components/ui/button";
+import { Question } from "@/types/question";
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { questionService } from "@/services/questionService";
+import { useNavigate } from "react-router-dom";
 
-const questions = [
-  {
-    question: "What is JSX in React?",
-    options: [
-      "A syntax extension for JavaScript that allows writing HTML-like code in JavaScript",
-      "A state management library for React applications",
-      "A build tool for bundling React applications",
-      "A testing framework for React components",
-    ],
-  },
-  {
-    question: "React components must always return a single JSX element.",
-    options: ["True", "False"],
-  },
-  {
-    question: "What is the purpose of React components?",
-    options: [
-      "To structure and organize UI elements",
-      "To manage backend logic",
-      "To replace the need for HTML and CSS",
-      "To directly manipulate the DOM",
-    ],
-  },
-  {
-    question: "What is the purpose of React components?",
-    options: [
-      "To structure and organize UI elements",
-      "To manage backend logic",
-      "To replace the need for HTML and CSS",
-      "To directly manipulate the DOM",
-    ],
-  },
-  {
-    question: "What is the purpose of React components?",
-    options: [
-      "To structure and organize UI elements",
-      "To manage backend logic",
-      "To replace the need for HTML and CSS",
-      "To directly manipulate the DOM",
-    ],
-  },
-  {
-    question: "What is the purpose of React components?",
-    options: [
-      "To structure and organize UI elements",
-      "To manage backend logic",
-      "To replace the need for HTML and CSS",
-      "To directly manipulate the DOM",
-    ],
-  },
+interface ListQuestionProps {
+  questions: Question[];
+}
 
-  {
-    question: "What is JSX in React?",
-    options: [
-      "A syntax extension for JavaScript that allows writing HTML-like code in JavaScript",
-      "A state management library for React applications",
-      "A build tool for bundling React applications",
-      "A testing framework for React components",
-    ],
-  },
-];
-
-export default function QuizQuestion() {
+export default function QuizQuestion({ questions }: ListQuestionProps): JSX.Element {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [timeLeft, setTimeLeft] = useState(180);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-
+  const [userAnswers, setUserAnswers] = useState<string[]>(new Array(questions.length).fill(""));
+  const [userId, setUserId] = useState<string | null>(null);
+  const navigate  = useNavigate();
   useEffect(() => {
+    // Lấy userId từ localStorage
+    const storedUser = localStorage.getItem("user");
+    console.log("Stored user ID:", storedUser);
+    // if (storedUser) setUserId(storedUser);
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser); // Chuyển chuỗi JSON thành object
+        setUserId(parsedUser.id); // Lưu userId
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
@@ -78,6 +37,15 @@ export default function QuizQuestion() {
   }, [currentQuestion]);
 
   const handleNext = () => {
+    if (selectedOption !== null) {
+      const selectedOptionId = questions[currentQuestion].questionOptions[selectedOption].id;
+      setUserAnswers((prevAnswers) => {
+        const newAnswers = [...prevAnswers];
+        newAnswers[currentQuestion] = selectedOptionId;
+        return newAnswers;
+      });
+    }
+
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
       setTimeLeft(180);
@@ -85,8 +53,31 @@ export default function QuizQuestion() {
     }
   };
 
-  const handleQuestionSelect = (index:number) => {
-    setCurrentQuestion(index);
+  const handleSubmit = async () => {
+    if (!userId) {
+      alert("User ID không tồn tại!");
+      return;
+    }
+
+    const questionResponse = {
+      userId,
+      resultIds: userAnswers.filter((id) => id !== ""), // Lọc bỏ câu chưa trả lời
+    };
+    console.log(questionResponse);
+    console.log("Question Response JSON:", JSON.stringify(questionResponse, null, 2));
+
+    try {
+      console.log("📤 Sending JSON to API:", JSON.stringify(questionResponse, null, 2));
+      const response = await questionService.doQuestion(questionResponse);
+      console.log("Response from API:", response);
+      console.log("✅ API Response:", response.data);
+      localStorage.setItem("questionResult", JSON.stringify(response));
+      navigate("/Result");
+      // alert("Quiz submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      // alert("Failed to submit quiz.");
+    }
   };
 
   return (
@@ -115,14 +106,10 @@ export default function QuizQuestion() {
           {questions.map((q, index) => (
             <li
               key={index}
-              className={
-                index === currentQuestion
-                  ? "text-emerald-700 font-bold cursor-pointer"
-                  : "text-gray-600 cursor-pointer"
-              }
-              onClick={() => handleQuestionSelect(index)}
+              className={index === currentQuestion ? "text-emerald-700 font-bold cursor-pointer" : "text-gray-600 cursor-pointer"}
+              onClick={() => setCurrentQuestion(index)}
             >
-              {index + 1}. {q.question}
+              {index + 1}. {q.content}
             </li>
           ))}
         </ul>
@@ -132,10 +119,10 @@ export default function QuizQuestion() {
       <main className="w-3/4 p-10 mx-auto">
         <div className="p-10 w-[80%] my-[100px] mx-auto">
           <h1 className="text-[30px] font-bold text-gray-800">
-            {questions[currentQuestion].question}
+            {questions[currentQuestion].content}
           </h1>
           <div className="mt-6 space-y-4">
-            {questions[currentQuestion].options.map((option, index) => (
+            {questions[currentQuestion].questionOptions.map((option, index) => (
               <label key={index} className="flex text-[18px] items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
@@ -146,40 +133,34 @@ export default function QuizQuestion() {
                 />
                 <div
                   className={`w-6 h-6 flex items-center justify-center border-2 rounded-full transition-colors ${
-                    selectedOption === index
-                      ? "border-emerald-700 bg-emerald-700"
-                      : "border-gray-400"
+                    selectedOption === index ? "border-emerald-700 bg-emerald-700" : "border-gray-400"
                   }`}
                 >
                   {selectedOption === index && <div className="w-3 h-3 bg-white rounded-full"></div>}
                 </div>
-                <span>{option}</span>
+                <span>{option.content}</span>
               </label>
             ))}
           </div>
-         
-            {
-              currentQuestion === questions.length - 1 ? (
-                <Button
-                  onClick={() => alert("Quiz completed!")}
-                  className="mt-6 px-6 py-3 rounded-lg flex items-center gap-2 font-semibold bg-emerald-700 text-white"
-                >
-                  Submit
-                </Button>
-              ) : (
-                <Button
-                onClick={handleNext}
-                disabled={selectedOption === null || currentQuestion === questions.length - 1}
-                className={`mt-6 px-6 py-3 rounded-lg flex items-center gap-2 font-semibold ${
-                  selectedOption === null || currentQuestion === questions.length - 1
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-emerald-700 text-white"
-                }`}
-              >
-                Next <ArrowRight size={18} />
-              </Button>
-              )
-            }
+
+          {currentQuestion === questions.length - 1 ? (
+            <Button
+              onClick={handleSubmit}
+              className="mt-6 px-6 py-3 rounded-lg flex items-center gap-2 font-semibold bg-emerald-700 text-white"
+            >
+              Submit
+            </Button>
+          ) : (
+            <Button
+              onClick={handleNext}
+              disabled={selectedOption === null}
+              className={`mt-6 px-6 py-3 rounded-lg flex items-center gap-2 font-semibold ${
+                selectedOption === null ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-emerald-700 text-white"
+              }`}
+            >
+              Next <ArrowRight size={18} />
+            </Button>
+          )}
         </div>
       </main>
     </div>
