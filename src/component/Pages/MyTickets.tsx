@@ -1,22 +1,10 @@
-import React, { useState, useEffect } from "react";
+
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTicket } from "@/hooks/useTicket"; 
+import { Ticket } from "@/types/ticket";
 
-type TicketStatus = "paid" | "checked-in" | "no-refund" | "refunded" | "canceled" | "used" | "expired";
-
-
-interface Ticket {
-  id: string;
-  eventTitle: string;
-  eventDescription: string;
-  date: string;
-  time: string;
-  location: string;
-  ticketNumber: string;
-  status: TicketStatus;
-  qrCodeUrl?: string;
-}
-//kkkkkkkk
-const getStatusLabel = (status: TicketStatus) => {
+const getStatusLabel = (status: string) => {
   switch (status) {
     case "paid":
       return { label: "Đã thanh toán", color: "bg-blue-500" };
@@ -38,37 +26,23 @@ const getStatusLabel = (status: TicketStatus) => {
 };
 
 const MyTickets: React.FC = () => {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { tickets, loading, error } = useTicket("");
   const navigate = useNavigate();
 
-
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const res = await fetch("/ticket.json");
-        const data = await res.json();
-        
-        setTimeout(() => {
-          setTickets(data);
-          setIsLoading(false);
-        }, 800);
-        
-      } catch (error) {
-        console.error("Lỗi khi tải vé:", error);
-      }
-    };
-  
-    fetchTickets();
-  }, []);
-  
-
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <span className="text-green-600 text-xl font-medium">
           Đang tải danh sách vé...
         </span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="text-red-600 text-xl font-medium">{error}</span>
       </div>
     );
   }
@@ -86,7 +60,7 @@ const MyTickets: React.FC = () => {
             Bạn chưa mua vé nào.
           </p>
         ) : (
-          tickets.map((ticket) => {
+          tickets.map((ticket: Ticket) => {
             const { label, color } = getStatusLabel(ticket.status);
             return (
               <div
@@ -102,12 +76,13 @@ const MyTickets: React.FC = () => {
                     />
                   </div>
                 )}
-
                 <div className="flex-1">
                   <h2 className="text-2xl font-semibold text-green-700">
                     {ticket.eventTitle}
                   </h2>
-                  <p className="mt-1 text-gray-600">{ticket.eventDescription}</p>
+                  <p className="mt-1 text-gray-600">
+                    {ticket.eventDescription}
+                  </p>
                   <div className="mt-2 space-y-1">
                     <div className="flex items-center">
                       <span className="font-medium text-green-600 mr-2">
@@ -147,9 +122,9 @@ const MyTickets: React.FC = () => {
                     </div>
                   </div>
                 </div>
-
-                <button className="ml-4 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-600"
-                 onClick={() => navigate(`/ticket-detail/${ticket.id}`)}
+                <button
+                  className="ml-4 px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-600"
+                  onClick={() => navigate(`/ticket-detail/${ticket.id}`)}
                 >
                   Chi tiết
                 </button>
@@ -159,7 +134,7 @@ const MyTickets: React.FC = () => {
         )}
       </div>
     </div>
-  );
+  );                                                                                     
 };
 
 export default MyTickets;
