@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 interface ExpenseCardProps {
   title: string;
-  amount: string;
+  amount: any;
   percentage: number;
   icon: React.ReactNode;
   unit: string;
