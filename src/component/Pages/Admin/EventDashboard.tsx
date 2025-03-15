@@ -1,13 +1,13 @@
 import { ChartData } from '@/component/Molecules/BarChart';
 import ExpenseCard from '@/component/Molecules/StatisticsCard';
 import { TableData } from '@/component/Molecules/TableCard';
-import { useDashboard } from '@/hooks/useDashboard';
+import { useEventDashboard } from '@/hooks/useDashboard';
 import { DollarSign } from 'lucide-react';
 import React from 'react';
 
-const ServiceDashboard: React.FC = () => {
-     const { revenueData, bookingStatus, overviewData, loading, error } = useDashboard("","");
-     const newestRevenueData = revenueData ? revenueData.at(-1) : null;
+const EventDashboard: React.FC = () => {
+    //  const { revenueData, bookingStatus, overviewData, loading, error } = useDashboard("","");
+    const {eventDashboard, eventStatusDashboard, loading, error} = useEventDashboard("","");
           if (loading) return <p>Loading...</p>;
           if (error ) return <p>Error</p>;
      
@@ -16,30 +16,28 @@ const ServiceDashboard: React.FC = () => {
                <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                     <div className="grid auto-rows-min gap-4 md:grid-cols-5">
                          <div className="aspect-video rounded-xl bg-muted/50">
-                              <ExpenseCard title="Tổng doanh thu" amount={newestRevenueData?.total_revenue} percentage={0} icon={<DollarSign />} unit='VND' />
+                              <ExpenseCard title="Tổng doanh thu" amount={eventDashboard?.total_revenue} percentage={0} icon={<DollarSign />} unit='VND' />
                          </div>
                          <div className="aspect-video rounded-xl bg-muted/50" >
-                              <ExpenseCard title="Tổng đặt trong ngày" amount={overviewData?.total_booking} percentage={12} icon={<DollarSign />} unit='đơn' />
+                              <ExpenseCard title="Tổng số vé đã bán trong ngày" amount={eventDashboard?.total_ticket_sold} percentage={12} icon={<DollarSign />} unit='vé' />
                          </div>
                          <div className="aspect-video rounded-xl bg-muted/50" >
-                              <ExpenseCard title="Dịch vụ đã hoàn thành" amount={bookingStatus?.Completed} percentage={12} icon={<DollarSign />} unit='Dịch vụ' />
+                              <ExpenseCard title="Sự kiện đã hoàn thành" amount={eventStatusDashboard?.Completed} percentage={12} icon={<DollarSign />} unit='Sự kiện' />
                          </div>
                          <div className="aspect-video rounded-xl bg-muted/50" >
-                              <ExpenseCard title="Dịch vụ đã hủy" amount={bookingStatus?.Canceled} percentage={12} icon={<DollarSign />} unit='Dịch vụ' />
+                              <ExpenseCard title="Sự kiện đã hủy" amount={eventStatusDashboard?.Canceled} percentage={12} icon={<DollarSign />} unit='Sự kiện' />
                          </div>
                          <div className="aspect-video rounded-xl bg-muted/50" >
-                              <ExpenseCard title="Khách hàng mới" amount={overviewData?.new_customer} percentage={12} icon={<DollarSign />} unit='Người' />
+                              <ExpenseCard title="Sự kiện sắp tới" amount={eventDashboard?.upcoming_event} percentage={12} icon={<DollarSign />} unit='Sự kiện' />
                          </div>
 
                     </div>
                     <div className="grid auto-rows-min gap-4 md:grid-cols-2">
                          <div className="aspect-video rounded-xl bg-muted/50">
-                              <ChartData />
+                              {/* <ChartData /> */}
                          </div>
                          <div className="aspect-video rounded-xl grid  gap-4">
-                              {/* <ChartData /> */}
                               <TableData />
-                              
                          </div>
                     </div>
 
@@ -48,4 +46,4 @@ const ServiceDashboard: React.FC = () => {
      );
 };
 
-export default ServiceDashboard;
+export default EventDashboard;

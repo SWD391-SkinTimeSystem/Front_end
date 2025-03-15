@@ -30,6 +30,7 @@
     "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@react-oauth/google": "^0.12.1",
+    "@types/material-ui": "^0.21.18",
     "@schedule-x/events-service": "^2.21.2",
     "@schedule-x/react": "^2.21.3",
     "@schedule-x/theme-default": "^2.21.2",

@@ -146,7 +146,7 @@ const data = {
         },
         {
           title: "Sự kiện",
-          url: "#",
+          url: "/admin/so-lieu/su-kien",
           roles: ["admin", "manager"],
         },
        
