@@ -57,6 +57,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeCha
      const availableSlots = availableTime?.[selectedDate] ?? {}; // Tránh lỗi undefined
      // nếu không có availableSlot thì sẽ hiển thị theo data.data[timetime]
      console.log(data)
+     console.log(disable)
      return (
           <Card className="p-4">
                <div className="flex flex-row items-center mb-4">
@@ -80,8 +81,8 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeCha
                          <Button disabled={disable}
                               key={day.date}
                               className={cn( 
-                                   "w-[150px] text-sm font-medium py-5",
-                                   selectedDate === day.date ? "bg-orange-500" : "bg-gray-200"
+                                   "w-[150px] text-sm font-medium py-5 hover:bg-orange-500 hover:text-white",
+                                   selectedDate === day.date ? "bg-orange-500" : "bg-blue-200 text-blue-800"
                               )}
                               onClick={() => {
                                    onDateChange(day.date)
@@ -102,21 +103,24 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeCha
                               ?? data?.data?.[time + ":00"]
                               ?? false; return (
                                    <Button
-                                        disabled={disable} // Không cho phép chọn slot bận
-                                        key={time}
-                                        className={cn(
-                                             "px-3 py-2 border rounded-md",
-                                             isAvailable
-                                                  ? (selectedTime === time ? "bg-green-700 text-white" : "bg-green-200 text-green-800")
-                                                  : "cursor-not-allowed"
-                                        )}
-                                        onClick={() => {
-                                             setSelectedTime(time);
-                                             onTimeChange(time);
-                                        }}
-                                   >
-                                        {time}
-                                   </Button>
+                                   disabled={disable || !isAvailable} // Chặn cả khi disable=true hoặc slot bận
+                                   key={time}
+                                   className={cn(
+                                       "px-3 py-2 border rounded-md hover:bg-orange-500 hover:text-white",
+                                       !isAvailable
+                                           ? "bg-gray-300 text-gray-600 cursor-not-allowed" // Slot bận
+                                           : selectedTime === time
+                                               ? "bg-orange-500 text-white" // Slot được chọn
+                                               : "bg-green-200 text-green-800" // Slot rảnh
+                                   )}
+                                   onClick={disable || !isAvailable ? undefined : () => {
+                                       setSelectedTime(time);
+                                       onTimeChange(time);
+                                   }}
+                               >
+                                   {time}
+                               </Button>
+                               
                               );
                     })}
                </div>

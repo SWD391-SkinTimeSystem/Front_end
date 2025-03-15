@@ -1,9 +1,9 @@
 import { ticketService } from '@/services/ticketService';
 import { useState, useEffect } from 'react';
-import { Ticket } from '@/types/ticket';
+import { Ticket, TicketHistory } from '@/types/ticket';
 
 const useCreateTicket = () => {
-  const [ticket, setTicket] = useState(null);
+  const [tickets, setTickets] = useState<TicketHistory[]>([]);
   const [error1, setError1] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -11,16 +11,25 @@ const useCreateTicket = () => {
     setLoading(true);
     try {
       const response = await ticketService.createTicket(paymentRequest);
-      console.log(response.data);
-      setTicket(response.data);
+      return response; 
     } catch (error) {
       setError1(error);
     } finally {
       setLoading(false);
     }
   };
-
-  return { createTicket, ticket, error1, loading };
+  const getTicketByStatus = async (status: string) => {
+    setLoading(true);
+    try {
+      const response = await ticketService.getListTicketsByCustomer(status);
+      setTickets(response.data);
+    } catch (error) {
+      setError1(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  return { createTicket,getTicketByStatus, tickets, error1, loading };
 };
 
 export default useCreateTicket;

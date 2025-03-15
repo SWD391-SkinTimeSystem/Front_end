@@ -20,6 +20,10 @@ export default function ResultPage() {
       console.log("Stored result:", resultData);
     }
   }, []);
+  const handleButtonClick = (id: string) => {
+    navigate(`/service-detail/${id}`);
+
+  }
   return (
     <div className="container mx-auto p-6">
       <div className="text-center">
@@ -58,7 +62,7 @@ export default function ResultPage() {
                     ? "border-orange-500 text-orange-600 bg-white"
                     : "bg-gray-100 hover:bg-white"
                 )}
-                onClick={() => setSelected(service.nameService)}
+                onClick={() => handleButtonClick(service.id)}
               >
                 <span className="text-2xl"></span> {service.nameService}
               </Button>

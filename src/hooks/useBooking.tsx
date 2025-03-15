@@ -13,7 +13,7 @@ export const useBooking = () => {
          const response = await bookingService.createBooking(data);
          return response;
        } catch (err) {
-         setbError(err as Error);
+         setbError(err as Error); 
          throw err;
        } finally {
          setIsLoading(false);

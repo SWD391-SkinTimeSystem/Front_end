@@ -1,18 +1,20 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { matchPath, useLocation } from "react-router-dom";
 import { BreadcrumbDemo } from "../Atoms/Breadcrumbs";
 import "../../styles/global.css";
 import Header from "./Header";
 import { AccountSidebar } from "../Organisms/AccountSidebar";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
+
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
-  const hideSidebar = location.pathname === "/" || location.pathname === "/booking";
+  const hideSidebar = location.pathname === "/" || matchPath("/booking/:serviceId", location.pathname);
   const isAccountPage = location.pathname.startsWith("/account");
   return (
     <>
       <div id="body">
+      
         <Header />
         <div className="w-[80%] mx-auto">
           <div id="breadcrumb" className="pl-[20px] py-3">

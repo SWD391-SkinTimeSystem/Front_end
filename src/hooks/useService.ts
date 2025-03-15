@@ -28,7 +28,7 @@ export const useService = () => {
 }
 
 export const useServiceDetail = (id : string) => {
-     const [serviceDetail, setServiceDetail] = useState<ServiceDetailType[]>([]);
+     const [serviceDetail, setServiceDetail] = useState<Service>();
      const [loading, setLoading] = useState<boolean>(true);
      const [error, setError] = useState<string | null>(null);
 

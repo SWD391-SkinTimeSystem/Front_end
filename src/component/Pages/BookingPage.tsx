@@ -1,9 +1,10 @@
 // src/screens/BookingPage.tsx
-import React, { useState } from "react";
-import { BookingList, BookingItem } from "../../components/ui/bookinglist";
+import React, { useEffect, useState } from "react";
+import { BookingList } from "../../components/ui/bookinglist";
 import { ClockIcon, CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useBooking } from "@/hooks/useCusBooking";
+import useBookingStore from "@/store/store";
 
 const BookingPage: React.FC = () => {
   // Chọn trạng thái hiển thị theo tab
@@ -11,12 +12,17 @@ const BookingPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { bookings, loading, error } = useBooking(activeFilter);
+  const { setBookings, bookingCompleted, bookingNotStarted, bookingCanceled } = useBookingStore();
+
   console.log("Bookings:", bookings);
   const counts = {
     not_started: activeFilter === "NotStarted" ? bookings.length : 0,
     completed: activeFilter === "Completed" ? bookings.length : 0,
     canceled: activeFilter === "Canceled" ? bookings.length : 0,
   };
+  useEffect(() => {
+    setBookings(bookings, activeFilter);
+  }, [bookings, activeFilter, setBookings]);
 
   const handleViewDetails = (id: string) => {
     console.log(`Xem chi tiết lịch hẹn với id: ${id}`);
@@ -41,9 +47,9 @@ const BookingPage: React.FC = () => {
         >
           <ClockIcon className="w-4 h-4 mr-1" />
           <span>Sắp diễn ra</span>
-          <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-            {counts.not_started}
-          </span>
+          {/* <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+            {bookingNotStarted}
+          </span> */}
         </button>
 
         {/* Tab: completed */}
@@ -59,9 +65,9 @@ const BookingPage: React.FC = () => {
         >
           <CheckCircleIcon className="w-4 h-4 mr-1" />
           <span>Đã hoàn thành</span>
-          <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-            {counts.completed}
-          </span>
+          {/* <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+            {bookingCompleted}
+          </span> */}
         </button>
 
         {/* Tab: canceled */}
@@ -77,9 +83,9 @@ const BookingPage: React.FC = () => {
         >
           <XCircleIcon className="w-4 h-4 mr-1" />
           <span>Đã hủy</span>
-          <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-            {counts.canceled}
-          </span>
+          {/* <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+            {bookingCanceled}
+          </span> */}
         </button>
       </div>
 

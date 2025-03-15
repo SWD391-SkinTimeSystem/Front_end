@@ -9,7 +9,7 @@ export type TicketData = {
     status: string;
     qrCodeUrl?: string;
   }
-  export type Ticket = {
+export type Ticket = {
     eventId: string;
     price: number;
     paymentMethod: string;

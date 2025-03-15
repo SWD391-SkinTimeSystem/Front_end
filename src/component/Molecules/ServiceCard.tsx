@@ -12,16 +12,16 @@ interface ServicesProps {
    }
 export default function ServiceCard({ services }: ServicesProps) {
   const navigate = useNavigate(); 
-
+  const serviceId = services.id;
   const handleViewDetails = (serviceId: string) => {
     console.log(`Xem chi tiết dịch vụ với serviceId: ${serviceId}`);
     navigate(`/service-detail/${serviceId}`);
   };
   const handleViewBooking = () => {
-    navigate(`booking`);
+    navigate(`/booking/${serviceId}`);
   };
   return (
-    <Card className="border shadow-none rounded-none mt-3]">
+    <Card className="border shadow-none rounded-none mt-3] cursor-pointer">
       {/* Header */}
       <div className="p-4">
         <p className="text-[10px] text-gray-500">Thẩm mỹ không xâm lấn</p>

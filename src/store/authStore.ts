@@ -2,7 +2,7 @@ import axios from "axios";
 import { create } from "zustand";
 // import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://swd291-api.duckdns.org/api";
+const API_URL = "https://localhost:5063/api";
 
 interface User {
   id: string;
@@ -31,6 +31,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     const userData = localStorage.getItem("user");
     return userData ? JSON.parse(userData) : null; // ⚡ Kiểm tra null trước khi parse
   })(),
+  
 
   setAuth: (accessToken, refreshToken, user) => {
     localStorage.setItem("accessToken", accessToken);

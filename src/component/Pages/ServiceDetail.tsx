@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import RatingCard from "../Atoms/Rating";
 import CommentItem from "../Atoms/Comment";
 import { useService, useServiceDetail } from "@/hooks/useService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
     const ServiceDetail = () => {
     const [activeTab, setActiveTab] = useState("detail");
@@ -29,6 +29,7 @@ import { useParams } from "react-router-dom";
     const selectedService = services.find((s) => s.id === serviceId);
 
     const { serviceDetail, loading, error } = useServiceDetail(serviceId || "");
+    const navigate = useNavigate();
 
     useEffect(() => {
       console.log("Service Detail Updated:", serviceDetail);
@@ -77,7 +78,9 @@ import { useParams } from "react-router-dom";
               </Button>
               <div className="flex gap-2 mt-4">
 
-                <Button className="bg-green-700 text-white flex items-center gap-2 px-4 py-2 rounded-md">
+                <Button className="bg-green-700 text-white flex items-center gap-2 px-4 py-2 rounded-md"
+                        onClick={() => navigate(`/booking/${serviceId}`)}
+                >
                   <CalendarDays size={10} /> <span>Book now</span>
                 </Button>
               </div>

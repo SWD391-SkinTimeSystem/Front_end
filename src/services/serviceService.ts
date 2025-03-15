@@ -20,7 +20,7 @@ export const serviceService = {
      getService : async (id: string) => {
           const response = await axiosInstance.get(`${API_URL}/${id}`);
           console.log("lỗi ở serviceService",  response.data )
-          return response.data.serviceDetails;
+          return response.data.data;
      },
      createService : async (service: Service) => {
           const response = await axiosInstance.post(`${API_URL}`, service);

@@ -5,12 +5,14 @@ import { CalendarDays, LucideSearch } from "lucide-react";
 import ServiceCard from "../Molecules/ServiceCard";
 import { Service } from "@/types/services";
 import { useNavigate } from "react-router-dom";
+import { useEvent } from "@/hooks/useEvent";
 
 interface ListServicesProps {
      services: Service[];
    }
 
 export default function ServiceList({ services = [] }: ListServicesProps) {
+       const { events, loading, error } = useEvent();
      console.log("Services in ServiceList:", services);
 const navigate = useNavigate()
      return (
@@ -36,15 +38,6 @@ const navigate = useNavigate()
 
                               {/* Input giá */}
                               <div className="relative w-full max-w-md">
-                                   <Input
-                                        type="text"
-                                        placeholder="Loại da ..."
-                                        className="pl-5 rounded-2xl bg-white"
-                                   />
-                                   <LucideSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-
-                              </div> 
-                              <div className="relative w-full max-w-md">
                                    <Input type="text" placeholder="Loại da ..." className="pl-5 rounded-2xl bg-white" />
                                    <LucideSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                               </div>
@@ -55,12 +48,34 @@ const navigate = useNavigate()
 
                               {/* Danh sách bài viết */}
                               <div className="mt-3 space-y-4">
-                                   {services.map((service) => (
-                                        <Card key={service.id} className="shadow-none border-none">
+                              {
+                                   events.map((event) => (
+                                        <Card key={event.event_id} className="shadow-none border-none">
                                              <CardContent className="p-0 relative">
                                                   <img
-                                                       src={service.thumbnail}
-                                                       alt={service.serviceName}
+                                                       src={event.image_url}
+                                                       alt={event.title}
+                                                       className="rounded-md w-full object-cover"
+                                                  />
+                                                  <div className="absolute top-0 left-0 bg-black bg-opacity-50 text-white p-2 rounded-br-md">
+                                                       <CalendarDays className="w-4 h-4" />
+                                                       <span className="text-xs">{event.start_date}</span>
+                                                  </div>
+                                                  <p className="mt-2 text-sm text-gray-700 hover:text-orange-500 cursor-pointer">{event.title}</p>
+                                                  <Button 
+                                                       variant="ghost" 
+                                                       className="text-xs text-orange-500"
+                                                       onClick={() => navigate(`/event-detail/${event.event_id}`)}
+                                                  >Xem chi tiết</Button>
+                                             </CardContent>
+                                        </Card>
+                                   ))
+                              }
+                                        {/* <Card key="" className="shadow-none border-none">
+                                             <CardContent className="p-0 relative">
+                                                  <img
+                                                       src=""
+                                                       alt=""
 
                                                        className="rounded-md w-full object-cover"
                                                   />
@@ -68,15 +83,14 @@ const navigate = useNavigate()
                                                        <CalendarDays className="w-4 h-4" />
                                                        <span className="text-xs">21/12/2025</span>
                                                   </div>
-                                                  <p className="mt-2 text-sm text-gray-700 hover:text-orange-500 cursor-pointer">{service.serviceName}</p>
+                                                  <p className="mt-2 text-sm text-gray-700 hover:text-orange-500 cursor-pointer">Mục này hiển thị danh sách sự kiện</p>
                                                   <Button 
                                                        variant="ghost" 
                                                        className="text-xs text-orange-500"
-                                                       onClick={() => navigate(`/service-detail/${service.id}`)}
+                                                       // onClick={() => navigate(`/service-detail/${service.id}`)}
                                                   >Xem chi tiết</Button>
                                              </CardContent>
-                                        </Card>
-                                   ))}
+                                        </Card> */}
                               </div>
                          </div>
 
