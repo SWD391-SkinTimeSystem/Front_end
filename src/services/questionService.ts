@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
-import { QuestionResponse } from "@/types/question";
+import { QuestionResponse, QuestionUpdate } from "@/types/question";
 
 const API_URL = "/question";
 const RECOMMENDATION_API_URL = "/question/recommendations";
@@ -20,5 +20,19 @@ export const questionService = {
                throw error;
           }
 
+     },
+
+     updateQuestion: async (questionUpdate: QuestionUpdate[]) => {
+          try {
+               const response = await axiosInstance.post(`${API_URL}`, questionUpdate, {
+                 headers: {
+                   "Content-Type": "application/json",
+                 },
+               });
+               return response.data;
+             } catch (error) {
+               console.error("Error updating quiz questions:", error);
+               throw error;
+             }
      }
 }

@@ -1,9 +1,9 @@
 import {useState, useEffect} from 'react';
 import { questionService } from '@/services/questionService';
-import { Question, QuestionResponse } from '@/types/question';
+import { Question, QuestionResponse, QuestionUpdate } from '@/types/question';
 
 export const useQuestion = () => {
-     const [questions, setQuestions] = useState<Question[]>([]);
+     const [question, setQuestions] = useState<Question[]>([]);
      const [loading, setLoading] = useState<boolean>(true);
      const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +36,31 @@ export const useQuestion = () => {
           }
         };
       
-        return { questions, loading, error, fetchQuestions, doQuestion };
+        return { question, loading, error, fetchQuestions, doQuestion };
+
+}
+
+export const useUpdateQuestion = (updateQuestions : QuestionUpdate[]) => {
+     const [updateQuestionData, setUpdateQuestionData] = useState<QuestionUpdate[]>([]);
+     const [loading1, setLoading] = useState<boolean>(true);
+     const [error1, setError] = useState<string | null>(null);
+
+     const fetchUpdateQuestion = async () => {
+          try {
+               const data = await questionService.updateQuestion(updateQuestions);
+               setUpdateQuestionData(data);
+          } catch (error) {
+               setError("failed to fetch services");   
+          } finally {
+               setLoading(false);
+          }
+     }
+
+     useEffect(() => {
+          fetchUpdateQuestion();
+     }, []);
+
+     return { updateQuestionData, loading1, error1 };
 
 }
 

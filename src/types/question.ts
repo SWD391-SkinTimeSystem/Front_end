@@ -8,6 +8,7 @@ export type Question = {
 type questionOptions = {
      content: string;
      id: string;
+     skin_type: skinTypes;
 }
 
 export type QuestionResponse = {
@@ -22,9 +23,21 @@ export type QuestionRecommendation = {
 
 type skinTypes = {
      nameSkinType: string;
-     percentage: number;
 }
 type services = {
      id: string;
      nameService: string;
 }
+
+export type QuestionUpdate = {
+     id: string;
+     content: string;
+     order_no: number;
+     choices: Choice[];
+}
+
+type Choice = {
+     id: string;
+     content: string;
+     skin_type: string;
+   };
