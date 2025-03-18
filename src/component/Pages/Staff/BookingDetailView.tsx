@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Card, 
   CardContent, 
@@ -18,6 +18,8 @@ import {
   Printer,
   Check,
   X,
+  Clock3,
+  Hourglass
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
@@ -28,40 +30,167 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { BookingDetail }  from '../../../types/booking';
-import { format } from "date-fns";
+import { BookingDetail } from '../../../types/booking';
+import { format, parseISO, addMinutes, addHours, differenceInMinutes } from "date-fns";
 import { vi } from "date-fns/locale";
+import { CheckInOutButton } from './CheckInOutButton';
 
-const getStatusConfig = (status: string) => {
+// Get enhanced status display configuration
+const getEnhancedStatusConfig = (status: string, isTreatmentPlan: boolean, completedSteps: number, totalSteps: number) => {
+  // Basic status from backend
+  const backendStatus = status.toLowerCase();
+  
+  // Enhanced UI status
+  let uiStatus = backendStatus;
+  
+  if (backendStatus === 'not_started') {
+    uiStatus = 'Chưa hoàn thành';
+  } else if (backendStatus === 'completed') {
+    uiStatus = 'Đã hoàn thành';
+  } else if (backendStatus === 'canceled') {
+    uiStatus = 'Đã hủy';
+  }
+    
+  // If it's a treatment plan and not canceled, check for in-progress status
+  if (isTreatmentPlan && backendStatus === 'not_started' && completedSteps > 0) {
+    uiStatus = 'Đang thực hiện';
+  }
+  
+  // Configuration for UI display
+  switch (uiStatus) {
+    case 'Đã hoàn thành':
+      return { color: 'bg-green-100 text-green-800', icon: <CheckCircle2 className="h-4 w-4 mr-1" />, label: uiStatus };
+    case 'Chưa hoàn thành':
+      return { color: 'bg-blue-100 text-blue-800', icon: <Clock className="h-4 w-4 mr-1" />, label: uiStatus };
+    case 'Đã hủy':
+      return { color: 'bg-red-100 text-red-800', icon: <X className="h-4 w-4 mr-1" />, label: uiStatus };
+    case 'Đang thực hiện':
+      return { color: 'bg-yellow-100 text-yellow-800', icon: <Hourglass className="h-4 w-4 mr-1" />, label: uiStatus };
+    default:
+      return { color: 'bg-gray-100 text-gray-800', icon: <Clock className="h-4 w-4 mr-1" />, label: uiStatus };
+  }
+};
+
+// Get step status configuration
+const getStepStatusConfig = (status: string) => {
   switch (status.toLowerCase()) {
     case 'completed':
-      return { color: 'bg-green-100 text-green-800', icon: <CheckCircle2 className="h-4 w-4 mr-1" /> };
-    case 'upcoming':
-      return { color: 'bg-blue-100 text-blue-800', icon: <Clock className="h-4 w-4 mr-1" /> };
-    case 'cancelled':
-      return { color: 'bg-red-100 text-red-800', icon: <X className="h-4 w-4 mr-1" /> };
-    case 'in progress':
-      return { color: 'bg-yellow-100 text-yellow-800', icon: <AlertCircle className="h-4 w-4 mr-1" /> };
+      return { color: 'bg-green-100 text-green-800', icon: <CheckCircle2 className="h-4 w-4 mr-1" />, label: 'Đã hoàn thành' };
+    case 'not_started':
+      return { color: 'bg-blue-100 text-blue-800', icon: <Clock className="h-4 w-4 mr-1" />, label: 'Chưa hoàn thành' };
+    case 'canceled':
+      return { color: 'bg-red-100 text-red-800', icon: <X className="h-4 w-4 mr-1" />, label: 'Đã hủy' };
     default:
-      return { color: 'bg-gray-100 text-gray-800', icon: <Clock className="h-4 w-4 mr-1" /> };
+      return { color: 'bg-gray-100 text-gray-800', icon: <Clock className="h-4 w-4 mr-1" />, label: 'Chưa hoàn thành' };
   }
+};
+
+// Function to parse time from string (HH:MM format)
+const parseTime = (dateStr: string, timeStr: string): Date => {
+  const date = new Date(dateStr);
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  date.setHours(hours, minutes, 0, 0);
+  return date;
 };
 
 interface BookingDetailViewProps {
   booking: BookingDetail;
   onBack: () => void;
+  onCheckIn: (bookingId: string, stepIndex: number, code: string) => Promise<boolean>;
+  onCheckOut: (bookingId: string, stepIndex: number) => Promise<boolean>;
+  onUpdateStatus: (bookingId: string, stepIndex: number, status: string) => Promise<boolean>;
 }
 
-const BookingDetailView: React.FC<BookingDetailViewProps> = ({ booking, onBack }) => {
-  const statusConfig = getStatusConfig(booking.status);
+const BookingDetailView: React.FC<BookingDetailViewProps> = ({ 
+  booking, 
+  onBack, 
+  onCheckIn, 
+  onCheckOut,
+  onUpdateStatus 
+}) => {
+  const [checkedInSteps, setCheckedInSteps] = useState<number[]>([]);
+  const [checkInTimes, setCheckInTimes] = useState<{[key: number]: Date}>({});
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
   
-  // Calculate current step based on completed services
+  // Update current time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // every minute
+    return () => clearInterval(timer);
+  }, []);
+  
+  // Check for auto-cancellation
+  useEffect(() => {
+    booking.details.forEach((detail, index) => {
+      if (detail.status.toLowerCase() === 'not_started') {
+        const serviceDateTime = parseTime(detail.reservedDate.toString(), detail.startTime);
+        const timeLimit = addMinutes(serviceDateTime, 15);
+  
+        // Nếu quá thời gian 15 phút mà chưa check-in, auto cancel
+        if (currentTime > timeLimit && !checkedInSteps.includes(index)) {
+          onUpdateStatus(booking.id, index, 'canceled').then(success => {
+            if (success) {
+              // Cập nhật lại booking.details trong state ngay lập tức
+              booking.details[index].status = 'canceled';
+            }
+          });
+        }
+      }
+    });
+  }, [currentTime, booking.details, checkedInSteps, onUpdateStatus]);
+  
+  // useEffect(() => {
+  //   if (!booking?.details?.length) return;
+  
+  //   const updatedDetails = booking.details.map((detail, index) => {
+  //     if (detail.status.toLowerCase() === "not_started") {
+  //       const serviceDateTime = parseTime(detail.reservedDate.toString(), detail.startTime);
+  //       const timeLimit = addMinutes(serviceDateTime, 15);
+  
+  //       if (currentTime > timeLimit && !checkedInSteps.includes(index)) {
+  //         onUpdateStatus(booking.id, index, "canceled").then((success) => {
+  //           if (success) {
+  //             setBooking((prev) => ({
+  //               ...prev,
+  //               details: prev.details.map((d, i) =>
+  //                 i === index ? { ...d, status: "canceled" } : d
+  //               ),
+  //             }));
+  //           }
+  //         });
+  //       }
+  //     }
+  //     return detail;
+  //   });
+  // }, [currentTime, booking.id, checkedInSteps, onUpdateStatus]);
+  
   const completedSteps = booking.details.filter(detail => 
-    new Date(detail.reservedDate) < new Date() || 
-    (booking.status.toLowerCase() === 'completed')
+    detail.status.toLowerCase() === 'completed'
   ).length;
   
   const progress = (completedSteps / booking.totalStep) * 100;
+  
+  const statusConfig = getEnhancedStatusConfig(
+    booking.status, 
+    booking.isTretmentPlan, 
+    completedSteps, 
+    booking.totalStep
+  );
+  
+  const currentStepIndex = booking.details.findIndex(detail => 
+    detail.status.toLowerCase() === 'not_started'
+  );
+
+  const handleCheckIn = async (bookingId: string, stepIndex: number, code: string) => {
+    const success = await onCheckIn(bookingId, stepIndex, code);
+    if (success) {
+      const now = new Date();
+      setCheckedInSteps(prev => [...prev, stepIndex]);
+      setCheckInTimes(prev => ({...prev, [stepIndex]: now}));
+    }
+    return success;
+  };
   
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -83,14 +212,17 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({ booking, onBack }
               <CardTitle className="text-xl text-green-800">
                 Chi tiết lịch hẹn #{booking.id}
               </CardTitle>
-              <CardDescription className="mt-1">
-                Mã check-in: <span className="font-mono font-bold">{booking.checkInCode}</span>
-              </CardDescription>
+              {/* Only show check-in code if at least one step has been checked in */}
+              {checkedInSteps.length > 0 && (
+                <CardDescription className="mt-1">
+                  Mã check-in: <span className="font-mono font-bold">{booking.checkInCode}</span>
+                </CardDescription>
+              )}
             </div>
             <div className="flex flex-col items-end">
               <Badge className={`${statusConfig.color} flex items-center px-3 py-1`}>
                 {statusConfig.icon}
-                {booking.status}
+                {statusConfig.label}
               </Badge>
               <span className="text-sm text-gray-500 mt-2">
                 {booking.isTretmentPlan ? 'Lộ trình điều trị' : 'Dịch vụ đơn lẻ'}
@@ -152,20 +284,65 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({ booking, onBack }
               
               <div className="space-y-4">
                 {booking.details.map((detail, index) => {
-                  const isPast = new Date(detail.reservedDate) < new Date();
-                  const isCompleted = booking.status.toLowerCase() === 'completed' || isPast;
+                  const detailStatus = getStepStatusConfig(detail.status);
+                  const isActiveStep = currentStepIndex === index;
+                  const isPastStep = index < currentStepIndex;
+                  
+                  // Kiểm tra xem bước này đã checkin chưa
+                  const isStepCheckedIn = checkedInSteps.includes(index);
+                  
+                  // Check thời gian dịch vụ đó
+                  const serviceDateTime = parseTime(detail.reservedDate.toString(), detail.startTime);
+                  const serviceEndDateTime = parseTime(detail.reservedDate.toString(), detail.startEnd);
+                  
+                  // Check-in window opens 15 minutes before service time
+                  const checkInWindowStart = addMinutes(serviceDateTime, -15);
+                  
+                  // Tự động hủy nếu quá 15p kể từ giờ dvu mà chưa checkin
+                  const autoCancelTime = addMinutes(serviceDateTime, 15);
+                  
+                  // có thể checkin từ trước 15p giờ dvu
+                  const isWithinCheckInWindow = currentTime >= checkInWindowStart && currentTime <= autoCancelTime;
+                  
+                  // có thể checkout sau 1h từ giờ checkin
+                  const checkInTime = checkInTimes[index];
+                  const canShowCheckOut = checkInTime && 
+                                          differenceInMinutes(currentTime, checkInTime) >= 60;
+                  
+                  // A step can only be checked in if it's the active step, not started, 
+                  // not already checked in, and within check-in window
+                  const canCheckIn = isActiveStep && 
+                                     detail.status.toLowerCase() === 'not_started' && 
+                                     !isStepCheckedIn &&
+                                     isWithinCheckInWindow;
+                  
+                  // A step can only be checked out if it's been checked in and at least an hour has passed
+                  const canCheckOut = isActiveStep && 
+                                      detail.status.toLowerCase() === 'not_started' && 
+                                      isStepCheckedIn &&
+                                      canShowCheckOut;
+                  
+                  const isStepCompleted = detail.status.toLowerCase() === 'completed';
+                  const isStepCanceled = detail.status.toLowerCase() === 'canceled';
                   
                   return (
                     <div 
                       key={index} 
-                      className={`p-4 border rounded-lg ${isCompleted ? 'border-green-200 bg-green-50' : 'border-gray-200'}`}
+                      className={`p-4 border rounded-lg ${
+                        isStepCompleted ? 'border-green-200 bg-green-50' : 
+                        isStepCanceled ? 'border-red-200 bg-red-50' :
+                        isActiveStep ? 'border-blue-200 bg-blue-50' : 'border-gray-200'
+                      }`}
                     >
                       <div className="flex justify-between items-center">
                         <div className="flex items-center">
                           <div className={`rounded-full h-8 w-8 flex items-center justify-center mr-3 ${
-                            isCompleted ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
+                            isStepCompleted ? 'bg-green-500 text-white' : 
+                            isStepCanceled ? 'bg-red-500 text-white' :
+                            isActiveStep ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
                           }`}>
-                            {isCompleted ? <Check className="h-5 w-5" /> : (index + 1)}
+                            {isStepCompleted ? <Check className="h-5 w-5" /> : 
+                             isStepCanceled ? <X className="h-5 w-5" /> : (index + 1)}
                           </div>
                           <div>
                             <h4 className="font-medium">{detail.serviceDetailsName}</h4>
@@ -179,17 +356,23 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({ booking, onBack }
                           </div>
                         </div>
                         
-                        {index < booking.details.length - 1 && !isCompleted && (
-                          <Button disabled size="sm" variant="outline" className="text-gray-500">
-                            {index === 0 ? 'Bước tiếp theo' : 'Chờ hoàn thành'}
-                          </Button>
-                        )}
-                        
-                        {isCompleted && (
-                          <Badge className="bg-green-100 text-green-800 px-2">
-                            <Check className="h-3 w-3 mr-1" /> Hoàn thành
+                        <div className="flex items-center">
+                          <Badge className={`${detailStatus.color} flex items-center px-2 mr-3`}>
+                            {detailStatus.icon}
+                            {detailStatus.label}
                           </Badge>
-                        )}
+                          
+                          {!isStepCanceled && (canCheckIn || canCheckOut) && (
+                            <CheckInOutButton 
+                              bookingId={booking.id}
+                              stepIndex={index}
+                              checkInCode={booking.checkInCode}
+                              isCheckedIn={isStepCheckedIn} 
+                              onCheckIn={handleCheckIn} 
+                              onCheckOut={onCheckOut}
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
@@ -221,11 +404,6 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({ booking, onBack }
               <Printer className="h-4 w-4 mr-2" />
               In thông tin
             </Button>
-            {booking.status.toLowerCase() === 'upcoming' && (
-              <Button className="bg-green-600 hover:bg-green-700 text-white">
-                Cập nhật trạng thái
-              </Button>
-            )}
           </div>
         </CardFooter>
       </Card>

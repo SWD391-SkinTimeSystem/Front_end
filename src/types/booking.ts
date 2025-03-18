@@ -32,7 +32,8 @@ export type Booking = {
          serviceDetailsName: string,
          startTime: string,
          startEnd: string,
-         reservedDate: Date
+         reservedDate: Date,
+         status: string,
        }[]
        
  };
