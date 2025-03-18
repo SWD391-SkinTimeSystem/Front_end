@@ -34,13 +34,13 @@ import { vi } from "date-fns/locale";
 
 const getStatusConfig = (status: string) => {
   switch (status.toLowerCase()) {
-    case 'completed':
+    case 'Completed':
       return { color: 'bg-green-100 text-green-800', icon: <CheckCircle2 className="h-4 w-4 mr-1" /> };
-    case 'upcoming':
+    case 'Upcoming':
       return { color: 'bg-blue-100 text-blue-800', icon: <Clock className="h-4 w-4 mr-1" /> };
-    case 'cancelled':
+    case 'Cancelled':
       return { color: 'bg-red-100 text-red-800', icon: <X className="h-4 w-4 mr-1" /> };
-    case 'in progress':
+    case 'In progress':
       return { color: 'bg-yellow-100 text-yellow-800', icon: <AlertCircle className="h-4 w-4 mr-1" /> };
     default:
       return { color: 'bg-gray-100 text-gray-800', icon: <Clock className="h-4 w-4 mr-1" /> };
@@ -53,6 +53,7 @@ interface BookingDetailViewProps {
 }
 
 const BookingDetailView: React.FC<BookingDetailViewProps> = ({ booking, onBack }) => {
+  console.log(booking.status);
   const statusConfig = getStatusConfig(booking.status);
   
   // Calculate current step based on completed services
@@ -92,9 +93,9 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({ booking, onBack }
                 {statusConfig.icon}
                 {booking.status}
               </Badge>
-              <span className="text-sm text-gray-500 mt-2">
+              {/* <span className="text-sm text-gray-500 mt-2">
                 {booking.isTretmentPlan ? 'Lộ trình điều trị' : 'Dịch vụ đơn lẻ'}
-              </span>
+              </span> */}
             </div>
           </div>
         </CardHeader>

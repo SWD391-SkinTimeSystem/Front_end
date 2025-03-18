@@ -51,3 +51,27 @@ export const useBookingDetail = (id : string) => {
      return { bookingDetail, loading, error };
 
 }
+
+export const useBookingDetailStaff = (id : string) => {
+  const [bookingDetail, setBookingDetail] = useState<BookingDetail | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+   const [error, setError] = useState<string | null>(null);
+
+   const fetchBookingDetail = async () => {
+        try {
+             const data = await bookingService.getBookingDetail(id);
+             setBookingDetail(data.data);
+        } catch (error) {
+             setError("failed to fetch bookingDetail");
+        } finally {
+             setLoading(false);
+        }
+   }
+
+   useEffect(() => {
+      fetchBookingDetail();
+    }, [id]);
+
+   return { bookingDetail, loading, error };
+
+}
