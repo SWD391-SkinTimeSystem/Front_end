@@ -7,7 +7,6 @@ export type TicketData = {
     location: string;
     ticketNumber: string;
     status: string;
-    qrCodeUrl?: string;
   }
   export type Ticket = {
     eventId: string;
@@ -26,5 +25,5 @@ export type TicketHistory = {
     purchase_date: string;
     status: string;
     otp_code: string | null;
-    qr_code: string | null;
+
 };
