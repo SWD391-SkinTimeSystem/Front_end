@@ -112,16 +112,20 @@ const BookingDetailPage = () => {
                     <p className="font-semibold text-lg">
                       {step.serviceDetailsName}
                     </p>
-                    <p className="text-gray-600 text-sm">
-                      Ngày hẹn: {formatDateTime(step.reservedDate)}
-                    </p>
-                    <p className="text-gray-600 text-sm">
-                      Thời gian: {formatDateTime(step.startTime)} -{" "}
-                      {formatDateTime(step.startEnd)}
-                    </p>
-                    <Button className="mt-2 bg-emerald-700 text-white">
-                      Đổi lịch
-                    </Button>
+                    {step.startTime && step.startTime !== "0" && step.reservedDate && step.startEnd && (
+                        <>
+                          <p className="text-gray-600 text-sm">
+                            Ngày hẹn: {formatDateTime(step.reservedDate)}
+                          </p>
+                          <p className="text-gray-600 text-sm">
+                            Thời gian: {formatDateTime(step.startTime)} - {formatDateTime(step.startEnd)}
+                          </p>
+                          <Button className="mt-2 bg-emerald-700 text-white">
+                            Đổi lịch
+                          </Button>
+                        </>
+                    )}
+
                   </div>
                 </div>
               ))}

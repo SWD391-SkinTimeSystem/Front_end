@@ -4,7 +4,6 @@ import { BookingDetail } from '../../../types/booking';
 // Dữ liệu mẫu cho một dịch vụ không có lộ trình, trạng thái chưa bắt đầu
 export const singleServiceBooking: BookingDetail = {
   id: "BK-20250316-001",
-  checkInCode: "CK98765",
   therapistName: "Nguyễn Thanh Hương",
   thumbnail: "https://placehold.co/600x400/e2f6e9/34a853?text=Facial+Treatment",
   serviceName: "Chăm sóc da mặt chuyên sâu",
@@ -14,10 +13,11 @@ export const singleServiceBooking: BookingDetail = {
   details: [
     {
       serviceDetailsName: "Chăm sóc da mặt chuyên sâu",
-      startTime: "20:35",
+      startTime: "22:00",
       startEnd: "22:00",
       status: "Not_started",
-      reservedDate: new Date("2025-03-18")
+      reservedDate: new Date("2025-03-20"),
+      checkInCode: "CK98765"
     }
   ]
 };
@@ -25,7 +25,6 @@ export const singleServiceBooking: BookingDetail = {
 // Dữ liệu mẫu cho một lộ trình điều trị (nhiều bước)
 export const treatmentPlanBooking: BookingDetail = {
   id: "BK-20250316-002",
-  checkInCode: "CK12345",
   therapistName: "Trần Minh Đức",
   thumbnail: "https://placehold.co/600x400/e2f6e9/34a853?text=Acne+Treatment",
   serviceName: "Lộ trình điều trị mụn chuyên sâu",
@@ -35,38 +34,48 @@ export const treatmentPlanBooking: BookingDetail = {
   details: [
     {
       serviceDetailsName: "Bước 1: Tư vấn và phân tích da",
-      startTime: "09:00",
-      startEnd: "10:00",
+      startTime: "02:36",
+      startEnd: "04:00",
       status: "Not_started",
-      reservedDate: new Date("2025-02-15")
+      reservedDate: new Date("2025-03-21"),
+      checkInCode: "CK12345",
+
     },
     {
       serviceDetailsName: "Bước 2: Điều trị và làm sạch sâu",
-      startTime: "09:30",
+      startTime: "10:00",
       startEnd: "11:00",
       status: "Not_started",
-      reservedDate: new Date("2025-03-01")
+      reservedDate: new Date("2025-04-01"),
+      checkInCode: "CK12346",
+
     },
     {
       serviceDetailsName: "Bước 3: Điều trị chuyên sâu với sản phẩm đặc trị",
       startTime: "10:00",
       startEnd: "11:30",
       status: "Not_started",
-      reservedDate: new Date("2025-03-15")
+      reservedDate: new Date("2025-03-15"),
+      checkInCode: "CK12347",
+
     },
     {
       serviceDetailsName: "Bước 4: Phục hồi và tái tạo da",
       startTime: "14:00",
       startEnd: "15:30",
       status: "Not_started",
-      reservedDate: new Date("2025-03-29")
+      reservedDate: new Date("2025-03-29"),
+      checkInCode: "CK12348",
+
     },
     {
       serviceDetailsName: "Bước 5: Kiểm tra kết quả và tư vấn duy trì",
       startTime: "16:00",
       startEnd: "17:00",
       status: "Not_started",
-      reservedDate: new Date("2025-04-12")
+      reservedDate: new Date("2025-04-12"),
+      checkInCode: "CK12349",
+
     }
   ]
 };
