@@ -25,5 +25,20 @@ export type TicketHistory = {
     purchase_date: string;
     status: string;
     otp_code: string | null;
-
 };
+
+export type TicketEvent = {
+  content: ContentItem[];
+  itemAmount: number;
+  pageSize: number;
+  pageCount: number;
+  currentPage: number;
+}
+
+export type ContentItem = {
+  id: string;
+  userId: string;
+  ticket_Otp: string;
+  base64_QrCode: string;
+  status: number;
+}

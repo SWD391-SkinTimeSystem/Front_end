@@ -7,7 +7,11 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Search, RefreshCcw, UserCheck, CheckCircle, XCircle } from 'lucide-react';
 import { EventDetail } from "../../../types/event";
-import { TicketHistory } from "../../../types/ticket";
+import { ContentItem, TicketEvent, TicketHistory } from "../../../types/ticket";
+import { useEventDetail } from '@/hooks/useEvent';
+import { set } from 'date-fns';
+import { useEvent, useTicketEvent } from '@/hooks/useTicketEvent';
+import { ticketEvent } from '@/services/ticketEvent';
 
 
 const Notification = ({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) => {
@@ -40,8 +44,8 @@ const mockEvent: EventDetail = {
   title: "Workshop Chăm Sóc Da Mùa Thu",
   image: "https://example.com/event-image.jpg",
   content: "Workshop chia sẻ kiến thức chăm sóc da trong mùa thu.",
-  date: "2025-03-21",
-  start_time: "12:00",
+  date: "2025-03-25",
+  start_time: "12:30",
   end_time: "23:00",
   location: "299 Đường Cầu Giấy, Hà Nội",
   available_ticket: 50,
@@ -100,15 +104,15 @@ const mockTickets: TicketHistory[] = [
 
 const EventCheckInManager = () => {
   const [event, setEvent] = useState<EventDetail | null>(null);
-  const [tickets, setTickets] = useState<TicketHistory[]>([]);
-  const [filteredTickets, setFilteredTickets] = useState<TicketHistory[]>([]);
+  const [tickets, setTickets] = useState<TicketEvent>();
+  const [filteredTickets, setFilteredTickets] = useState<ContentItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isCheckInAvailable, setIsCheckInAvailable] = useState(false);
   const [loading, setLoading] = useState(true);
   const [checkedInCount, setCheckedInCount] = useState(0);
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
-
-
+  const {eventDetail} = useEventDetail("08dd6b72-ca9f-4ce9-85aa-4363bd24fb14");
+  const {ticketEvents} = useEvent("08dd6b72-ca9f-4ce9-85aa-4363bd24fb14");
 
   const showNotification = (message: string, type: 'success' | 'error') => {
     setNotification({ message, type });
@@ -118,15 +122,22 @@ const EventCheckInManager = () => {
     setNotification(null);
   };
 
-  const fetchEventData = async (eventId: string) => {
+  useEffect(() => {
+    if (eventDetail) {
+      fetchEventData();
+    }
+  }, [eventDetail]);
+
+  const fetchEventData = async () => {
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 800));
-      setEvent(mockEvent);
-      setTickets(mockTickets);
-      setFilteredTickets(mockTickets);
+      setEvent(eventDetail);
+      console.log(event);
+      setTickets(ticketEvents);
+      setFilteredTickets(ticketEvents?.content ?? []);
 
-      const checkedIn = mockTickets.filter(ticket =>ticket.status === "checked-in").length;
+      const checkedIn = ticketEvents?.content.filter(ticket =>ticket.status === 1).length;
 
       setCheckedInCount(checkedIn);
 
@@ -137,7 +148,6 @@ const EventCheckInManager = () => {
       setLoading(false);
     }
   };
-
 
   const checkCheckInAvailability = () => {
     if (!event) return { status: "unknown", message: "Không có thông tin sự kiện" };
@@ -161,16 +171,19 @@ const EventCheckInManager = () => {
   const checkInStatus = checkCheckInAvailability();
 
 
-  const handleCheckInChange = (ticketId: string, checked: boolean) => {
-    const updatedTickets = tickets.map(ticket => {
-      if (ticket.ticket_id === ticketId) {
+  const handleCheckInChange = async (ticketId: string, checked: boolean) => {
+    const updatedTickets = (tickets?.content ?? []).map(ticket => {
+      if (ticket.id === ticketId) {
         const updatedTicket = {
           ...ticket,
-          status: checked ? "checked-in" : "paid"
+          status: checked ? 1 : 0
         };
+        if (event) {
+          ticketEvent.checkInTicket(ticketId, event.id, updatedTicket.ticket_Otp);
+        }
   
         showNotification(
-          `${checked ? "Check-in thành công" : "Hủy check-in"}: Mã vé ${ticket.otp_code}`,
+          `${checked ? "Check-in thành công" : "Hủy check-in"}: Mã vé ${ticket.ticket_Otp}`,
           checked ? "success" : "error"
         );
   
@@ -179,46 +192,43 @@ const EventCheckInManager = () => {
       return ticket;
     });
   
-    setTickets(updatedTickets);
+    const updated : TicketEvent = {...tickets, content: updatedTickets};
+    setTickets(updated);
     setFilteredTickets(updatedTickets.filter(ticket =>
-      ticket.otp_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.ticket_id.toLowerCase().includes(searchQuery.toLowerCase())
+      ticket.ticket_Otp?.includes(searchQuery.toLowerCase()) ||
+      ticket.id.includes(searchQuery.toLowerCase())
     ));
   
-    const checkedIn = updatedTickets.filter(ticket => ticket.status === "checked-in").length;
+    const checkedIn = updatedTickets.filter(ticket => ticket.status === 1).length;
     setCheckedInCount(checkedIn);
   };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim() === '') {
-      setFilteredTickets(tickets);
+      setFilteredTickets(tickets?.content ?? []);
     } else {
-      const filtered = tickets.filter(ticket =>
-        ticket.otp_code?.toLowerCase().includes(query.toLowerCase()) ||
-        ticket.ticket_id.toLowerCase().includes(query.toLowerCase())
+      const filtered = tickets?.content.filter(ticket =>
+        ticket.ticket_Otp?.toLowerCase().includes(query.toLowerCase()) ||
+        ticket.id.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredTickets(filtered);
     }
   };
 
   const refreshData = () => {
-    if (event) {
-      fetchEventData(event.id);
-      showNotification("Dữ liệu đã được làm mới", "success");
-    }
+        fetchEventData();
+        showNotification("Dữ liệu đã được làm mới", "success");
   };
 
   useEffect(() => {
-    fetchEventData("ev001");
-
-
+    fetchEventData();
     const intervalId = setInterval(() => {
       setIsCheckInAvailable(checkCheckInAvailability());
     }, 60000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [event]);
 
   useEffect(() => {
     if (event) {
@@ -238,11 +248,19 @@ const EventCheckInManager = () => {
   }
 
   if (!event) {
-    return (
-      <div className="p-4 text-center">
-        <h2 className="text-xl font-bold text-red-500">Không tìm thấy sự kiện</h2>
-      </div>
-    );
+    if (eventDetail === null) {
+      return (
+        <div className="p-4 text-center">
+          <h2 className="text-xl font-bold text-red-500">Không tìm thấy sự kiện</h2>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+        </div>
+      );
+    }
   }
 
   return (
@@ -294,10 +312,10 @@ const EventCheckInManager = () => {
             {isCheckInAvailable && (
               <div className="flex justify-between items-center mb-2">
                 <span className="font-medium text-green-700">
-                  Trạng thái check-in: {checkedInCount}/{tickets.length} ({Math.round((checkedInCount / tickets.length) * 100)}%)
+                  Trạng thái check-in: {checkedInCount}/{tickets?.content.length} ({Math.round((checkedInCount / (tickets.content).length) * 100)}%)
                 </span>
                 <Progress
-                  value={(checkedInCount / tickets.length) * 100}
+                  value={(checkedInCount / (tickets.content).length) * 100}
                   className="h-2 bg-gray-200"
                 />
               </div>
@@ -335,23 +353,23 @@ const EventCheckInManager = () => {
                   <tbody className="divide-y divide-gray-200">
                     {filteredTickets.length > 0 ? (
                       filteredTickets.map((ticket) => (
-                        <tr key={ticket.ticket_id} className={ticket.status === "checked-in" ? "bg-green-50" : ""}>
-                          <td className="px-4 py-3 text-sm font-medium">{ticket.otp_code}</td>
-                          <td className="px-4 py-3 text-sm">{ticket.ticket_id}</td>
-                          <td className="px-4 py-3 text-sm">{new Date(ticket.purchase_date).toLocaleDateString('vi-VN')}</td>
+                        <tr key={ticket.id} className={ticket.status === 1 ? "bg-green-50" : ""}>
+                          <td className="px-4 py-3 text-sm font-medium">{ticket.ticket_Otp}</td>
+                          <td className="px-4 py-3 text-sm">{ticket.id}</td>
+                          <td className="px-4 py-3 text-sm">{new Date(event.date).toLocaleDateString('vi-VN')}</td>
                           <td className="px-4 py-3 text-sm text-center">
                             <Badge
-                              variant={ticket.status === "checked-in" ? "default" : "outline"}
-                              className={ticket.status === "checked-in" ? "bg-green-500" : "text-gray-500 border-gray-300"}
+                              variant={ticket.status === 1 ? "default" : "outline"}
+                              className={ticket.status === 1 ? "bg-green-500" : "text-gray-500 border-gray-300"}
                             >
-                              {ticket.status === "checked-in" ? "Đã check-in" : "Chưa check-in"}
+                              {ticket.status === 1 ? "Đã check-in" : "Chưa check-in"}
                             </Badge>
                           </td>
                           <td className="px-4 py-3 text-center">
                             <Checkbox
-                              checked={ticket.status === "checked-in"}
+                              checked={ticket.status === 1}
                               onCheckedChange={(checked) =>
-                                handleCheckInChange(ticket.ticket_id, checked as boolean)
+                                handleCheckInChange(ticket.id, checked as boolean)
                               }
                               className="border-green-500 text-green-500 focus:ring-green-500"
                             />

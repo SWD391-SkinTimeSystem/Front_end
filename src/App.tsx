@@ -9,6 +9,8 @@ import Register from "./component/Auth/Register";
 import Quiz from "./component/Organisms/Question";
 import ResultPage from "./component/Organisms/QuizResult";
 import {DisplayQuestion} from "./features/question";
+import TestPage from "./component/Pages/Staff/TestPage";
+import EventCheckInManager from "./component/Pages/Staff/EventCheckInManager";
 const App = () => {
   return (
     <>
@@ -21,6 +23,8 @@ const App = () => {
           <Route path="/Result" element={<ResultPage />} />
           <Route path="/*" element={<UserRoutes />} />
           <Route path="/admin/*" element={<AdminRoutes />} />
+          <Route path="/bookingDetail" element={<TestPage />} />
+          <Route path="/eventCheckIn" element={<EventCheckInManager />} />
         </Routes>
       </Router>
     </>

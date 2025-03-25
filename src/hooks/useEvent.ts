@@ -28,7 +28,7 @@ export const useEvent = () => {
 
 export const useEventDetail = (id : string) => {
      const [eventDetail, setEventDetail] = useState<EventDetail | null>(null);
-     const [loading, setLoading] = useState<boolean>(true);
+     const [loadingEventDetail, setLoading] = useState<boolean>(true);
      const [error, setError] = useState<string | null>(null);
 
      const fetchEvent = async () => {
@@ -46,6 +46,6 @@ export const useEventDetail = (id : string) => {
           fetchEvent();
      }, []);
 
-     return { eventDetail, loading, error };
+     return { eventDetail, loadingEventDetail, error };
 
 }

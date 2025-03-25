@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import { Booking, BookingDetail } from '@/types/booking';
+import { Booking, BookingDetail, CopyBookingDetail } from '@/types/booking';
 import { bookingService } from '@/services/bookingCusService';
 
 export const useBooking = (status : string) => {
@@ -49,5 +49,29 @@ export const useBookingDetail = (id : string) => {
       }, [id]);
 
      return { bookingDetail, loading, error };
+
+}
+
+export const useCopyBookingDetail = (id : string) => {
+  const [bookingDetail, setBookingDetail] = useState<CopyBookingDetail | null>(null);
+  const [loading1, setLoading] = useState<boolean>(true);
+   const [error1, setError] = useState<string | null>(null);
+
+   const fetchBookingDetail = async () => {
+        try {
+             const data = await bookingService.getBookingDetail(id);
+             setBookingDetail(data);
+        } catch (error) {
+             setError("failed to fetch bookingDetail");
+        } finally {
+             setLoading(false);
+        }
+   }
+
+   useEffect(() => {
+      fetchBookingDetail();
+    }, [id]);
+
+   return { bookingDetail, loading1, error1 };
 
 }
