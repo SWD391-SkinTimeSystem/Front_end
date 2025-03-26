@@ -1,6 +1,6 @@
 import { eventService } from "@/services/eventService";
 import { useEffect, useState } from "react";
-import { Event, EventDetail } from "@/types/event";
+import { Event, EventDetail, EventStatus } from "@/types/event";
 
 export const useEvent = () => {
      const [events, setEvents] = useState<Event[]>([]);
@@ -47,5 +47,46 @@ export const useEventDetail = (id : string) => {
      }, []);
 
      return { eventDetail, loadingEventDetail, error };
+
+}
+
+export const useEventStatus = () => {
+     const [eventPendingApproval, setEventPendingApproval] = useState<EventStatus | null>(null);
+     const [eventApproved, setEventApproved] = useState<EventStatus | null>(null);
+     const [eventDeclined, setEventDeclined] = useState<EventStatus | null>(null);
+     const [loadingEventDetail, setLoading] = useState<boolean>(true);
+     const [error, setError] = useState<string | null>(null);
+
+     const fetchEventStatus = async () => {
+          try {
+               const pending_approval = await eventService.getEventState(1,10,0);
+               const approved = await eventService.getEventState(1,10,1);
+               const declined = await eventService.getEventState(1,10,2);
+               setEventPendingApproval(pending_approval);
+               setEventApproved(approved);
+               setEventDeclined(declined);
+               console.log(pending_approval);
+          } catch (error) {
+               setError("failed to fetch services");
+          } finally {
+               setLoading(false);
+          }
+     }
+
+     const fetchUpdateStatus = async (id: string, status: number) => {
+          try {
+               await eventService.updateEventState(id, status);
+          } catch (error) {
+               setError("failed to fetch services");
+          } finally {
+               setLoading(false);
+          }
+     }
+
+     useEffect(() => {
+          fetchEventStatus();
+     }, []);
+
+     return { eventPendingApproval, eventApproved, eventDeclined, fetchUpdateStatus, loadingEventDetail, error };
 
 }

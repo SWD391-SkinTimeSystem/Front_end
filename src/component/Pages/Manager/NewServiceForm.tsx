@@ -12,6 +12,7 @@ import {
  FormLabel,
 } from '@/components/ui/form';
 import { Plus, Trash2, ArrowRight, Image, X } from 'lucide-react';
+import { useCategory } from '@/hooks/useCategory';
 
 const colors = {
     primary: {
@@ -46,10 +47,11 @@ type ServiceFormProps = {
 };
 
 export const NewServiceForm = ({ onSuccess, initialData }: ServiceFormProps) => {
- const { createService, updateService, serviceCategories } = useServices();
+ const { categories } = useCategory();
+ const { createService, updateService } = useServices();
  useEffect(() => {
-    console.log("Service Categories:", serviceCategories);
-  }, [serviceCategories]);
+    console.log("Service Categories:", categories);
+  }, [categories]);
  const [isSubmitting, setIsSubmitting] = useState(false);
  const [error, setError] = useState<string | null>(null);
  const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
@@ -275,9 +277,9 @@ export const NewServiceForm = ({ onSuccess, initialData }: ServiceFormProps) => 
                className="border border-gray-300 rounded-md p-2 w-full"
              >
                <option value="" disabled>Chọn loại dịch vụ</option>
-               {serviceCategories.map((category) => (
-                 <option key={category.serviceGroupId} value={category.serviceGroupId}>
-                   {category.serviceGroupName}
+               {categories.map((category) => (
+                 <option key={category.id} value={category.id}>
+                   {category.name}
                  </option>
                ))}
              </select>

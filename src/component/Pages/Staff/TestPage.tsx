@@ -17,7 +17,7 @@ const TestPage: React.FC = () => {
   const [booking, setBooking] = useState<CopyBookingDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { bookingDetail } = useCopyBookingDetail("e4de942b-177a-4a87-9421-df5036eecf11");
+  const { bookingDetail } = useCopyBookingDetail("1fc0bcd2-106c-4790-9716-c4dee58a1a67");
   console.log(bookingDetail);
   const { fetchCheckin, fetchCheckout } = useTracking();
   
@@ -88,8 +88,7 @@ const TestPage: React.FC = () => {
 
   const handleCheckOut = async (bookingId: string, stepIndex: number): Promise<boolean> => {
     if (!booking) return false;
-    
-    const result = await trackingService.checkoutTracking(booking.details[stepIndex].scheduleID);
+    const result = await fetchCheckout(booking.details[stepIndex].scheduleID);
     console.log(result);
     toast("Check-out thành công");
     return true;

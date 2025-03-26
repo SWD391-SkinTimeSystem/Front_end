@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,8 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, MapPin, Clock, Users, Tag, CheckCircle, XCircle, Eye, Search, Filter } from 'lucide-react';
-import {Event} from "../../../types/event";
+import {Event, EventDetail} from "../../../types/event";
 import { Textarea } from '@/components/ui/textarea';
+import { useEventStatus } from '@/hooks/useEvent';
+import { set } from 'date-fns';
 
 const Notification = ({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) => {
   useEffect(() => {
@@ -44,11 +46,11 @@ const EventCard = ({
   onApprove, 
   onReject 
 }: { 
-  event: Event, 
+  event: EventDetail, 
   isManager?: boolean,
-  onView: (event: Event) => void,
-  onApprove?: (event: Event) => void,
-  onReject?: (event: Event) => void
+  onView: (event: EventDetail) => void,
+  onApprove?: (event: EventDetail) => void,
+  onReject?: (event: EventDetail) => void
 }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -58,28 +60,28 @@ const EventCard = ({
   return (
     <Card className="overflow-hidden h-full border border-green-100 hover:border-green-300 transition-all duration-300">
       <div className="relative h-40 overflow-hidden bg-gray-100">
-        {event.image_url ? (
-          <img src={event.image_url} alt={event.title} className="object-cover w-full h-full" />
+        {event.image ? (
+          <img src={event.image} alt={event.title} className="object-cover w-full h-full" />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-green-50">
             <Calendar className="h-12 w-12 text-green-300" />
           </div>
         )}
         <Badge className={`absolute top-2 right-2 ${
-          event.status === 'approved' ? 'bg-green-500' : 
-          event.status === 'pending' ? 'bg-yellow-500' : 
-          event.status === 'rejected' ? 'bg-red-500' : 'bg-gray-500'
+          event.event_status === 'approved' ? 'bg-green-500' : 
+          event.event_status === 'pending_approval' ? 'bg-yellow-500' : 
+          event.event_status === 'declined' ? 'bg-red-500' : 'bg-gray-500'
         }`}>
-          {event.status === 'approved' ? 'Đã duyệt' : 
-           event.status === 'pending' ? 'Chờ duyệt' : 
-           event.status === 'rejected' ? 'Từ chối' : 'Đã hủy'}
+          {event.event_status === 'approved' ? 'Đã duyệt' : 
+           event.event_status === 'pending_approval' ? 'Chờ duyệt' : 
+           event.event_status === 'declined' ? 'Từ chối' : 'Đã hủy'}
         </Badge>
       </div>
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-bold text-green-800 truncate">{event.title}</CardTitle>
         <CardDescription className="flex items-center text-sm text-gray-600 mt-1">
           <Calendar className="h-4 w-4 mr-1" />
-          {formatDate(event.start_date)} · {event.start_time}
+          {formatDate(event.date)} · {event.start_time}
         </CardDescription>
         <CardDescription className="flex items-center text-sm text-gray-600">
           <MapPin className="h-4 w-4 mr-1" />
@@ -88,19 +90,19 @@ const EventCard = ({
       </CardHeader>
       <CardContent className="pt-0">
         <div className="text-sm text-gray-600 h-12 overflow-hidden">
-          {event.description}
+          {event.content}
         </div>
         <div className="mt-2 flex items-center">
           <Tag className="h-4 w-4 mr-1 text-green-700" />
           <span className="font-medium text-green-700">
-            {event.price.toLocaleString('vi-VN')} VNĐ
+            {event.ticket_price.toLocaleString('vi-VN')} VNĐ
           </span>
         </div>
-        {event.tickets_sold !== undefined && event.total_tickets !== undefined && (
+        {event.available_ticket !== undefined && event.total_ticket_amount !== undefined && (
           <div className="mt-2 flex items-center">
             <Users className="h-4 w-4 mr-1 text-green-700" />
             <span className="text-sm text-gray-600">
-              {event.tickets_sold}/{event.total_tickets} vé đã bán
+              còn lại {event.available_ticket}/{event.total_ticket_amount} vé
             </span>
           </div>
         )}
@@ -111,7 +113,7 @@ const EventCard = ({
           Xem chi tiết
         </Button>
         
-        {isManager && event.status === 'pending' && (
+        {isManager && event.event_status === 'pending_approval' && (
           <div className="flex gap-2">
             <Button 
               variant="outline" 
@@ -139,8 +141,8 @@ const EventCard = ({
 };
 
 const EventManagerUI = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [events, setEvents] = useState<EventDetail[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<EventDetail | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
@@ -148,6 +150,15 @@ const EventManagerUI = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const {eventPendingApproval, eventApproved, eventDeclined, fetchUpdateStatus} = useEventStatus();
+
+  const merge = useMemo(() => {
+    if (eventPendingApproval?.content || eventApproved?.content || eventDeclined?.content) {
+      return [...(eventPendingApproval?.content ?? []), ...(eventApproved?.content ?? []), ...(eventDeclined?.content ?? [])];
+    }
+    return [];
+  }, [eventPendingApproval, eventApproved, eventDeclined]);
+  console.log(merge);
 
   const showNotification = (message: string, type: 'success' | 'error') => {
     setNotification({ message, type });
@@ -157,85 +168,18 @@ const EventManagerUI = () => {
     setNotification(null);
   };
 
+  useEffect(() => {
+    if (merge.length > 0) {
+      fetchEvents();
+    }
+  }, [merge]);
+  
+
   const fetchEvents = async () => {
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 800));
-      
-      const mockEvents: Event[] = [
-        {
-          event_id: "ev001",
-          title: "Workshop Chăm Sóc Da Mùa Thu",
-          description: "Workshop chia sẻ kiến thức chăm sóc da trong mùa thu.",
-          start_date: "2025-03-20",
-          price: 200000,
-          start_time: "19:00",
-          location: "299 Đường Cầu Giấy, Hà Nội",
-          image_url: "",
-          status: "approved",
-          created_at: "2025-03-01",
-          tickets_sold: 30,
-          total_tickets: 100
-        },
-        {
-          event_id: "ev002",
-          title: "Talkshow Bí Quyết Làm Đẹp",
-          description: "Talkshow với sự tham gia của các chuyên gia làm đẹp hàng đầu.",
-          start_date: "2025-04-15",
-          price: 150000,
-          start_time: "18:30",
-          location: "189 Nguyễn Thị Minh Khai, Quận 1, TP. HCM",
-          image_url: "",
-          status: "pending",
-          created_at: "2025-03-10",
-          tickets_sold: 0,
-          total_tickets: 80
-        },
-        {
-          event_id: "ev003",
-          title: "Hội Thảo Xu Hướng Làm Đẹp 2025",
-          description: "Giới thiệu các xu hướng làm đẹp mới nhất năm 2025.",
-          start_date: "2025-05-25",
-          price: 300000,
-          start_time: "09:00",
-          location: "Gem Center, 8 Nguyễn Bỉnh Khiêm, Q.1, TP. HCM",
-          image_url: "",
-          status: "approved",
-          created_at: "2025-03-05",
-          tickets_sold: 15,
-          total_tickets: 150
-        },
-        {
-          event_id: "ev004",
-          title: "Lớp Học Trang Điểm Cơ Bản",
-          description: "Khóa học ngắn hạn về kỹ thuật trang điểm cơ bản cho người mới bắt đầu.",
-          start_date: "2025-04-10",
-          price: 250000,
-          start_time: "14:00",
-          location: "107 Tôn Dật Tiên, Quận 7, TP. HCM",
-          image_url: "",
-          status: "pending",
-          created_at: "2025-03-15",
-          tickets_sold: 0,
-          total_tickets: 50
-        },
-        {
-          event_id: "ev005",
-          title: "Ngày Hội Khuyến Mãi Mỹ Phẩm",
-          description: "Ngày hội giảm giá và tư vấn về các sản phẩm mỹ phẩm cao cấp.",
-          start_date: "2025-06-05",
-          price: 50000,
-          start_time: "10:00",
-          location: "Aeon Mall Hà Đông, Hà Nội",
-          image_url: "",
-          status: "rejected",
-          created_at: "2025-03-12",
-          tickets_sold: 0,
-          total_tickets: 200
-        }
-      ];
-      
-      setEvents(mockEvents);
+      setEvents(merge);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -244,19 +188,19 @@ const EventManagerUI = () => {
     }
   };
 
-  const handleViewEvent = (event: Event) => {
+  const handleViewEvent = (event: EventDetail) => {
     setSelectedEvent(event);
     setIsViewDialogOpen(true);
   };
 
-  const handleApproveEvent = async (event: Event) => {
+  const handleApproveEvent = async (event: EventDetail) => {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await fetchUpdateStatus(event.id, 1);
+
       const updatedEvents = events.map(e => 
-        e.event_id === event.event_id ? { ...e, status: 'approved' } : e
+        e.id === event.id ? { ...e, event_status: 'approved' } : e
       );
-      
       setEvents(updatedEvents);
       showNotification(`Sự kiện "${event.title}" đã được duyệt thành công!`, "success");
     } catch (error) {
@@ -265,7 +209,7 @@ const EventManagerUI = () => {
     }
   };
 
-  const handleRejectDialogOpen = (event: Event) => {
+  const handleRejectDialogOpen = (event: EventDetail) => {
     setSelectedEvent(event);
     setRejectionReason('');
     setIsRejectDialogOpen(true);
@@ -276,9 +220,10 @@ const EventManagerUI = () => {
     
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await fetchUpdateStatus(selectedEvent.id, 2);
+
       const updatedEvents = events.map(e => 
-        e.event_id === selectedEvent.event_id ? { ...e, status: 'rejected' } : e
+        e.id === selectedEvent.id ? { ...e, event_status: 'declined' } : e
       );
       
       setEvents(updatedEvents);
@@ -293,14 +238,11 @@ const EventManagerUI = () => {
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           event.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || event.status === filterStatus;
+    const matchesStatus = filterStatus === 'all' || event.event_status === filterStatus;
     
     return matchesSearch && matchesStatus;
   });
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
 
   return (
     <div className="container mx-auto p-4">
@@ -327,7 +269,7 @@ const EventManagerUI = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="flex gap-4 items-center">
+        {/* <div className="flex gap-4 items-center">
           <Filter className="text-gray-400" size={18} />
           <Select value={filterStatus} onValueChange={setFilterStatus}>
             <SelectTrigger className="w-full border-green-200 focus:border-green-500">
@@ -340,21 +282,21 @@ const EventManagerUI = () => {
               <SelectItem value="rejected">Từ chối</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
       </div>
 
-      <Tabs defaultValue="pending" className="mb-6">
+      <Tabs defaultValue="pending_approval" className="mb-6">
         <TabsList className="border-b border-gray-200 w-full flex justify-start mb-4">
           <TabsTrigger value="all" className="text-green-700 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
             Tất cả
           </TabsTrigger>
-          <TabsTrigger value="pending" className="text-green-700 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
+          <TabsTrigger value="pending_approval" className="text-green-700 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
             Chờ duyệt
           </TabsTrigger>
           <TabsTrigger value="approved" className="text-green-700 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
             Đã duyệt
           </TabsTrigger>
-          <TabsTrigger value="rejected" className="text-green-700 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
+          <TabsTrigger value="declined" className="text-green-700 data-[state=active]:border-b-2 data-[state=active]:border-green-500">
             Từ chối
           </TabsTrigger>
         </TabsList>
@@ -368,7 +310,7 @@ const EventManagerUI = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEvents.map(event => (
                 <EventCard 
-                  key={event.event_id} 
+                  key={event.id} 
                   event={event} 
                   isManager={true}
                   onView={handleViewEvent}
@@ -386,18 +328,18 @@ const EventManagerUI = () => {
           )}
         </TabsContent>
 
-        <TabsContent value="pending" className="mt-0">
+        <TabsContent value="pending_approval" className="mt-0">
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
             </div>
-          ) : filteredEvents.filter(event => event.status === "pending").length > 0 ? (
+          ) : filteredEvents.filter(event => event.event_status === "pending_approval").length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEvents
-                .filter(event => event.status === "pending")
+                .filter(event => event.event_status === "pending_approval")
                 .map(event => (
                   <EventCard 
-                    key={event.event_id} 
+                    key={event.id} 
                     event={event}
                     isManager={true}
                     onView={handleViewEvent}
@@ -420,13 +362,13 @@ const EventManagerUI = () => {
             <div className="flex items-center justify-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
             </div>
-          ) : filteredEvents.filter(event => event.status === "approved").length > 0 ? (
+          ) : filteredEvents.filter(event => event.event_status === "approved").length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEvents
-                .filter(event => event.status === "approved")
+                .filter(event => event.event_status === "approved")
                 .map(event => (
                   <EventCard 
-                    key={event.event_id} 
+                    key={event.id} 
                     event={event}
                     isManager={true}
                     onView={handleViewEvent}
@@ -444,18 +386,18 @@ const EventManagerUI = () => {
           )}
         </TabsContent>
 
-        <TabsContent value="rejected" className="mt-0">
+        <TabsContent value="declined" className="mt-0">
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
             </div>
-          ) : filteredEvents.filter(event => event.status === "rejected").length > 0 ? (
+          ) : filteredEvents.filter(event => event.event_status === "declined").length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEvents
-                .filter(event => event.status === "rejected")
+                .filter(event => event.event_status === "declined")
                 .map(event => (
                   <EventCard 
-                    key={event.event_id} 
+                    key={event.id} 
                     event={event}
                     isManager={true}
                     onView={handleViewEvent}
@@ -481,23 +423,23 @@ const EventManagerUI = () => {
                 <DialogTitle className="text-xl font-bold text-green-800">{selectedEvent.title}</DialogTitle>
                 <div className="flex items-center gap-2 mt-2">
                   <Badge className={`${
-                    selectedEvent.status === 'approved' ? 'bg-green-500' : 
-                    selectedEvent.status === 'pending' ? 'bg-yellow-500' : 
-                    selectedEvent.status === 'rejected' ? 'bg-red-500' : 'bg-gray-500'
+                    selectedEvent.event_status === 'approved' ? 'bg-green-500' : 
+                    selectedEvent.event_status === 'pending_approval' ? 'bg-yellow-500' : 
+                    selectedEvent.event_status === 'declined' ? 'bg-red-500' : 'bg-gray-500'
                   }`}>
-                    {selectedEvent.status === 'approved' ? 'Đã duyệt' : 
-                    selectedEvent.status === 'pending' ? 'Chờ duyệt' : 
-                    selectedEvent.status === 'rejected' ? 'Từ chối' : 'Đã hủy'}
+                    {selectedEvent.event_status === 'approved' ? 'Đã duyệt' : 
+                    selectedEvent.event_status === 'pending_approval' ? 'Chờ duyệt' : 
+                    selectedEvent.event_status === 'declined' ? 'Từ chối' : 'Đã hủy'}
                   </Badge>
-                  <span className="text-sm text-gray-500">Ngày tạo: {new Date(selectedEvent.created_at).toLocaleDateString('vi-VN')}</span>
+                  <span className="text-sm text-gray-500">Ngày tạo: {new Date(selectedEvent.date).toLocaleDateString('vi-VN')}</span>
                 </div>
               </DialogHeader>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
                 <div>
                   <div className="h-48 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                    {selectedEvent.image_url ? (
-                      <img src={selectedEvent.image_url} alt={selectedEvent.title} className="w-full h-full object-cover" />
+                    {selectedEvent.image ? (
+                      <img src={selectedEvent.image} alt={selectedEvent.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-green-50">
                         <Calendar className="h-16 w-16 text-green-300" />
@@ -511,7 +453,7 @@ const EventManagerUI = () => {
                       <div>
                         <p className="font-medium">Thời gian</p>
                         <p className="text-gray-600">
-                          {new Date(selectedEvent.start_date).toLocaleDateString('vi-VN')} · {selectedEvent.start_time}
+                          {new Date(selectedEvent.date).toLocaleDateString('vi-VN')} · {selectedEvent.start_time}
                         </p>
                       </div>
                     </div>
@@ -528,7 +470,7 @@ const EventManagerUI = () => {
                       <Tag className="h-5 w-5 mt-0.5 text-green-700" />
                       <div>
                         <p className="font-medium">Giá vé</p>
-                        <p className="text-gray-600">{selectedEvent.price.toLocaleString('vi-VN')} VNĐ</p>
+                        <p className="text-gray-600">{selectedEvent.ticket_price.toLocaleString('vi-VN')} VNĐ</p>
                       </div>
                     </div>
                     
@@ -537,7 +479,7 @@ const EventManagerUI = () => {
                       <div>
                         <p className="font-medium">Vé</p>
                         <p className="text-gray-600">
-                          {selectedEvent.tickets_sold}/{selectedEvent.total_tickets} vé đã bán
+                          {selectedEvent.available_ticket}/{selectedEvent.total_ticket_amount} vé đã bán
                         </p>
                       </div>
                     </div>
@@ -547,7 +489,7 @@ const EventManagerUI = () => {
                 <div>
                   <div className="mb-4">
                     <h3 className="font-medium text-lg mb-2">Mô tả sự kiện</h3>
-                    <p className="text-gray-600 whitespace-pre-line">{selectedEvent.description}</p>
+                    <p className="text-gray-600 whitespace-pre-line">{selectedEvent.content}</p>
                   </div>
                 </div>
               </div>
@@ -561,7 +503,7 @@ const EventManagerUI = () => {
                   Đóng
                 </Button>
                 
-                {selectedEvent.status === 'pending' && (
+                {selectedEvent.event_status === 'pending_approval' && (
                   <div className="flex gap-2">
                     <Button 
                       variant="outline" 
@@ -622,7 +564,7 @@ const EventManagerUI = () => {
               Hủy
             </Button>
             <Button 
-              onClick={handleRejectEvent} 
+              onClick={handleRejectEvent}
               className="bg-red-600 hover:bg-red-700 text-white"
               disabled={!rejectionReason.trim()}
             >

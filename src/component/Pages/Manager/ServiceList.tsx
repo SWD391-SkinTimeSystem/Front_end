@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Service } from "../../../types/services";
-import { useServices } from './useServices';
 import { 
  Card, 
  CardContent, 
@@ -21,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Pencil, Plus, Clock, Tag, Info } from 'lucide-react';
 import { NewServiceForm } from './NewServiceForm';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useService, useServiceDetail } from '@/hooks/useService';
 
 const colors = {
     primary: {
@@ -49,67 +49,70 @@ const colors = {
     }
    };
 
-const ServiceDetail = ({ service }: { service: Service }) => (
- <DialogContent className="max-w-3xl">
-   <DialogHeader>
-     <DialogTitle className={`${colors.primary.DEFAULT} font-bold text-2xl`}>
-       {service.serviceName}
-     </DialogTitle>
-     <DialogDescription>
-       Chi tiết dịch vụ
-     </DialogDescription>
-   </DialogHeader>
-   
-   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-     <div>
-       <img 
-         src={service.thumbnail} 
-         alt={service.serviceName} 
-         className="w-full rounded-lg object-cover h-64" 
-       />
-       <div className="mt-4">
-         <p className="text-gray-600 mb-2">{service.description}</p>
-         <div className="flex items-center mt-2">
-           <Clock className="h-4 w-4 mr-2 text-gray-500" />
-           <span className="text-gray-500">{service.duration} phút</span>
-         </div>
-         <div className="flex items-center mt-2">
-           <Tag className="h-4 w-4 mr-2 text-gray-500" />
-           <span className="text-gray-500">{service.price?.toLocaleString('vi-VN')} VNĐ</span>
-         </div>
-       </div>
-     </div>
-     
-     <div>
-       <h3 className="font-semibold text-lg mb-4">Quy trình thực hiện</h3>
-       {service.serviceDetails && service.serviceDetails.length > 0 ? (
-         <div className="space-y-4">
-           {service.serviceDetails.map((detail) => (
-             <div key={detail.id} className="border-l-2 border-green-500 pl-4 py-2">
-               <h4 className="font-medium text-gray-800 flex items-center">
-                 <span className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs mr-2">
-                   {detail.step}
-                 </span>
-                 {detail.name}
-               </h4>
-               <p className="text-gray-600 text-sm mt-1">{detail.description}</p>
-               <div className="flex items-center mt-2 text-xs text-gray-500">
-                 <Clock className="h-3 w-3 mr-1" />
-                 <span>{detail.duration} phút</span>
-               </div>
-             </div>
-           ))}
-         </div>
-       ) : (
-         <p className="text-gray-500 italic">Chưa có thông tin chi tiết</p>
-       )}
-     </div>
-   </div>
- </DialogContent>
-);
+const ServiceDetail = ({ service }: { service: Service }) => {
+  // const { serviceDetail } = useServiceDetail("");
+  return (
+    <DialogContent className="max-w-3xl">
+      <DialogHeader>
+        <DialogTitle className={`${colors.primary.DEFAULT} font-bold text-2xl`}>
+          {service.serviceName}
+        </DialogTitle>
+        <DialogDescription>
+          Chi tiết dịch vụ
+        </DialogDescription>
+      </DialogHeader>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <img 
+            src={service.thumbnail} 
+            alt={service.serviceName} 
+            className="w-full rounded-lg object-cover h-64" 
+          />
+          <div className="mt-4">
+            <p className="text-gray-600 mb-2">{service.description}</p>
+            <div className="flex items-center mt-2">
+              <Clock className="h-4 w-4 mr-2 text-gray-500" />
+              <span className="text-gray-500">{service.duration} phút</span>
+            </div>
+            <div className="flex items-center mt-2">
+              <Tag className="h-4 w-4 mr-2 text-gray-500" />
+              <span className="text-gray-500">{service.price?.toLocaleString('vi-VN')} VNĐ</span>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 className="font-semibold text-lg mb-4">Quy trình thực hiện</h3>
+          {service.serviceDetails && service.serviceDetails.length > 0 ? (
+            <div className="space-y-4">
+              {service.serviceDetails.map((detail) => (
+                <div key={detail.id} className="border-l-2 border-green-500 pl-4 py-2">
+                  <h4 className="font-medium text-gray-800 flex items-center">
+                    <span className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs mr-2">
+                      {detail.step}
+                    </span>
+                    {detail.name}
+                  </h4>
+                  <p className="text-gray-600 text-sm mt-1">{detail.description}</p>
+                  <div className="flex items-center mt-2 text-xs text-gray-500">
+                    <Clock className="h-3 w-3 mr-1" />
+                    <span>{detail.duration} phút</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 italic">Chưa có thông tin chi tiết</p>
+          )}
+        </div>
+      </div>
+    </DialogContent>
+   );
+}
 
 export const ServiceList = () => {
- const { services, loading, error } = useServices();
+ const { services, loading, error } = useService();
  const [showNewForm, setShowNewForm] = useState(false);
  const methods = useForm();
  if (loading) return <div className="flex justify-center py-10">Đang tải dữ liệu...</div>;

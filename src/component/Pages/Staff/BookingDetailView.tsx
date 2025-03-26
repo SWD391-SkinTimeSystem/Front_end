@@ -30,11 +30,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { BookingDetail } from '../../../types/booking';
+import { BookingDetail, CopyBookingDetail } from '../../../types/booking';
 import { format, parseISO, addMinutes, addHours, differenceInMinutes, addDays } from "date-fns";
 import { vi } from "date-fns/locale";
 import { CheckInOutButton } from './CheckInOutButton';
-import { DatePickerWithRange } from '@/components/ui/date-range-picker';
+// import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 import {
   Dialog,
   DialogContent,
@@ -51,7 +51,7 @@ const getEnhancedStatusConfig = (status: string, completedSteps: number, totalSt
   
   let uiStatus = backendStatus;
   
-  if (backendStatus === 'not_started') {
+  if (backendStatus === 'notstarted') {
     uiStatus = 'Chưa hoàn thành';
   } else if (backendStatus === 'completed') {
     uiStatus = 'Đã hoàn thành';
@@ -59,7 +59,7 @@ const getEnhancedStatusConfig = (status: string, completedSteps: number, totalSt
     uiStatus = 'Đã hủy';
   }
     
-  if (totalSteps > 1 && backendStatus === 'not_started') {
+  if (totalSteps > 1 && backendStatus === 'notstarted') {
     uiStatus = 'Đang thực hiện';
   }
   
@@ -81,7 +81,7 @@ const getStepStatusConfig = (status: string) => {
   switch (status.toLowerCase()) {
     case 'completed':
       return { color: 'bg-green-100 text-green-800', icon: <CheckCircle2 className="h-4 w-4 mr-1" />, label: 'Đã hoàn thành' };
-    case 'not_started':
+    case 'notstarted':
       return { color: 'bg-blue-100 text-blue-800', icon: <Clock className="h-4 w-4 mr-1" />, label: 'Chưa hoàn thành' };
     case 'canceled':
       return { color: 'bg-red-100 text-red-800', icon: <X className="h-4 w-4 mr-1" />, label: 'Đã hủy' };
@@ -103,7 +103,7 @@ interface TimeSlot {
 }
 
 interface BookingDetailViewProps {
-  booking: BookingDetail;
+  booking: CopyBookingDetail;
   onBack: () => void;
   onCheckIn: (bookingId: string, stepIndex: number, code: string) => Promise<boolean>;
   onCheckOut: (bookingId: string, stepIndex: number) => Promise<boolean>;
@@ -151,7 +151,7 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
   // Check for auto-cancellation
   useEffect(() => {
     booking.details.forEach((detail, index) => {
-      if (detail.status.toLowerCase() === 'not_started' && detail.reservedDate && detail.startTime) {
+      if (detail.status.toLowerCase() === 'notstarted' && detail.reservedDate && detail.startTime) {
         const serviceDateTime = parseTime(detail.reservedDate.toString(), detail.startTime);
         const timeLimit = addMinutes(serviceDateTime, 15);
   
@@ -181,7 +181,7 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
   );
   
   const currentStepIndex = booking.details.findIndex(detail => 
-    detail.status.toLowerCase() === 'not_started'
+    detail.status.toLowerCase() === 'notstarted'
   );
 
   const handleCheckIn = async (bookingId: string, stepIndex: number, code: string) => {
@@ -402,7 +402,7 @@ console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
                   // - Within check-in window
                   // - Previous step is completed
                   const canCheckIn = isActiveStep && 
-                                     detail.status.toLowerCase() === 'not_started' && 
+                                     detail.status.toLowerCase() === 'notstarted' && 
                                      !isStepCheckedIn &&
                                      isWithinCheckInWindow &&
                                      isPreviousStepCompleted &&
@@ -412,7 +412,7 @@ console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
                   // - It's been checked in
                   // - At least an hour has passed since check-in
                   const canCheckOut = isActiveStep && 
-                                      detail.status.toLowerCase() === 'not_started' && 
+                                      detail.status.toLowerCase() === 'notstarted' && 
                                       isStepCheckedIn &&
                                       canShowCheckOut;
                   
@@ -420,7 +420,7 @@ console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
                   const isStepCanceled = detail.status.toLowerCase() === 'canceled';
                   
                   // For steps that aren't scheduled yet but previous step is completed
-                  const needsScheduling = detail.status.toLowerCase() === 'not_started' && 
+                  const needsScheduling = detail.status.toLowerCase() === 'notstarted' && 
                                          !isStepScheduled && 
                                          isPreviousStepCompleted;
                   

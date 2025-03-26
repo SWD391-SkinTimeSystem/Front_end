@@ -10,9 +10,9 @@ export const trackingService = {
         }
       },
 
-    checkoutTracking: async (trackingId: string) => {
+    checkoutTracking: async (scheduleId: string) => {
         try {
-          const response = await axiosInstance.put("/tracking/checkout", trackingId);
+          const response = await axiosInstance.put("/tracking/checkout", {scheduleId});
           return response.data;
         } catch (error) {
           console.error("Error checking out:", error);

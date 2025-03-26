@@ -22,4 +22,12 @@ export type EventDetail = {
     total_ticket_amount: number;
     ticket_price: number;
     event_status: string;
-  }
+}
+
+export type EventStase = {
+    content: EventDetail[];
+    itemAmount: number;
+    pageSize: number;
+    pageCount: number;
+    currentPage: number;
+}
