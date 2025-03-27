@@ -28,6 +28,7 @@ const App = () => {
 
       <Router>
         <Routes>
+         
           <Route path="/login" element={<Login />} />
           <Route path="/question" element={<Quiz />} />
           <Route path="/questionSection" element={<DisplayQuestion />} />
@@ -39,9 +40,19 @@ const App = () => {
           <Route path="/therapist/*" element={<SkinTherapistRoutes />} />
           <Route path="/admin/*" element={<AdminSystemRoutes />} />
         </Routes>
+        {/* <Routes>
+            <Route
+              path="/login"
+              element={<AuthContainer />}
+            />
+            <Route
+              path="/register"
+              element={<AuthContainer />}
+            />
+          </Routes> */}
       </Router>
 
     </>
-  )
-}
-export default App
+  );
+};
+export default App;

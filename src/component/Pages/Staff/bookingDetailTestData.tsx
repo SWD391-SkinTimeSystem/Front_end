@@ -34,9 +34,12 @@ export const treatmentPlanBooking: BookingDetail = {
   details: [
     {
       serviceDetailsName: "Bước 1: Tư vấn và phân tích da",
-      startTime: "09:00",
-      startEnd: "10:00",
-      reservedDate: new Date("2025-02-15")
+      startTime: "02:36",
+      startEnd: "04:00",
+      status: "Not_started",
+      reservedDate: new Date("2025-03-21"),
+      checkInCode: "CK12345",
+
     },
     {
       serviceDetailsName: "Bước 2: Điều trị và làm sạch sâu",

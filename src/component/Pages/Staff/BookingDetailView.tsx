@@ -64,6 +64,104 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({ booking, onBack }
   
   const progress = (completedSteps / booking.totalStep) * 100;
   
+  const statusConfig = getEnhancedStatusConfig(
+    booking.status, 
+    completedSteps, 
+    booking.totalStep
+  );
+  
+  const currentStepIndex = booking.details.findIndex(detail => 
+    detail.status.toLowerCase() === 'not_started'
+  );
+
+  const handleCheckIn = async (bookingId: string, stepIndex: number, code: string) => {
+    const success = await onCheckIn(bookingId, stepIndex, code);
+    if (success) {
+      const now = new Date();
+      setCheckedInSteps(prev => [...prev, stepIndex]);
+      setCheckInTimes(prev => ({...prev, [stepIndex]: now}));
+      console.log(stepIndex)
+    }
+    return success;
+  };
+  
+  const handleCheckOut = async (bookingId: string, stepIndex: number) => {
+    const success = await onCheckOut(bookingId, stepIndex);
+    
+    if (success) {
+      if (stepIndex < booking.totalStep - 1) {
+        const nextIndex = stepIndex + 1;
+        setNextStepIndex(nextIndex);
+        
+        const minDate = addDays(new Date(), 7); 
+        const maxDate = addDays(minDate, 7);    
+        console.log("Checkout success:", success);
+console.log("Step index:", stepIndex);
+console.log("Total steps:", booking.totalStep);
+console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
+        setDateRange({
+          minDate,
+          maxDate
+        });
+        
+        setShowScheduleDialog(true);
+      }
+    }
+    return success;
+  };
+  const handleDateSelect = async (date: Date) => {
+    setSelectedDate(date);
+    setSelectedTimeSlot(null);
+    
+    try {
+      // Fetch available time slots for the selected date
+      const slots = await fetchAvailableTimeSlots(date);
+      setAvailableTimeSlots(slots);
+    } catch (error) {
+      console.error("Error fetching time slots:", error);
+      toast.error("Không thể tải khung giờ có sẵn. Vui lòng thử lại sau.");
+      setAvailableTimeSlots([]);
+    }
+  };
+  
+  const handleScheduleConfirm = async () => {
+    if (!nextStepIndex || !selectedDate || !selectedTimeSlot) {
+      setScheduleError("Vui lòng chọn ngày và giờ hẹn.");
+      return;
+    }
+    
+    setIsScheduling(true);
+    setScheduleError(null);
+    
+    try {
+      const success = await onScheduleNextStep(
+        booking.id, 
+        nextStepIndex, 
+        selectedDate, 
+        selectedTimeSlot
+      );
+      
+      if (success) {
+        toast.success("Đã lên lịch thành công cho bước tiếp theo!");
+        setShowScheduleDialog(false);
+        
+        // Update the booking details in state to reflect the new schedule
+        booking.details[nextStepIndex].reservedDate = selectedDate;
+        booking.details[nextStepIndex].startTime = selectedTimeSlot;
+        // Calculate end time (assuming 1-hour duration)
+        const [hour, minute] = selectedTimeSlot.split(':').map(Number);
+        booking.details[nextStepIndex].startEnd = `${hour + 1}:${minute.toString().padStart(2, '0')}`;
+      } else {
+        setScheduleError("Không thể lên lịch. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Error scheduling next step:", error);
+      setScheduleError("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+    } finally {
+      setIsScheduling(false);
+    }
+  };
+  
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex items-center mb-6">
