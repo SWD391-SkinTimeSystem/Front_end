@@ -25,6 +25,7 @@ export type TicketHistory = {
     event_id: string;
     purchase_date: string;
     status: string;
+    event_date: string;
     otp_code: string | null;
     qr_code: string | null;
 };

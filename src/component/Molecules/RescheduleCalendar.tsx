@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, getFormattedDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Availability } from "@/types/schedule";
-import { useAvailability } from "@/hooks/useSchedule";
 
 interface DateTimePickerProps {
      onTimeChange: (time: string) => void;
      onDateChange: (date: string) => void;
-     disable?: boolean;
      availableTime?: Availability;
-     checkAvailabelByDate: boolean;
+     reservedDate: Date;
+     scheduleId: string
 }
 
 const fixedTimeSlots = [
@@ -25,28 +23,37 @@ const options = [
      { label: "Đang chọn", value: "selected", color: "bg-orange-500 text-white" },
 ];
 
-const fetchWeekDays = () => {
-     const today = new Date();
-     return Array.from({ length: 7 }, (_, i) => {
-          const date = new Date();
-          date.setDate(today.getDate() + i);
-          return {
-               day: date.toLocaleDateString("vi-VN", { weekday: "long" }),
-               date: date.toISOString().split('T')[0]  // This gives YYYY-MM-DD format
-          };
-     });
+const fetchWeekDays = (reservedDate: Date) => {
+  const today = new Date();
+  const maxDate = new Date();
+  maxDate.setDate(today.getDate() + 6); // Giới hạn đến 7 ngày sau
+
+  const days = [];
+  let currentDate = new Date(reservedDate); // Bắt đầu từ reservedDate
+
+  while (currentDate <= maxDate) {
+      days.push({
+          day: currentDate.toLocaleDateString("vi-VN", { weekday: "long" }),
+          date: currentDate.toISOString().split("T")[0], // YYYY-MM-DD
+      });
+
+      currentDate.setDate(currentDate.getDate() + 1); // Tăng 1 ngày
+  }
+
+  return days;
 };
-const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeChange, availableTime, disable, checkAvailabelByDate }) => {
-     const [weekDays] = useState(fetchWeekDays());
+
+const RescheduleCalendar: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeChange, availableTime, reservedDate, scheduleId}) => {
+     const [weekDays] = useState(fetchWeekDays(reservedDate));
      const [selectedDate, setSelectedDate] = useState(weekDays[0].date);
      const [selectedTime, setSelectedTime] = useState<string | null>(null);
-     const { data, isLoading, error } = useAvailability(checkAvailabelByDate, selectedDate) // Gọi hook khi checkAvailabelByDate = true
      // gọi slot rãnh theo ngày ;
      // giờ là load ngày theo chuyên viên hay là load ngày theo date \
      const availableSlots = availableTime?.[selectedDate] ?? {}; // Tránh lỗi undefined
      // nếu không có availableSlot thì sẽ hiển thị theo data.data[timetime]
-     console.log(data)
-     console.log(disable)
+     console.log(availableSlots)
+     console.log(selectedDate)
+      console.log(scheduleId)
      return (
           <Card className="p-4">
                <div className="flex flex-row items-center mb-4">
@@ -63,11 +70,9 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeCha
                </div>
 
                <div className="flex items-center justify-between overflow-auto gap-2 w-full">
-                    <Button variant="ghost" size="icon">
-                         <ChevronLeft className="w-5 h-5" />
-                    </Button>
+                   
                     {weekDays.map((day) => (
-                         <Button disabled={disable}
+                         <Button 
                               key={day.date}
                               className={cn( 
                                    "w-[150px] text-sm font-medium py-5 hover:bg-orange-500 hover:text-white",
@@ -78,21 +83,18 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeCha
                                    setSelectedDate(day.date)
                               }}
                          >
-                              {day.day} <br />
+                              {day.day}<br />
                          </Button>
                     ))}
-                    <Button variant="ghost" size="icon">
-                         <ChevronRight className="w-5 h-5" />
-                    </Button>
+                   
                </div>
                <div className="grid grid-cols-6 gap-2 mt-4">
                     {fixedTimeSlots.map((time) => {
                          // Kiểm tra xem slot có rảnh không (tránh lỗi khi availableTime[selectedDate] undefined)
-                         const isAvailable = availableTime?.[selectedDate]?.[time + ":00"]
-                              ?? data?.data?.[time + ":00"]
-                              ?? false; return (
+                         const isAvailable = availableTime?.[selectedDate]?.[time + ":00"] ?? false;
+                              return (
                                    <Button
-                                   disabled={disable || !isAvailable} // Chặn cả khi disable=true hoặc slot bận
+                                   disabled={!isAvailable} // Chặn cả khi disable=true hoặc slot bận
                                    key={time}
                                    className={cn(
                                        "px-3 py-2 border rounded-md hover:bg-orange-500 hover:text-white",
@@ -102,7 +104,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeCha
                                                ? "bg-orange-500 text-white" // Slot được chọn
                                                : "bg-green-200 text-green-800" // Slot rảnh
                                    )}
-                                   onClick={disable || !isAvailable ? undefined : () => {
+                                   onClick={!isAvailable ? undefined : () => {
                                        setSelectedTime(time);
                                        onTimeChange(time);
                                    }}
@@ -117,4 +119,4 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange, onTimeCha
      );
 };
 
-export default DateTimePicker;
+export default RescheduleCalendar;

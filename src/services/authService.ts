@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-
-const API_URL = "https://localhost:5063/api";
+import axiosInstance from "@/lib/axiosInstance";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface DecodedToken {
   id: string;
@@ -133,6 +133,16 @@ const authService = {
       throw error;
     }
   },
+  getCurrentUser: async () => {
+    try {
+      const response = await axiosInstance.get(`${API_URL}/account`);
+      return response.data;
+    } catch (error: any) {
+      console.error("AuthService getCurrentUser error:", error);
+      throw error;
+    }
+  },
+  
 };
 
 export default authService; // ✅ Thêm export default

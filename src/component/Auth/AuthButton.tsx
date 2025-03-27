@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import NotificationBell from "../Atoms/NotificationBell";
+import { useAccountStore } from "@/store/useAccountStore";
 
 const AuthButton: React.FC = () => {
   const { user, logout } = useAuthStore();
+  const { account, fetchAccount, isLoading, error } = useAccountStore();
   const navigate = useNavigate();
   console.log(user);
   const handleLogout = () => {
@@ -35,7 +37,7 @@ const AuthButton: React.FC = () => {
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>{user.fullname}</DropdownMenuLabel>
+              <DropdownMenuLabel>{account?.fullname}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuCheckboxItem onClick={handleLogout}>
                 {/* <Button variant="ghost" className="flex items-center text-white space-x-2" > */}

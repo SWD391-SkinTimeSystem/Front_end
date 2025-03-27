@@ -2,28 +2,26 @@ import { eventService } from "@/services/eventService";
 import { useEffect, useState } from "react";
 import { Event, EventDetail } from "@/types/event";
 
-export const useEvent = () => {
+export const useEvent = (page: number, pageSize: number) => {
      const [events, setEvents] = useState<Event[]>([]);
      const [loading, setLoading] = useState<boolean>(true);
      const [error, setError] = useState<string | null>(null);
 
      const fetchEvent = async () => {
           try {
-               const data = await eventService.getListEvents();
-               setEvents(data);
+               const data = await eventService.getListEvents(page, pageSize);
+               setEvents(data.content);
           } catch (error) {
                setError("failed to fetch services");
           } finally {
                setLoading(false);
           }
      }
-
      useEffect(() => {
           fetchEvent();
      }, []);
- 
 
-     return { events, loading, error };
+     return {fetchEvent, events, loading, error };
 }
 
 export const useEventDetail = (id : string) => {

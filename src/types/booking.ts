@@ -23,6 +23,8 @@ export type Booking = {
      id: string,
      checkInCode: string,
      therapistName: string,
+     therapistId: string,
+     transactionId: string,
      thumbnail: string,
      serviceName: string,
      status: string,
@@ -33,6 +35,11 @@ export type Booking = {
          startTime: string,
          startEnd: string,
          reservedDate: Date
+         checkInCode: string,
+        status: string,
+        scheduleID: string,
+        step: number
+        description: string
        }[]
        
  };

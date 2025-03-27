@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import '../../styles/global.css';
 import { LucideSearch } from "lucide-react";
 import AuthButton from "@/component/Auth/AuthButton";
 import { useNavigate } from "react-router-dom";
+import { useAccountStore } from "@/store/useAccountStore";
 // import { LucideSearch, LucidePhone, LucideUser } from "lucide-react";
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const { account, fetchAccount, isLoading, error } = useAccountStore();
+  const user = localStorage.getItem("accessToken");
+  
+  useEffect(() => {
+    if (user && user !== "undefined") {
+      console.log("User is logged in");
+      fetchAccount();
+    }
+  }, [user]); // Chỉ chạy lại khi user thay đổi
+  console.log("Header account", account);
   return (
     <>
       <div className="relative">

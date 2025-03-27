@@ -32,9 +32,8 @@ export const TicketCard: React.FC<TicketListProps> = ({
               <div className="flex flex-row">
                 <p>
                   Ngày hẹn:{" "}
-                  <span className="text-green-400 font-bold">{formatDateAndTime(ticket.purchase_date)}</span> <span className="text-green-400 font-bold">
+                  <span className="text-green-400 font-bold">{formatDateAndTime(ticket.event_date)}</span> <span className="text-green-400 font-bold">
                     {/* {time} */}
-
                   </span>
                   <span className="mr-2 ml-2">|</span>
                 </p>
@@ -70,7 +69,7 @@ export const TicketCard: React.FC<TicketListProps> = ({
                 </p>
                 {/* <strong>Dịch vụ có lộ trình không: </strong> */}
                 <span className="text-mg font-bold text-emerald-700">
-                  {ticket.otp_code}
+                  Mã vé: {ticket.otp_code}
                 </span>
               </div>
             </div>

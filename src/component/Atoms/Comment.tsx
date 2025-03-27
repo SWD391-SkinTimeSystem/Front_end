@@ -45,11 +45,11 @@ export default function CommentItem() {
                     {/* Thông tin người dùng */}
                     <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center text-white font-bold">
-                         {feedback.username.charAt(0).toUpperCase()}
+                         {feedback.fullname.charAt(0).toUpperCase()}
                     </div>
                     <div>
                          <h4 className="font-semibold text-lg text-gray-800">
-                         {feedback.username}
+                         {feedback.fullname}
                          </h4>
                          <span className="text-sm text-gray-500">
                          {new Date(feedback.date).toLocaleDateString()}
