@@ -65,7 +65,6 @@ export const useEventStatus = () => {
                setEventPendingApproval(pending_approval);
                setEventApproved(approved);
                setEventDeclined(declined);
-               console.log(pending_approval);
           } catch (error) {
                setError("failed to fetch services");
           } finally {

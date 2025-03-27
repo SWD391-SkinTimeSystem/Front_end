@@ -45,6 +45,8 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { useCheckCheckin, useTracking } from '@/hooks/useTracking';
+import { trackingService } from '@/services/trackingService';
 
 const getEnhancedStatusConfig = (status: string, completedSteps: number, totalSteps: number) => {
   const backendStatus = status.toLowerCase();
@@ -186,38 +188,38 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
 
   const handleCheckIn = async (bookingId: string, stepIndex: number, code: string) => {
     const success = await onCheckIn(bookingId, stepIndex, code);
+    const isCheckIn = await trackingService.getCheckCheckIn(booking.details[stepIndex].scheduleID);
     if (success) {
-      const now = new Date();
       setCheckedInSteps(prev => [...prev, stepIndex]);
-      setCheckInTimes(prev => ({...prev, [stepIndex]: now}));
+      setCheckInTimes(isCheckIn.checkinTime);
     }
     return success;
   };
   
-  const handleCheckOut = async (bookingId: string, stepIndex: number) => {
-    const success = await onCheckOut(bookingId, stepIndex);
+//   const handleCheckOut = async (bookingId: string, stepIndex: number) => {
+//     const success = await onCheckOut(bookingId, stepIndex);
     
-    if (success) {
-      if (stepIndex < booking.totalStep - 1) {
-        const nextIndex = stepIndex + 1;
-        setNextStepIndex(nextIndex);
+//     if (success) {
+//       if (stepIndex < booking.totalStep - 1) {
+//         const nextIndex = stepIndex + 1;
+//         setNextStepIndex(nextIndex);
         
-        const minDate = addDays(new Date(), 7); 
-        const maxDate = addDays(minDate, 7);    
-        console.log("Checkout success:", success);
-console.log("Step index:", stepIndex);
-console.log("Total steps:", booking.totalStep);
-console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
-        setDateRange({
-          minDate,
-          maxDate
-        });
+//         const minDate = addDays(new Date(), 7); 
+//         const maxDate = addDays(minDate, 7);    
+//         console.log("Checkout success:", success);
+// console.log("Step index:", stepIndex);
+// console.log("Total steps:", booking.totalStep);
+// console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
+//         setDateRange({
+//           minDate,
+//           maxDate
+//         });
         
-        setShowScheduleDialog(true);
-      }
-    }
-    return success;
-  };
+//         setShowScheduleDialog(true);
+//       }
+//     }
+//     return success;
+//   };
   const handleDateSelect = async (date: Date) => {
     setSelectedDate(date);
     setSelectedTimeSlot(null);
@@ -353,16 +355,16 @@ console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
               </h3>
               
               <div className="space-y-4">
-                {booking.details.map((detail, index) => {
+                {booking.details.map((detail, index)  => {
                   const detailStatus = getStepStatusConfig(detail.status);
                   const isActiveStep = currentStepIndex === index;
                   const isPastStep = index < currentStepIndex;
-                  
+                  const check = trackingService.getCheckCheckIn(detail.scheduleID);
                   // Kiểm tra xem bước này đã checkin chưa
-                  const isStepCheckedIn = checkedInSteps.includes(index);
+                  const isStepCheckedIn = check;
                   
                   // Kiểm tra xem bước trước đã hoàn thành chưa
-                  const isPreviousStepCompleted = index === 0 || 
+                  const isPreviousStepCompleted = index === 0 ||
                       (index > 0 && booking.details[index - 1].status.toLowerCase() === 'completed');
                   
                   // Kiểm tra xem bước hiện tại đã được lên lịch chưa
@@ -518,29 +520,6 @@ console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
         </CardContent>
         
         <Separator />
-<Button
-  variant="outline"
-  className="text-blue-600"
-  onClick={() => {
-    // Giả định bước tiếp theo là 1 (hoặc index phù hợp cho test)
-    const testStepIndex = 1; 
-    setNextStepIndex(testStepIndex);
-    
-    // Thiết lập date range
-    const minDate = addDays(new Date(), 7);
-    const maxDate = addDays(minDate, 7);
-    
-    setDateRange({
-      minDate,
-      maxDate
-    });
-    
-    // Hiển thị dialog
-    setShowScheduleDialog(true);
-  }}
->
-  Test Schedule Popup
-</Button>
         <CardFooter className="p-6 flex flex-wrap justify-between gap-4">
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-2">Ghi chú thêm</h4>
@@ -556,12 +535,12 @@ console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
             </Accordion>
           </div>
           
-          <div className="flex gap-3">
+          {/* <div className="flex gap-3">
             <Button variant="outline" className="text-gray-600">
               <Printer className="h-4 w-4 mr-2" />
               In thông tin
             </Button>
-          </div>
+          </div> */}
         </CardFooter>
       </Card>
       

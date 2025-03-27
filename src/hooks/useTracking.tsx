@@ -1,5 +1,6 @@
 
 import { trackingService } from "@/services/trackingService";
+import { Check } from "@/types/tracking";
 import { useState } from "react";
 
 export const useTracking = () => {
@@ -28,4 +29,25 @@ export const useTracking = () => {
           }
      }
      return { fetchCheckin, fetchCheckout, loading, error };
+}
+
+export const useCheckCheckin = () => {
+     const [isCheckIn, setIsCheckIn] = useState<Check>();
+     const [loading, setLoading] = useState<boolean>(true);
+     const [error, setError] = useState<string | null>(null);
+
+     const fetchCheckCheckin = async (scheduleId: string) => {
+          try {
+               const data = await trackingService.getCheckCheckIn(scheduleId);
+               setIsCheckIn(data);
+               return isCheckIn;
+          } catch (error) {
+               setError("failed to fetch services");
+          } finally {
+               setLoading(false);
+          }
+     }
+
+
+     return {fetchCheckCheckin, loading, error };
 }

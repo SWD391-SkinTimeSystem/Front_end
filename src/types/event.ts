@@ -24,10 +24,22 @@ export type EventDetail = {
     event_status: string;
 }
 
-export type EventStase = {
+export type EventStatus = {
     content: EventDetail[];
     itemAmount: number;
     pageSize: number;
     pageCount: number;
     currentPage: number;
+}
+
+export type CreateEvent = {
+    EventName : string;
+    Description : string;
+    Date  : string;
+    StartTime  : string;
+    EndTime  : string;
+    Location : string;
+    Price : number;
+    Capacity : number;
+    EventImage : string;
 }
