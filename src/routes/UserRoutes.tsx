@@ -12,6 +12,7 @@ import HomePage from "@/component/Pages/Manager/TestHome/HomePage";
 import SkincareLandingPage from "@/component/Pages/Manager/TestHome/SkincareLandingPage";
 import UserManagementPage from "@/component/Pages/Admin/UserManagementPage";
 import ServiceManagementPage from "@/component/Pages/Manager/Service/ServiceManagementPage";
+import FeedbackManagementPage from "@/component/Pages/Manager/Feedback/FeedbackManagementPage";
 
 // import {ServiceList} from "@/component/Pages/Staff/ServiceList";
 const ServiceDetail = lazy(() => import("@/component/Pages/ServiceDetail"));
@@ -59,8 +60,8 @@ const UserRoutes: React.FC = () => {
           //                <Route path="/event" element={<DisplayEventList />} />
           //                <Route path="/event-detail/:id" element={<EventDetail />} />
           //                <Route path="/testAPI" element={<DisplayServiceList />} />
-          //                <Route path="/payment/fail" element={<FailurePayment />} />
-          //                <Route path="/payment/success" element={<SuccessPayment />} />
+          //                {/* <Route path="/payment/fail" element={<FailurePayment />} />
+          //                <Route path="/payment/success" element={<SuccessPayment />} /> */}
 
           //           </Routes>
           //      </Suspense>
@@ -73,6 +74,8 @@ const UserRoutes: React.FC = () => {
                <Route path="/event" element={<EventManagementUI />} />
                <Route path="/eventM" element={<EventManagerUI />} />
                <Route path="/service" element={<ServiceManagementPage />} />
+               <Route path="/feedback" element={<FeedbackManagementPage />} />
+
                <Route path="/user" element={<UserManagementPage />} />
 
                <Route path="" element={<HomePage />} />
