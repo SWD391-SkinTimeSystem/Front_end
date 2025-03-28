@@ -1,5 +1,6 @@
 export type Service = {
      serviceGroupId: string,
+
      id: string;          // Mã dịch vụ
      serviceName: string;        // Tên dịch vụ
      description?: string; // Mô tả dịch vụ (tuỳ chọn)
@@ -17,14 +18,17 @@ export type ServiceCategory = {
 
 };
 export type ServiceDetailType = {
-     id: string;          // Mã dịch vụ
+     id: string;        
      name: string;
      description: string;
      step: number;
      duration: number;
      dateToNextStep: number;
 };
-
+export type ServiceImage = {
+     thumbnail?: string;
+     serviceImages?: string[];
+};
 export type Feedback = {
      review_id: string;
      user_id: string;
@@ -33,3 +37,5 @@ export type Feedback = {
      review: string;
      date: Date;
 };
+
+export type ServiceWithImages = Service & ServiceImage;

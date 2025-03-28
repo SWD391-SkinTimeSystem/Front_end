@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { BookingDetail} from '../../../types/booking';
 import BookingDetailView from './BookingDetailView';
+
 // import { BookingService } from './BookingService';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -15,6 +16,7 @@ import { trackingService } from '@/services/trackingService';
 const TestPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const { id } = useParams<{ id: string }>();
 
   const [booking, setBooking] = useState<BookingDetail | null>(null);
@@ -73,7 +75,7 @@ const TestPage: React.FC = () => {
   const handleBack = () => {
     navigate('/bookings');
   };
-  
+
 
 
   const handleCheckIn = async (bookingId: string, stepIndex: number, code: string): Promise<boolean> => {
@@ -94,6 +96,7 @@ const TestPage: React.FC = () => {
 
   const handleCheckOut = async (bookingId: string, stepIndex: number): Promise<boolean> => {
     if (!booking) return false;
+
     const result = await fetchCheckout(booking.details[stepIndex].scheduleID);
     console.log(result);
     toast("Check-out thành công");
@@ -103,6 +106,7 @@ const TestPage: React.FC = () => {
   const handleUpdateStatus = async (bookingId: string, stepIndex: number, status: string): Promise<boolean> => {
     if (!booking) return false;
     
+
     const updatedBooking = JSON.parse(JSON.stringify(booking)) as CopyBookingDetail;
     updatedBooking.details[stepIndex].status = status;
     
@@ -127,6 +131,7 @@ const TestPage: React.FC = () => {
   ): Promise<boolean> => {
     if (!booking) return false;
     
+
     const updatedBooking = JSON.parse(JSON.stringify(booking)) as CopyBookingDetail;
     
     // Update the next step's scheduling information
@@ -163,6 +168,7 @@ const TestPage: React.FC = () => {
       }, 500);
     });
   };
+
 
   // const renderSampleSelector = () => (
   //   <div className="flex gap-4 mb-6 flex-wrap">

@@ -1,4 +1,5 @@
 
+
 import React, { useState, useMemo, useEffect } from 'react';
 import {
   Card,
@@ -37,17 +38,60 @@ import {
   Trash2,
   UserPlus
 } from 'lucide-react';
-import { useAccountList } from '@/hooks/useAccount';
-import { AccountDetail } from '@/types/account';
+
+interface User {
+  id: string;
+  username: string;
+  fullname: string;
+  avatar?: string;
+  email: string;
+  phone?: string;
+  date_of_birth: string;
+  gender?: 'male' | 'female' | 'other';
+  role: 'customer' | 'staff' | 'skin_therapist' | 'manager' | 'admin';
+  status: 'active' | 'inactive' | 'deleted';
+  created_time: string;
+  last_modified: string;
+}
+
+const initialUsers: User[] = [
+  {
+    id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    username: 'admin',
+    fullname: 'Admin User',
+    email: 'admin@example.com',
+    role: 'manager',
+    status: 'active',
+    phone: '0123456789',
+    gender: 'male',
+    date_of_birth: '1990-01-01',
+    created_time: new Date('2024-03-20').toISOString(),
+    last_modified: new Date().toISOString()
+  },
+  {
+    id: '3fa85f64-5717-4562-b3fc-2c963f66afa7',
+    username: 'staff1',
+    fullname: 'Staff User',
+    email: 'staff1@example.com',
+    role: 'staff',
+    status: 'active',
+    phone: '0987654321',
+    gender: 'female',
+    date_of_birth: '1995-05-15',
+    created_time: new Date('2024-03-25').toISOString(),
+    last_modified: new Date().toISOString()
+  }
+];
 
 const UserManagement: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const {accounts} = useAccountList();
-  const [users, setUsers] = useState<AccountDetail[]>([]);
+
+  const [users, setUsers] = useState<User[]>(initialUsers);
   const [newUser, setNewUser] = useState({
     username: '',
     email: '',
-    password: '12345678',
+    password: '12345678', 
+
     role: 'customer'
   });
   
@@ -58,10 +102,12 @@ const UserManagement: React.FC = () => {
     sortOrder: 'newest' as 'newest' | 'oldest'
   });
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
+
   const validateEmail = (email: string) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(email);
   };
+
 
   useEffect(() => {
     if (accounts) {
@@ -83,6 +129,7 @@ const UserManagement: React.FC = () => {
       return;
     }
   
+
     const userToAdd: AccountDetail = {
       ...newUser,
       id:'',
@@ -125,6 +172,7 @@ const UserManagement: React.FC = () => {
   // Filtered and sorted users
   const filteredUsers = useMemo(() => {
     return users
+
       .filter(user => user.status !== 'Deleted')
       .filter(user =>
         (!filters.username || user.username.toLowerCase().includes(filters.username.toLowerCase())) &&
@@ -161,6 +209,7 @@ const UserManagement: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
+
                   <SelectItem value="custommer">Customer</SelectItem>
                   <SelectItem value="staff">Staff</SelectItem>
                   <SelectItem value="therapist">Skin Therapist</SelectItem>
@@ -176,6 +225,7 @@ const UserManagement: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
+
                   <SelectItem value="Active">Active</SelectItem>
                   <SelectItem value="Inactive">Inactive</SelectItem>
                 </SelectContent>
@@ -238,12 +288,14 @@ const UserManagement: React.FC = () => {
                       </Label>
                       <Select
                         value={newUser.role}
+
                         onValueChange={(value) => setNewUser({ ...newUser, role: value as AccountDetail['role'] })}
                       >
                         <SelectTrigger className="col-span-3">
                           <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
                         <SelectContent>
+
                           <SelectItem value="customer">Customer</SelectItem>
                           <SelectItem value="staff">Staff</SelectItem>
                           <SelectItem value="skin_therapist">Skin Therapist</SelectItem>
@@ -327,6 +379,7 @@ const UserManagement: React.FC = () => {
                             <div>
                               <p><strong>Full Name:</strong> {user.fullname}</p>
                               <p><strong>Phone:</strong> {user.phone}</p>
+
                               <p><strong>Last Modified:</strong> {user.last_modified}</p>
                             </div>
                             <div>

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+
 import Checkbox from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Search, RefreshCcw, UserCheck, CheckCircle, XCircle } from 'lucide-react';
 import { EventDetail } from "../../../types/event";
+
 import { ContentItem, TicketEvent, TicketHistory } from "../../../types/ticket";
 import { useEventDetail } from '@/hooks/useEvent';
 import { set } from 'date-fns';
@@ -44,6 +46,7 @@ const mockEvent: EventDetail = {
   title: "Workshop Chăm Sóc Da Mùa Thu",
   image: "https://example.com/event-image.jpg",
   content: "Workshop chia sẻ kiến thức chăm sóc da trong mùa thu.",
+
   date: "2025-03-25",
   start_time: "12:30",
   end_time: "23:00",
@@ -104,6 +107,7 @@ const mockTickets: TicketHistory[] = [
 
 const EventCheckInManager = () => {
   const [event, setEvent] = useState<EventDetail | null>(null);
+
   const [tickets, setTickets] = useState<TicketEvent>();
   const [filteredTickets, setFilteredTickets] = useState<ContentItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,6 +115,7 @@ const EventCheckInManager = () => {
   const [loading, setLoading] = useState(true);
   const [checkedInCount, setCheckedInCount] = useState(0);
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
   const {eventDetail} = useEventDetail("08dd6c8b-859f-4690-8437-0f64a7cadcc1");
   const {ticketEvents} = useEvent("08dd6c8b-859f-4690-8437-0f64a7cadcc1");
 
@@ -121,6 +126,7 @@ const EventCheckInManager = () => {
   const hideNotification = () => {
     setNotification(null);
   };
+
 
   useEffect(() => {
     if (eventDetail) {
@@ -149,6 +155,7 @@ const EventCheckInManager = () => {
     }
   };
 
+
   const checkCheckInAvailability = () => {
     if (!event) return { status: "unknown", message: "Không có thông tin sự kiện" };
 
@@ -169,6 +176,7 @@ const EventCheckInManager = () => {
     return { status: "open", message: "Check-in đang mở" };
   };
   const checkInStatus = checkCheckInAvailability();
+
 
 
   const handleCheckInChange = async (ticketId: string, checked: boolean) => {
@@ -192,6 +200,7 @@ const EventCheckInManager = () => {
       return ticket;
     });
   
+
     const updated : TicketEvent = {...tickets, content: updatedTickets};
     setTickets(updated);
     setFilteredTickets(updatedTickets.filter(ticket =>
@@ -206,6 +215,7 @@ const EventCheckInManager = () => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim() === '') {
+
       setFilteredTickets(tickets?.content ?? []);
     } else {
       const filtered = tickets?.content.filter(ticket =>
@@ -217,6 +227,7 @@ const EventCheckInManager = () => {
   };
 
   const refreshData = () => {
+
         fetchEventData();
         showNotification("Dữ liệu đã được làm mới", "success");
   };
@@ -228,6 +239,7 @@ const EventCheckInManager = () => {
     }, 60000);
 
     return () => clearInterval(intervalId);
+
   }, [event]);
 
   useEffect(() => {
@@ -248,6 +260,7 @@ const EventCheckInManager = () => {
   }
 
   if (!event) {
+
     if (eventDetail === null) {
       return (
         <div className="p-4 text-center">
@@ -312,6 +325,7 @@ const EventCheckInManager = () => {
             {isCheckInAvailable && (
               <div className="flex justify-between items-center mb-2">
                 <span className="font-medium text-green-700">
+
                   Trạng thái check-in: {checkedInCount}/{tickets?.content.length} ({Math.round((checkedInCount / (tickets.content).length) * 100)}%)
                 </span>
                 <Progress
@@ -353,6 +367,7 @@ const EventCheckInManager = () => {
                   <tbody className="divide-y divide-gray-200">
                     {filteredTickets.length > 0 ? (
                       filteredTickets.map((ticket) => (
+
                         <tr key={ticket.id} className={ticket.status === 1 ? "bg-green-50" : ""}>
                           <td className="px-4 py-3 text-sm font-medium">{ticket.ticket_Otp}</td>
                           <td className="px-4 py-3 text-sm">{ticket.id}</td>
@@ -367,6 +382,7 @@ const EventCheckInManager = () => {
                           </td>
                           <td className="px-4 py-3 text-center">
                             <Checkbox
+
                               checked={ticket.status === 1}
                               onCheckedChange={(checked) =>
                                 handleCheckInChange(ticket.id, checked as boolean)

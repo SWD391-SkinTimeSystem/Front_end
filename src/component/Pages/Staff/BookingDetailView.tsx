@@ -185,11 +185,13 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
   );
   
   const currentStepIndex = booking.details.findIndex(detail => 
+
     detail.status.toLowerCase() === 'notstarted'
   );
 
   const handleCheckIn = async (bookingId: string, stepIndex: number, code: string) => {
     const success = await onCheckIn(bookingId, stepIndex, code);
+
     const isCheckIn = await trackingService.getCheckCheckIn(booking.details[stepIndex].scheduleID);
     if (success) {
       setCheckedInSteps(prev => [...prev, stepIndex]);
@@ -198,6 +200,7 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
     return success;
   };
   
+
 //   const handleCheckOut = async (bookingId: string, stepIndex: number) => {
 //     const success = await onCheckOut(bookingId, stepIndex);
     
