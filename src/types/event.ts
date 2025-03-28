@@ -41,5 +41,4 @@ export type CreateEvent = {
     Location : string;
     Price : number;
     Capacity : number;
-    EventImage : string;
 }

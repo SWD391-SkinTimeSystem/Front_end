@@ -8,22 +8,9 @@ import {
 import { createEventsServicePlugin } from '@schedule-x/events-service'
 import '@schedule-x/theme-default/dist/index.css'
 import { useEffect, useState } from 'react'
-import {
-     Command,
-     CommandDialog,
-     CommandEmpty,
-     CommandGroup,
-     CommandInput,
-     CommandItem,
-     CommandList,
-     CommandSeparator,
-     CommandShortcut,
-} from "@/components/ui/command"
-import { ServiceTrackerCard } from '@/component/Organisms/ServiceTracker'
 
 function CalendarApp() {
      const eventsService = useState(() => createEventsServicePlugin())[0]
-
      const calendar = useCalendarApp({
           views: [createViewDay(), createViewWeek(), createViewMonthGrid(), createViewMonthAgenda()],
           events: [
@@ -45,12 +32,12 @@ function CalendarApp() {
      return (
           <div className="flex flex-row justify-between items-start w-full px-8">
           {/* Lịch bên trái */}
-          <div className="w-3/4 max-w-[100vw]">
+          <div className="w-full max-w-[100vw]">
             <ScheduleXCalendar calendarApp={calendar} />
           </div>
         
           {/* Command bên phải */}
-          <div className="w-1/4 ml-2">
+          {/* <div className="w-1/4 ml-2">
             <Command className="w-full h-auto max-h-none overflow-visible">
               <CommandInput placeholder="Type a command or search..." />
               <CommandList className="w-full h-auto max-h-none">
@@ -106,7 +93,7 @@ function CalendarApp() {
                 </CommandGroup>
               </CommandList>
             </Command>
-          </div>
+          </div> */}
         </div>
         
      )

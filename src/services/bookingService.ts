@@ -11,5 +11,19 @@ export const bookingService = {
           } catch (error) {
                throw error;
           }
+     },
+     getBooking: async(page: number, pageSize: number) => {
+          try {
+               const response = await axiosInstance.get(`${API_URL}`,
+               {
+                    params: {
+                         page,
+                         pageSize
+                    }
+               });
+               return response.data;
+          } catch (error) {
+               throw error;
+          }
      }
 }

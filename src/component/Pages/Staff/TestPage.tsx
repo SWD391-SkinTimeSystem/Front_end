@@ -15,11 +15,12 @@ import { trackingService } from '@/services/trackingService';
 const TestPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams();
+  const { id } = useParams<{ id: string }>();
+
   const [booking, setBooking] = useState<BookingDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { bookingDetail } = useBookingDetail("15c16d48-62c7-4237-883c-d70b6b533512");
+  const { bookingDetail } = useBookingDetail(id);
   // const { bookingDetail } = useCopyBookingDetail("0857ffb6-ddfa-4f18-9c59-ecb69a196906");
   // console.log(bookingDetail);
   const { fetchCheckin, fetchCheckout } = useTracking();

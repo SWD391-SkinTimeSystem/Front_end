@@ -172,13 +172,13 @@ const data = {
     
     {
       name: "Sự kiện",
-      url: "#",
+      url: "events",
       icon: Tickets,
       roles: ["admin", "staff"],
     },
     {
       name: "Dịch vụ",
-      url: "service/manage",
+      url: "service",
       icon: CalendarDays,
       roles: ["admin", "staff"],
     },
@@ -201,6 +201,12 @@ const data = {
       url: "#",
       icon: UserRound,
       roles: ["admin"],
+    },
+    {
+      name: "Danh sách dịch vụ",
+      url: "/staff/bookings",
+      icon: UserRound,
+      roles: ["staff"],
     },
     {
       name: "Check in dịch vụ",
