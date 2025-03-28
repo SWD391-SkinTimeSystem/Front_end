@@ -7,7 +7,6 @@ export type TicketData = {
     location: string;
     ticketNumber: string;
     status: string;
-    qrCodeUrl?: string;
   }
 export type Ticket = {
     eventId: string;
@@ -27,5 +26,20 @@ export type TicketHistory = {
     status: string;
     event_date: string;
     otp_code: string | null;
-    qr_code: string | null;
 };
+
+export type TicketEvent = {
+  content: ContentItem[];
+  itemAmount: number;
+  pageSize: number;
+  pageCount: number;
+  currentPage: number;
+}
+
+export type ContentItem = {
+  id: string;
+  userId: string;
+  ticket_Otp: string;
+  base64_QrCode: string;
+  status: number;
+}

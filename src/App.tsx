@@ -11,6 +11,12 @@ import {DisplayQuestion} from "./features/question";
 import StaffRoutes from "./routes/StaffRoutes";
 import SkinTherapistRoutes from "./routes/SkinTherapistRoutes";
 import AdminSystemRoutes from "./routes/SystemAdminRoutes";
+import TestPage from "./component/Pages/Staff/TestPage";
+import EventCheckInManager from "./component/Pages/Staff/EventCheckInManager";
+import EventManagementUI from "./component/Pages/Staff/EventManagementUI";
+import UserManagement from "./component/Pages/Admin/UserManagement";
+import ServiceManagementTable from "./component/Pages/Manager/ServiceManagementTable";
+import EventManagerUI from "./component/Pages/Manager/EventManagerUI";
 const App = () => {
   return ( 
     <>
@@ -38,6 +44,13 @@ const App = () => {
           <Route path="/staff/*" element={<StaffRoutes />} />
           <Route path="/therapist/*" element={<SkinTherapistRoutes />} />
           <Route path="/admin/*" element={<AdminSystemRoutes />} />
+          <Route path="/admin/*" element={<AdminRoutes />} />
+          <Route path="/bookingDetail" element={<TestPage />} />
+          <Route path="/eventCheckIn" element={<EventCheckInManager />} />
+          <Route path="/serviceManager" element={<ServiceManagementTable />} />
+          <Route path="/eventManager" element={<EventManagerUI />} />
+          <Route path="/staff/eventManager" element={<EventManagementUI />} />
+          <Route path="/userManagement" element={<UserManagement />} />
         </Routes>
       </Router>
 
