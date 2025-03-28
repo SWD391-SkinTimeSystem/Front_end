@@ -43,46 +43,46 @@ const Loading = () => <h1>Loading...</h1>;
 
 const UserRoutes: React.FC = () => {
      return (
-          // <Layout>
-          //      <Suspense fallback={<Loading />}>
-          //           <Routes>
-          //                <Route path="/service-detail/:serviceId" element={<ServiceDetail />} />
-          //                <Route path="" element={<DisplayServiceList />} />
-          //                <Route path="/account/appointment-list" element={<BookingPage />} />
-          //                <Route path="/account/appointment-detail/:id" element={<BookingDetail />} />
-          //                {/* <Route path="/account/appointment-list" element={<Appointment />} />
-          //                <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} /> */}
-          //                <Route path="*" element={<h1>Not Found</h1>} />
-          //                <Route path="/booking" element={<Booking />} />
-          //                <Route path="/ticket" element={<MyTickets />} />
-          //                <Route path="/account/feedback/:bookingId" element={< FeedbackPage />} />
-          //                <Route path="/ticket-detail/:id" element={<TicketDetail />} />
-          //                <Route path="/event" element={<DisplayEventList />} />
-          //                <Route path="/event-detail/:id" element={<EventDetail />} />
-          //                <Route path="/testAPI" element={<DisplayServiceList />} />
-          //                {/* <Route path="/payment/fail" element={<FailurePayment />} />
-          //                <Route path="/payment/success" element={<SuccessPayment />} /> */}
+          <Layout>
+               <Suspense fallback={<Loading />}>
+                    <Routes>
+                         <Route path="/service-detail/:serviceId" element={<ServiceDetail />} />
+                         <Route path="" element={<DisplayServiceList />} />
+                         <Route path="/account/appointment-list" element={<BookingPage />} />
+                         <Route path="/account/appointment-detail/:id" element={<BookingDetail />} />
+                         {/* <Route path="/account/appointment-list" element={<Appointment />} />
+                         <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} /> */}
+                         <Route path="*" element={<h1>Not Found</h1>} />
+                         <Route path="/booking" element={<Booking />} />
+                         <Route path="/ticket" element={<MyTickets />} />
+                         <Route path="/account/feedback/:bookingId" element={< FeedbackPage />} />
+                         <Route path="/ticket-detail/:id" element={<TicketDetail />} />
+                         <Route path="/event" element={<DisplayEventList />} />
+                         <Route path="/event-detail/:id" element={<EventDetail />} />
+                         <Route path="/testAPI" element={<DisplayServiceList />} />
+                         {/* <Route path="/payment/fail" element={<FailurePayment />} />
+                         <Route path="/payment/success" element={<SuccessPayment />} /> */}
 
-          //           </Routes>
-          //      </Suspense>
-          // </Layout >
-          <Routes>
-               {/* <Route path="/checkin" element={<TestPage />} /> */}
-               <Route path="/checkin" element={<EventCheckInManager />} />
-               <Route path="/a" element={<TestPage />} />
+                    </Routes>
+               </Suspense>
+          </Layout >
+          // <Routes>
+          //      {/* <Route path="/checkin" element={<TestPage />} /> */}
+          //      <Route path="/checkin" element={<EventCheckInManager />} />
+          //      <Route path="/a" element={<TestPage />} />
                     
-               <Route path="/event" element={<EventManagementUI />} />
-               <Route path="/eventM" element={<EventManagerUI />} />
-               <Route path="/service" element={<ServiceManagementPage />} />
-               <Route path="/feedback" element={<FeedbackManagementPage />} />
+          //      <Route path="/event" element={<EventManagementUI />} />
+          //      <Route path="/eventM" element={<EventManagerUI />} />
+          //      <Route path="/service" element={<ServiceManagementPage />} />
+          //      <Route path="/feedback" element={<FeedbackManagementPage />} />
 
-               <Route path="/user" element={<UserManagementPage />} />
+          //      <Route path="/user" element={<UserManagementPage />} />
 
-               <Route path="" element={<HomePage />} />
-               {/* <Route path="/z" element={<SkincareLandingPage />} /> */}
-               {/* <Route path="" element={<DisplayServiceList />} /> */}
-               {/* <Route path="/service" element={<ServiceList  />} /> */}
-          </Routes>
+          //      <Route path="" element={<HomePage />} />
+          //      {/* <Route path="/z" element={<SkincareLandingPage />} /> */}
+          //      {/* <Route path="" element={<DisplayServiceList />} /> */}
+          //      {/* <Route path="/service" element={<ServiceList  />} /> */}
+          // </Routes>
 
 
      );

@@ -3,12 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-import Checkbox from '@/components/ui/checkbox';
+import {Checkbox} from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Search, RefreshCcw, UserCheck, CheckCircle, XCircle } from 'lucide-react';
 import { EventDetail } from "../../../types/event";
-
 import { ContentItem, TicketEvent, TicketHistory } from "../../../types/ticket";
 import { useEventDetail } from '@/hooks/useEvent';
 import { set } from 'date-fns';
@@ -41,69 +40,7 @@ const Notification = ({ message, type, onClose }: { message: string, type: 'succ
   );
 };
 
-const mockEvent: EventDetail = {
-  id: "ev001",
-  title: "Workshop Chăm Sóc Da Mùa Thu",
-  image: "https://example.com/event-image.jpg",
-  content: "Workshop chia sẻ kiến thức chăm sóc da trong mùa thu.",
 
-  date: "2025-03-25",
-  start_time: "12:30",
-  end_time: "23:00",
-  location: "299 Đường Cầu Giấy, Hà Nội",
-  available_ticket: 50,
-  total_ticket_amount: 100,
-  ticket_price: 200000,
-  event_status: "active"
-};
-
-const mockTickets: TicketHistory[] = [
-  {
-    ticket_id: "T001",
-    total_amount: 200000,
-    event_name: "Workshop Chăm Sóc Da Mùa Thu",
-    event_id: "ev001",
-    purchase_date: "2025-03-15",
-    status: "active",
-    otp_code: "ABC123",
-  },
-  {
-    ticket_id: "T002",
-    total_amount: 200000,
-    event_name: "Workshop Chăm Sóc Da Mùa Thu",
-    event_id: "ev001",
-    purchase_date: "2025-03-16",
-    status: "active",
-    otp_code: "DEF456",
-  },
-  {
-    ticket_id: "T003",
-    total_amount: 200000,
-    event_name: "Workshop Chăm Sóc Da Mùa Thu",
-    event_id: "ev001",
-    purchase_date: "2025-03-17",
-    status: "active",
-    otp_code: "GHI789",
-  },
-  {
-    ticket_id: "T004",
-    total_amount: 200000,
-    event_name: "Workshop Chăm Sóc Da Mùa Thu",
-    event_id: "ev001",
-    purchase_date: "2025-03-18",
-    status: "active",
-    otp_code: "JKL012",
-  },
-  {
-    ticket_id: "T005",
-    total_amount: 200000,
-    event_name: "Workshop Chăm Sóc Da Mùa Thu",
-    event_id: "ev001",
-    purchase_date: "2025-03-19",
-    status: "active",
-    otp_code: "MNO345",
-  }
-];
 
 const EventCheckInManager = () => {
   const [event, setEvent] = useState<EventDetail | null>(null);

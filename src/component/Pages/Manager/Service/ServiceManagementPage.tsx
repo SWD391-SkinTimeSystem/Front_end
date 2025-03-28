@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ServiceManagementTable from './ServiceManagementTable';
-import FeedbackManagement from './FeedbackManagement';
-
+// import FeedbackManagement from './FeedbackManagement';
+import FeedbackManagement from '../Feedback/FeedbackManagement';
 const ServiceManagementPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('services');
 

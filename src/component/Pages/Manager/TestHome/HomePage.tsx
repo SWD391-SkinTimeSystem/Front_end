@@ -4,7 +4,7 @@ import HeroBanner from "./HeroBanner";
 import Categories from "./Categories";
 import ServiceList from "./Services";
 import Footer from "./Footer";
-import { mockServiceCategories, servicesList, categories } from "../Service/services";
+import { servicesList, categories } from "../Service/services";
 import WhyChooseUs from "./WhyChooseUs";
 import AboutUs from "./AboutUs";
 
@@ -44,7 +44,6 @@ const HomePage: React.FC<HomePageProps> = ({ categories, services }) => {
         <Categories categoryList={categories} />
         <AboutUs />
         <WhyChooseUs />
-        
           <ServiceList serviceList={services} />
         </div>
         <Footer />

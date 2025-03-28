@@ -1,5 +1,3 @@
-
-
 import React, { useState, useMemo, useEffect } from 'react';
 import {
   Card,
@@ -38,6 +36,7 @@ import {
   Trash2,
   UserPlus
 } from 'lucide-react';
+import { AccountDetail } from '@/types/account';
 
 interface User {
   id: string;
@@ -110,10 +109,10 @@ const UserManagement: React.FC = () => {
 
 
   useEffect(() => {
-    if (accounts) {
-      setUsers(accounts?.content ?? []);
+    if (users) {
+      setUsers(users?.content ?? []);
     }
-  }, [accounts]);
+  }, [users]);
 
   const handleCreateUser = () => {
     const requiredFields = ['username', 'email', 'role'];
@@ -144,7 +143,7 @@ const UserManagement: React.FC = () => {
 
   console.log(userToAdd)
     const updatedUsers = [...users, userToAdd];
-    setUsers(updatedUsers);
+    // setUsers(updatedUsers);
 
   
     // Reset form về mặc định
@@ -401,6 +400,3 @@ const UserManagement: React.FC = () => {
 };
 
 export default UserManagement;
-
-
-
