@@ -14,8 +14,8 @@ const AdminRoutes: React.FC = () => {
     <Page role="manager">
       <Suspense fallback={<h1>Đang tải...</h1>}>
         <Routes>
-          <Route path="so-lieu/dich-vu" element={<ServiceDashboard />} />
-          <Route path="so-lieu/su-kien" element={<EventDashboard />} />
+          <Route path="satistic/service" element={<ServiceDashboard />} />
+          <Route path="satistic/event" element={<EventDashboard />} />
           <Route path="service" element={<ServiceManagementTable />} />
           <Route path="event" element={<EventManagerUI />} />
           <Route path="user" element={<UserManagement />} />

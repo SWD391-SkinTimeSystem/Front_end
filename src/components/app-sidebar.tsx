@@ -137,17 +137,18 @@ const data = {
       url: "#",
       icon: SquareTerminal,
       isActive: true,
-      roles: ["admin", "manager"],
+      roles: ["manager"],
       items: [
         {
           title: "Dịch vụ",
-          url: "/admin/so-lieu/dich-vu",
-          roles: ["admin"],
+          url: "/manager/satistic/service",
+          roles: ["manager"],
         },
+     
         {
           title: "Sự kiện",
-          url: "/admin/so-lieu/su-kien",
-          roles: ["admin", "manager"],
+          url: "/manager/satistic/event",
+          roles: ["manager"],
         },
        
       ],

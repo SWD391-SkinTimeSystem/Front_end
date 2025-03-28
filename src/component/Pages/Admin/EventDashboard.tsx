@@ -1,4 +1,3 @@
-import { ChartData } from '@/component/Molecules/BarChart';
 import ExpenseCard from '@/component/Molecules/StatisticsCard';
 import { TableData } from '@/component/Molecules/TableCard';
 import { useEventDashboard } from '@/hooks/useDashboard';
