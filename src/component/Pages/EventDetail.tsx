@@ -54,7 +54,11 @@ export default function EventDetail() {
       <div className="p-4">
         <p className="text-lg font-semibold">{formatEventDate(eventDetail?.date)}</p>
         <p className="text-lg font-semibold">{eventDetail?.end_time}</p>
-        <p className="mt-4">{eventDetail?.content}</p>
+        <div dangerouslySetInnerHTML={{ __html: eventDetail?.content ?? "" }} />
+
+        <p className="mt-4">
+          
+          </p>
         <div className="mt-4">
           <p>
             <strong>Số lượng vé:</strong> {eventDetail?.total_ticket_amount}

@@ -25,5 +25,13 @@ export const bookingService = {
           } catch (error) {
                throw error;
           }
+     },
+     getTherapistBooking: async(status: string) => {
+          try {
+               const response = await axiosInstance.get(`${API_URL}/status/therapist/${status}`);
+               return response.data;
+          } catch (error) {
+               throw error;
+          }
      }
 }

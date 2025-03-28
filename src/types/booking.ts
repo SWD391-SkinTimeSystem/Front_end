@@ -30,6 +30,18 @@ export type Booking = {
     bookingDate: string;
     bookingTime: string;
   };
+
+  export type BookingTherapist = {
+    id: string;
+    status: string; // Nếu có nhiều trạng thái, có thể liệt kê hết
+    date: string; // Format: YYYY-MM-DD
+    therapistName: string;
+    serviceName: string;
+    thumbnail: string;
+    isTreatmentPlan: boolean; // Fix lỗi chính tả từ "isTretmentPlan"
+    timeStart: string; // Format: HH:MM:SS
+    description: string;
+  };
  export type BookingDetail = {
      id: string,
     //  checkInCode: string,
