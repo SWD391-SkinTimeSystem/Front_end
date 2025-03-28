@@ -187,7 +187,7 @@ const data = {
       name: "Dịch vụ",
       url: "service",
       icon: CalendarDays,
-      roles: ["manager", "staff"],
+      roles: ["manager"],
     },
     {
       name: "Voucher",
@@ -195,12 +195,12 @@ const data = {
       icon: TicketPlus,
       roles: ["manager"],
     },
-    {
-      name: "Lịch làm việc",
-      url: "calendar",
-      icon: CalendarCheck2,
-      roles: ["staff"],
-    },
+    // {
+    //   name: "Lịch làm việc",
+    //   url: "calendar",
+    //   icon: CalendarCheck2,
+    //   roles: ["staff"],
+    // },
   ],
   manages: [
     {
@@ -216,17 +216,12 @@ const data = {
       roles: ["therapist"],
     },
     {
-      name: "Danh sách dịch vụ",
+      name: "Danh sách booking",
       url: "/staff/bookings",
       icon: UserRound,
       roles: ["staff"],
     },
-    {
-      name: "Check in dịch vụ",
-      url: "#",
-      icon: UserRound,
-      roles: ["staff"],
-    },
+    
     {
       name: "Check out dịch vụ",
       url: "#",
@@ -251,7 +246,19 @@ const data = {
       name: "Danh sách khách hàng",
       url: "/manager/bookings",
       icon: Users,
-      roles: ["manager", "staff"],
+      roles: ["manager"],
+    },
+    {
+      name: "Danh sách sự kiện",
+      url: "/staff/ongoingevent",
+      icon: Users,
+      roles: ["staff"],
+    },
+    {
+      name: "Danh sách khách hàng",
+      url: "/staff/bookings",
+      icon: Users,
+      roles: ["staff"],
     },
     {
       name: "Lịch làm việc",

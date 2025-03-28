@@ -79,7 +79,7 @@ export const useEventStatus = () => {
                setLoading(false);
           }
      }
-
+     
      useEffect(() => {
           fetchEventStatus();
      }, []);

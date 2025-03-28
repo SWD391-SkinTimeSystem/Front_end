@@ -14,6 +14,8 @@ import UserManagementPage from "@/component/Pages/Admin/UserManagementPage";
 import ServiceManagementPage from "@/component/Pages/Manager/Service/ServiceManagementPage";
 import FeedbackManagementPage from "@/component/Pages/Manager/Feedback/FeedbackManagementPage";
 import BookingTable from "@/component/Pages/BookingListTable";
+import FailurePayment from "@/component/Pages/FailurePayment";
+import SuccessPayment from "@/component/Pages/SuccessPayment";
 
 // import {ServiceList} from "@/component/Pages/Staff/ServiceList";
 const ServiceDetail = lazy(() => import("@/component/Pages/ServiceDetail"));
@@ -54,19 +56,18 @@ const UserRoutes: React.FC = () => {
                          {/* <Route path="/account/appointment-list" element={<Appointment />} />
                          <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} /> */}
                          <Route path="*" element={<h1>Not Found</h1>} />
-                         <Route path="/booking" element={<Booking />} />
-                         <Route path="/ticket" element={<MyTickets />} />
+                         <Route path="/booking/:serviceId" element={<Booking />} />
+                         <Route path="/account/ticket" element={<MyTickets />} />
                          <Route path="/account/feedback/:bookingId" element={< FeedbackPage />} />
                          <Route path="/ticket-detail/:id" element={<TicketDetail />} />
                          <Route path="/event" element={<DisplayEventList />} />
                          <Route path="/event-detail/:id" element={<EventDetail />} />
                          <Route path="/testAPI" element={<DisplayServiceList />} />
-                    
-                         {/* <Route path="/payment/fail" element={<FailurePayment />} />
-                         <Route path="/payment/success" element={<SuccessPayment />} /> */}
+                         <Route path="/payment/fail" element={<FailurePayment />} />
+                         <Route path="/payment/success" element={<SuccessPayment />} />
 
                     </Routes>
-               </Suspense>FF
+               </Suspense>
           </Layout >
           // <Routes>
           //      {/* <Route path="/checkin" element={<TestPage />} /> */}

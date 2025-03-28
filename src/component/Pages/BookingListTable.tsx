@@ -23,7 +23,7 @@ export default function BookingTable() {
   const [filterStatus, setFilterStatus] = useState("All");
   const navigate = useNavigate();
   const GoToBookingDetail = (id: string) => {
-    navigate(`/staff/bookings/detail/${id}`);
+    navigate(`/staff/bookings/${id}`);
   };
   useEffect(() => {
     getBooking(1, 10);
@@ -105,6 +105,9 @@ export default function BookingTable() {
             <TableHead className="text-emerald-700 font-semibold">Thực hiện dịch vụ</TableHead>
             <TableHead className="text-emerald-700 font-semibold">Giờ bắt đầu</TableHead>
             <TableHead className="text-emerald-700 font-semibold">Trạng thái</TableHead>
+            <TableHead className="text-emerald-700 font-semibold">Hành động</TableHead>
+            <TableHead className="text-emerald-700 font-semibold"></TableHead>
+
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -121,6 +124,23 @@ export default function BookingTable() {
                 <TableCell>{formatHour(booking.bookingTime)}</TableCell>
                 <TableCell>{formatHour(booking.bookingTime)}</TableCell>
                 <TableCell>{booking.status}</TableCell>
+                {account?.role === "staff" && (
+  <>
+    <TableCell>
+      <Button variant="outline" className="text-emerald-700" onClick={() => GoToBookingDetail(booking.id)}>
+        Checkin
+      </Button>
+    </TableCell>
+    <TableCell>
+      <Button variant="outline" className="text-emerald-700" onClick={() => navigate("/")}>
+        Đổi lịch
+      </Button>
+    </TableCell>
+  </>
+)}
+
+               
+
               </TableRow>
             ))
           ) : (
