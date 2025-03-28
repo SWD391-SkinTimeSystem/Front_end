@@ -1,56 +1,92 @@
 
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { BookingDetail} from '../../../types/booking';
 import BookingDetailView from './BookingDetailView';
-import { getMockBooking } from './bookingDetailTestData';
+
 // import { BookingService } from './BookingService';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+// import { useCopyBookingDetail } from '@/hooks/useCusBooking';
+import { useBookingDetail } from '@/hooks/useCusBooking';
+import { useTracking } from '@/hooks/useTracking';
+import { trackingService } from '@/services/trackingService';
 // import { addDays } from 'date-fns';
 
 const TestPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams();
+
+  const { id } = useParams<{ id: string }>();
+
   const [booking, setBooking] = useState<BookingDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { bookingDetail } = useBookingDetail(id);
+  // const { bookingDetail } = useCopyBookingDetail("0857ffb6-ddfa-4f18-9c59-ecb69a196906");
+  // console.log(bookingDetail);
+  const { fetchCheckin, fetchCheckout } = useTracking();
   
   const searchParams = new URLSearchParams(location.search);
-  const bookingId = searchParams.get('id') || 'treatment';  
+  const bookingId = searchParams.get('id') || 'treatment';
   
   useEffect(() => {
-    const fetchBooking = async () => {
-      setLoading(true);
-      try {
-        const data = await getMockBooking(bookingId);
-        setBooking(data);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching booking:', err);
-        setError('Không thể tải thông tin lịch hẹn');
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    if (bookingId) {
-      fetchBooking();
-    }
-  }, [bookingId]);
+    const fetchBooking = async () => {
+          setLoading(true);
+      if (bookingDetail && booking !== bookingDetail) {
+        bookingDetail.details.sort((a, b) => a.step - b.step);
+        setBooking(bookingDetail);
+      }
+          try {
+            setError(null);
+          } catch (err) {
+            console.error('Error fetching booking:', err);
+            setError('Không thể tải thông tin lịch hẹn');
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        fetchBooking();
+
+  }, [bookingDetail, booking]);
+  
+  // useEffect(() => {
+  //   const fetchBooking = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const data = await getMockBooking(bookingId);
+  //       setBooking(data);
+  //       setError(null);
+  //     } catch (err) {
+  //       console.error('Error fetching booking:', err);
+  //       setError('Không thể tải thông tin lịch hẹn');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (bookingId) {
+  //     fetchBooking();
+  //   }
+  // }, [bookingId]);
 
   const handleBack = () => {
     navigate('/bookings');
   };
 
+
+
   const handleCheckIn = async (bookingId: string, stepIndex: number, code: string): Promise<boolean> => {
     if (!booking) return false;
-    
-    console.log("Test page domgf 49 ", booking.details[stepIndex].checkInCode)
+    console.log(booking.details[stepIndex].checkInCode)
     if (code === booking.details[stepIndex].checkInCode) {
-      const updatedBooking = JSON.parse(JSON.stringify(booking)) as BookingDetail;
-      toast.success("Check-in thành công");
-      console.log(updatedBooking)
-      setBooking(updatedBooking);
+      const result = await fetchCheckin(booking.details[stepIndex].scheduleID, code);
+      console.log(result);
+      // const updatedBooking = JSON.parse(JSON.stringify(booking)) as CopyBookingDetail;
+      toast("Check-in thành công");
+      // setBooking(updatedBooking);
       return true;
     }
     
@@ -60,25 +96,18 @@ const TestPage: React.FC = () => {
 
   const handleCheckOut = async (bookingId: string, stepIndex: number): Promise<boolean> => {
     if (!booking) return false;
-    
-    const updatedBooking = JSON.parse(JSON.stringify(booking)) as BookingDetail;
-    
-    updatedBooking.details[stepIndex].status = "Completed";
-    
-    if (updatedBooking.totalStep === 1 || 
-        updatedBooking.details.every(detail => detail.status === "Completed" || detail.status === "Cancelled")) {
-      updatedBooking.status = "Completed";
-    }
-    
+
+    const result = await fetchCheckout(booking.details[stepIndex].scheduleID);
+    console.log(result);
     toast("Check-out thành công");
-    setBooking(updatedBooking);
     return true;
   };
 
   const handleUpdateStatus = async (bookingId: string, stepIndex: number, status: string): Promise<boolean> => {
     if (!booking) return false;
     
-    const updatedBooking = JSON.parse(JSON.stringify(booking)) as BookingDetail;
+
+    const updatedBooking = JSON.parse(JSON.stringify(booking)) as CopyBookingDetail;
     updatedBooking.details[stepIndex].status = status;
     
     if (status === "Cancelled" && 
@@ -102,7 +131,8 @@ const TestPage: React.FC = () => {
   ): Promise<boolean> => {
     if (!booking) return false;
     
-    const updatedBooking = JSON.parse(JSON.stringify(booking)) as BookingDetail;
+
+    const updatedBooking = JSON.parse(JSON.stringify(booking)) as CopyBookingDetail;
     
     // Update the next step's scheduling information
     updatedBooking.details[stepIndex].reservedDate = date;
@@ -139,56 +169,81 @@ const TestPage: React.FC = () => {
     });
   };
 
-  const renderSampleSelector = () => (
-    <div className="flex gap-4 mb-6 flex-wrap">
-      <h3 className="w-full font-medium text-gray-700">Chọn mẫu booking để xem:</h3>
-      <Button 
-        variant={bookingId === 'single' ? 'default' : 'outline'}
-        onClick={() => navigate(`${location.pathname}?id=single`)}
-      >
-        Dịch vụ đơn lẻ
-      </Button>
-      <Button 
-        variant={bookingId === 'treatment' ? 'default' : 'outline'}
-        onClick={() => navigate(`${location.pathname}?id=treatment`)}
-      >
-        Lộ trình điều trị
-      </Button>
-      <Button 
-        variant={bookingId === 'completed' ? 'default' : 'outline'}
-        onClick={() => navigate(`${location.pathname}?id=completed`)}
-      >
-        Đã hoàn thành
-      </Button>
-      <Button 
-        variant={bookingId === 'cancelled' ? 'default' : 'outline'}
-        onClick={() => navigate(`${location.pathname}?id=cancelled`)}
-      >
-        Đã hủy
-      </Button>
-    </div>
-  );
+
+  // const renderSampleSelector = () => (
+  //   <div className="flex gap-4 mb-6 flex-wrap">
+  //     <h3 className="w-full font-medium text-gray-700">Chọn mẫu booking để xem:</h3>
+  //     <Button 
+  //       variant={bookingId === 'single' ? 'default' : 'outline'}
+  //       onClick={() => navigate(`${location.pathname}?id=single`)}
+  //     >
+  //       Dịch vụ đơn lẻ
+  //     </Button>
+  //     <Button 
+  //       variant={bookingId === 'treatment' ? 'default' : 'outline'}
+  //       onClick={() => navigate(`${location.pathname}?id=treatment`)}
+  //     >
+  //       Lộ trình điều trị
+  //     </Button>
+  //     <Button 
+  //       variant={bookingId === 'completed' ? 'default' : 'outline'}
+  //       onClick={() => navigate(`${location.pathname}?id=completed`)}
+  //     >
+  //       Đã hoàn thành
+  //     </Button>
+  //     <Button 
+  //       variant={bookingId === 'cancelled' ? 'default' : 'outline'}
+  //       onClick={() => navigate(`${location.pathname}?id=cancelled`)}
+  //     >
+  //       Đã hủy
+  //     </Button>
+  //   </div>
+  // );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Đang tải thông tin lịch hẹn...</p>
+        </div>
+      </div>
+    );
   }
+
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="p-8 text-center">
+        <h3 className="text-xl font-medium text-red-600 mb-4">{error}</h3>
+        <Button onClick={() => window.location.reload()}>Thử lại</Button>
+      </div>
+ );
   }
-  console.log(bookingDetail);
-  // console.log(bookingDetail);
-  const handleBack = () => {
-    console.log('Back button clicked');
-  };
-  
+
+  if (!booking) {
+    return (
+      <div className="p-8 text-center">
+        <h3 className="text-xl font-medium text-gray-600 mb-4">Không tìm thấy thông tin lịch hẹn</h3>
+        <Button onClick={handleBack}>Quay lại danh sách</Button>
+      </div>
+    );
+  }
 
   return (
-    <>
-    <BookingDetailView booking={bookingDetail} onBack={handleBack} />
-    {/* <CheckInOutActions booking={booking} onStatusUpdate={() => console.log('Status updated')} /> */}
-
-    </>
-  )
+    <div className="container mx-auto p-4">
+      {/* {renderSampleSelector()} */}
+      
+      <BookingDetailView 
+        booking={booking}
+        onBack={handleBack}
+        onCheckIn={handleCheckIn}
+        onCheckOut={handleCheckOut}
+        onUpdateStatus={handleUpdateStatus}
+        onScheduleNextStep={handleScheduleNextStep}
+        fetchAvailableTimeSlots={fetchAvailableTimeSlots}
+      />
+    </div>
+  );
 };
 
 export default TestPage;

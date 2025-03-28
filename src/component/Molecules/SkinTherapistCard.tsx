@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skintherapist } from "@/types/skintherapist";
+import ImageWithFallback from "../Atoms/ImageWithFallback";
 
 interface ChildProps {
     //  onButtonClick: () => void;
@@ -23,11 +24,12 @@ const SkinTherapistCard:React.FC<ChildProps> = ({therapist,sendDataToParent}) =>
 
       {/* Hình ảnh sản phẩm */}
       <div className="flex justify-center">
-        <img
+      <ImageWithFallback src={therapist.avatar} alt={therapist.name} />
+        {/* <img
           src={therapist.avatar}
           alt="Fanola Hair Mask"
           className="w-40 h-40 object-cover rounded-tl-lg rounded-tr-lg"
-        />
+        /> */}
       </div>
 
       <CardContent className="mt-3">

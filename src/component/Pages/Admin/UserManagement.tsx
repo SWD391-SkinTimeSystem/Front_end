@@ -1,5 +1,6 @@
 
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -90,6 +91,7 @@ const UserManagement: React.FC = () => {
     username: '',
     email: '',
     password: '12345678', 
+
     role: 'customer'
   });
   
@@ -106,6 +108,13 @@ const UserManagement: React.FC = () => {
     return re.test(email);
   };
 
+
+  useEffect(() => {
+    if (accounts) {
+      setUsers(accounts?.content ?? []);
+    }
+  }, [accounts]);
+
   const handleCreateUser = () => {
     const requiredFields = ['username', 'email', 'role'];
     const missingFields = requiredFields.filter(field => !newUser[field]?.trim());
@@ -120,15 +129,22 @@ const UserManagement: React.FC = () => {
       return;
     }
   
-    const userToAdd = {
+
+    const userToAdd: AccountDetail = {
       ...newUser,
-      id: crypto.randomUUID(),
+      id:'',
       status: 'active',
       created_time: new Date().toISOString(),
       last_modified: new Date().toISOString(),
+      avatar:'',
+      fullname: '', 
+      phone: '', 
+      date_of_birth: '',
     };
+
   console.log(userToAdd)
-    setUsers([...users, userToAdd]);
+    const updatedUsers = [...users, userToAdd];
+    setUsers(updatedUsers);
 
   
     // Reset form về mặc định
@@ -156,7 +172,8 @@ const UserManagement: React.FC = () => {
   // Filtered and sorted users
   const filteredUsers = useMemo(() => {
     return users
-      .filter(user => user.status !== 'deleted')
+
+      .filter(user => user.status !== 'Deleted')
       .filter(user =>
         (!filters.username || user.username.toLowerCase().includes(filters.username.toLowerCase())) &&
         (!filters.role || user.role === filters.role) &&
@@ -192,9 +209,10 @@ const UserManagement: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="customer">Customer</SelectItem>
+
+                  <SelectItem value="custommer">Customer</SelectItem>
                   <SelectItem value="staff">Staff</SelectItem>
-                  <SelectItem value="skin_therapist">Skin Therapist</SelectItem>
+                  <SelectItem value="therapist">Skin Therapist</SelectItem>
                   <SelectItem value="manager">Manager</SelectItem>
                 </SelectContent>
               </Select>
@@ -207,8 +225,9 @@ const UserManagement: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
+
+                  <SelectItem value="Active">Active</SelectItem>
+                  <SelectItem value="Inactive">Inactive</SelectItem>
                 </SelectContent>
               </Select>
               <Select
@@ -269,16 +288,18 @@ const UserManagement: React.FC = () => {
                       </Label>
                       <Select
                         value={newUser.role}
-                        onValueChange={(value) => setNewUser({ ...newUser, role: value as User['role'] })}
+
+                        onValueChange={(value) => setNewUser({ ...newUser, role: value as AccountDetail['role'] })}
                       >
                         <SelectTrigger className="col-span-3">
                           <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="customer">Khách hàng</SelectItem>
-                          <SelectItem value="staff">Nhân viên</SelectItem>
-                          <SelectItem value="skin_therapist">Chuyên viên</SelectItem>
-                          <SelectItem value="manager">Quản lý</SelectItem>
+
+                          <SelectItem value="customer">Customer</SelectItem>
+                          <SelectItem value="staff">Staff</SelectItem>
+                          <SelectItem value="skin_therapist">Skin Therapist</SelectItem>
+                          <SelectItem value="manager">Manager</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -358,7 +379,8 @@ const UserManagement: React.FC = () => {
                             <div>
                               <p><strong>Full Name:</strong> {user.fullname}</p>
                               <p><strong>Phone:</strong> {user.phone}</p>
-                              <p><strong>Gender:</strong> {user.gender}</p>
+
+                              <p><strong>Last Modified:</strong> {user.last_modified}</p>
                             </div>
                             <div>
                               <p><strong>Date of Birth:</strong> {user.date_of_birth}</p>

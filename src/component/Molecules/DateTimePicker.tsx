@@ -25,17 +25,6 @@ const options = [
      { label: "Đang chọn", value: "selected", color: "bg-orange-500 text-white" },
 ];
 
-// const fetchWeekDays = () => {
-//      const today = new Date();
-//      return Array.from({ length: 7 }, (_, i) => {
-//           const date = new Date();
-//           date.setDate(today.getDate() + i);
-//           return {
-//                day: date.toLocaleDateString("vi-VN", { weekday: "long" }),
-//                date: date.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" })
-//           };
-//      });
-// };
 const fetchWeekDays = () => {
      const today = new Date();
      return Array.from({ length: 7 }, (_, i) => {

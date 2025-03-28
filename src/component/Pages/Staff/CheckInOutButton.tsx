@@ -48,7 +48,7 @@ export const CheckInOutButton: React.FC<CheckInOutButtonProps> = ({
   const [inputCode, setInputCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const handleCheckIn = async () => {
     setIsLoading(true);
     setError("");

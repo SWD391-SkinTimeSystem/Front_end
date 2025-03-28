@@ -8,15 +8,6 @@ import { useEventDetail } from "@/hooks/useEvent";
 import useCreateTicket from "@/hooks/useTicket";
 import { Ticket } from "@/types/ticket";
 import { formatCurrency, formatEventDate } from "@/lib/utils";
-
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 export default function EventDetail() {
   const [isOpen, setIsOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
@@ -63,7 +54,11 @@ export default function EventDetail() {
       <div className="p-4">
         <p className="text-lg font-semibold">{formatEventDate(eventDetail?.date)}</p>
         <p className="text-lg font-semibold">{eventDetail?.end_time}</p>
-        <p className="mt-4">{eventDetail?.content}</p>
+        <div dangerouslySetInnerHTML={{ __html: eventDetail?.content ?? "" }} />
+
+        <p className="mt-4">
+          
+          </p>
         <div className="mt-4">
           <p>
             <strong>Số lượng vé:</strong> {eventDetail?.total_ticket_amount}
@@ -106,30 +101,12 @@ export default function EventDetail() {
             </div>
           </motion.div>
         </div>
+        <PaymentMethods onPaymentMethodChange={handleSelectPaymentMethod} />
+        <Button className="bg-emerald-700 text-white" type="button" onClick={handlePayment} variant="secondary">
+                  Thanh Toán
+                </Button>    
       </div>
       <div className='m-5 grid place-items-end'>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="bg-emerald-700 text-white">Chọn phương thức thanh toán</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              {/* <DialogTitle>Share link</DialogTitle> */}
-              {/* <DialogDescription>
-                Anyone who has this link will be able to view this.
-              </DialogDescription> */}
-            </DialogHeader>
-            <PaymentMethods onPaymentMethodChange={handleSelectPaymentMethod} />
-
-            <DialogFooter className="sm:justify-start">
-              <DialogClose asChild>
-                <Button className="bg-emerald-700 text-white" type="button" onClick={handlePayment} variant="secondary">
-                  Thanh Toán
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
       {/* Button thanh toán  */}
       {/* <div className="grid place-items-end m-5">

@@ -36,7 +36,25 @@ export type Event = {
     image_url: string;
     total_ticket_amount: number;
     ticket_price: number;
-    // event_status: string;
-    content: string;
-};
 
+    event_status: string;
+}
+
+export type EventStatus = {
+    content: EventDetail[];
+    itemAmount: number;
+    pageSize: number;
+    pageCount: number;
+    currentPage: number;
+}
+
+export type CreateEvent = {
+    EventName : string;
+    Description : string;
+    Date  : string;
+    StartTime  : string;
+    EndTime  : string;
+    Location : string;
+    Price : number;
+    Capacity : number;
+}

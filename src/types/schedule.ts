@@ -14,3 +14,8 @@ export type TimeSlot = {
        availability: Availability;
    };
    
+   export type rescheduleData ={
+    idSchedule: string,
+    date: string,
+    timeStart: string
+  }

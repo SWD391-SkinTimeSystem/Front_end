@@ -172,13 +172,19 @@ const data = {
     
     {
       name: "Sự kiện",
-      url: "#",
+      url: "events",
       icon: Tickets,
-      roles: ["admin", "staff"],
+      roles: ["staff"],
+    },
+    {
+      name: "Sự kiện",
+      url: "/manager/event",
+      icon: Tickets,
+      roles: ["admin"],
     },
     {
       name: "Dịch vụ",
-      url: "#",
+      url: "service",
       icon: CalendarDays,
       roles: ["admin", "staff"],
     },
@@ -190,7 +196,7 @@ const data = {
     },
     {
       name: "Lịch làm việc",
-      url: "#",
+      url: "calendar",
       icon: CalendarCheck2,
       roles: ["staff"],
     },
@@ -198,9 +204,21 @@ const data = {
   manages: [
     {
       name: "Nhân viên",
-      url: "#",
+      url: "/admin/user",
       icon: UserRound,
       roles: ["admin"],
+    },
+    {
+      name: "Dịch vụ của tôi",
+      url: "/therapist/booking",
+      icon: UserRound,
+      roles: ["therapist"],
+    },
+    {
+      name: "Danh sách dịch vụ",
+      url: "/staff/bookings",
+      icon: UserRound,
+      roles: ["staff"],
     },
     {
       name: "Check in dịch vụ",
@@ -218,7 +236,7 @@ const data = {
       name: "Skin Therapist",
       url: "#",
       icon: Users,
-      roles: ["admin", "manager"],
+      roles: ["admin"],
     },
   ],
   follow: [
@@ -236,7 +254,7 @@ const data = {
     },
     {
       name: "Lịch làm việc",
-      url: "#",
+      url: "/therapist/calendar",
       icon: CalendarCheck2,
       roles: ["admin", "therapist"],
     },
