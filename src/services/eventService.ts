@@ -7,8 +7,13 @@ import { stat } from "fs";
 const API_URL = "/event";
 
 export const eventService = {
-     getListEvents : async () => {
-          const response = await axiosInstance.get(`${API_URL}/available`);
+     getListEvents : async (page: number, pageSize : number) => {
+          const response = await axiosInstance.get(`${API_URL}/available`, {
+               params: {
+                    page,
+                    pageSize
+               }
+          });
           if(response.data.success) {
                return response.data.data;
           }else {

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { BookingDetail, CopyBookingDetail } from '../../../types/booking';
@@ -69,6 +70,8 @@ const TestPage: React.FC = () => {
   const handleBack = () => {
     navigate('/bookings');
   };
+  
+
 
   const handleCheckIn = async (bookingId: string, stepIndex: number, code: string): Promise<boolean> => {
     if (!booking) return false;

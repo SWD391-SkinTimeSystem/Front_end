@@ -5,8 +5,14 @@ import { Service } from "@/types/services";
 const API_URL = "/service";
 
 export const serviceService = {
-     getListServices : async () => {
-          const response = await axiosInstance.get(`${API_URL}`);
+     getListServices : async (searchKey: null, page: number, pageSize: number) => {
+          const response = await axiosInstance.get(`${API_URL}`, {
+               params: {
+                    searchKey,
+                    page,
+                    pageSize
+               }
+          });
           if(response.data.success) {
 
                return response.data.data;
@@ -20,7 +26,7 @@ export const serviceService = {
      getService : async (id: string) => {
           const response = await axiosInstance.get(`${API_URL}/${id}`);
           console.log("lỗi ở serviceService",  response.data )
-          return response.data.serviceDetails;
+          return response.data.data;
      },
      createService : async (service: Service) => {
           const response = await axiosInstance.post(`${API_URL}`, service);

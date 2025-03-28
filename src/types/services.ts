@@ -9,7 +9,7 @@ export type Service = {
      serviceDetails?: ServiceDetailType[];   // Ảnh minh họa (tuỳ chọn)
      serviceImages: string[],
      // feedbacks: null
-
+     serviceImages: string[];
 };
 
 export type ServiceCategory = {
@@ -29,7 +29,7 @@ export type ServiceDetailType = {
 export type Feedback = {
      review_id: string;
      user_id: string;
-     username: string;
+     fullname: string;
      rating: number;
      review: string;
      date: Date;

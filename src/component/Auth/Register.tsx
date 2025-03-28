@@ -84,12 +84,24 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
     });
   };
 
+
+    
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
     try {
-      const response = await registerUser({
+      // const response = await registerUser({
+        // fullname: formData.fullName,
+        // password: formData.password,
+        // phone: formData.phoneNumber,
+        // dob: `${formData.year}-${formData.month}-${formData.day}`,
+        // gender: formData.gender,
+        // email: formData.email,
+        
+        // isTermOfUseAccepted: formData.agreeTerms,
+      // });
+      console.log(JSON.stringify({
         fullname: formData.fullName,
         password: formData.password,
         phone: formData.phoneNumber,
@@ -97,6 +109,7 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
         gender: formData.gender,
         email: formData.email,
         isTermOfUseAccepted: formData.agreeTerms,
+
       });
       if (response.success) {
         toast.success("Đăng ký thành công");

@@ -39,3 +39,69 @@ export const formatHour = (time: string) => {
 export function hoursToMinutes(hours: number): number {
   return hours * 60;
 }
+
+export const formatDateTime = (isoString: string): string => {
+  const date = new Date(isoString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
+  const year = date.getFullYear();
+  
+  return `${day}/${month}/${year}`;
+};
+
+export const formatDateAndTime = (isoString: string): string => {
+  const date = new Date(isoString);
+
+  const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  const formattedTime = `${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`;
+
+  return `${formattedDate} vào ${formattedTime} phút`;
+};
+
+export const getStatusLabel = (status: string) => {
+  switch (status) {
+    case "NotStarted":
+    case "paid":
+      return "Sắp diễn ra";
+    case "Completed":
+    case "CheckedIn":
+      return "Đã hoàn thành";
+    case "Canceled":
+    case "Canceled":
+      return "Đã hủy";
+    default:
+      return status; // Trả về chính status nếu không khớp với các case trên
+  }
+};
+
+
+export const formatEventDate = (isoDate: string): string => {
+  const date = new Date(isoDate);
+  return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()}`;
+};
+
+export const getFormattedDate = (): string => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0"); // Thêm 0 nếu <10
+  const day = String(today.getDate()).padStart(2, "0"); // Thêm 0 nếu <10
+  return `${year}-${month}-${day}`;
+};
+
+export const isDateInNext7Days = (date: Date): boolean => {
+  const today = new Date(); // Ngày hôm nay
+  today.setHours(0, 0, 0, 0); // Đặt giờ về 00:00:00 để so sánh chính xác
+
+  const next7Days = new Date(today);
+  next7Days.setDate(today.getDate() + 7); // Ngày sau 7 ngày
+
+  return date >= today && date <= next7Days;
+};
+
+export const isWithin48Hours = (date: Date): boolean => {
+  const now = new Date(); // Lấy thời gian hiện tại
+  const diffInMs = date.getTime() - now.getTime(); // Chênh lệch thời gian tính bằng milliseconds
+  const diffInHours = diffInMs / (1000 * 60 * 60); // Chuyển đổi thành giờ
+
+  return diffInHours <= 48; // Trả về true nếu nhỏ hơn hoặc bằng 48 giờ
+};

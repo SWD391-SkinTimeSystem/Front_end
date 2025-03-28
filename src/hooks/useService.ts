@@ -9,8 +9,8 @@ export const useService = () => {
 
      const fetchServices = async () => {
           try {
-               const data = await serviceService.getListServices();
-               setServices(data);
+               const data = await serviceService.getListServices(null, 1, 10);
+               setServices(data.content);
           } catch (error) {
                setError("failed to fetch services");
           } finally {
@@ -28,7 +28,7 @@ export const useService = () => {
 }
 
 export const useServiceDetail = (id : string) => {
-     const [serviceDetail, setServiceDetail] = useState<ServiceDetailType[]>([]);
+     const [serviceDetail, setServiceDetail] = useState<Service>();
      const [loading, setLoading] = useState<boolean>(true);
      const [error, setError] = useState<string | null>(null);
 

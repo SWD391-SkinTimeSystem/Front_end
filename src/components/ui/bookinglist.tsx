@@ -1,7 +1,7 @@
 // src/components/ui/BookingList.tsx
 import React from "react";
 import { CircleUser, MapPin } from "lucide-react";
-import { formatDate } from "../../lib/utils";
+import { formatDate, formatDateTime, getStatusLabel } from "../../lib/utils";
 
 export interface BookingItem {
   id: string;
@@ -20,18 +20,7 @@ interface BookingListProps {
   onViewDetails: (id: string) => void;
 }
 
-const getStatusLabel = (status: string) => {
-  switch (status) {
-    case "Not_started":
-      return "Sắp diễn ra";
-    case "Completed":
-      return "Đã hoàn thành";
-    case "Canceled":
-      return "Đã hủy";
-    default:
-      return status;
-  }
-};
+
 
 export const BookingList: React.FC<BookingListProps> = ({
   bookings,
@@ -42,7 +31,7 @@ export const BookingList: React.FC<BookingListProps> = ({
   return (
     <div className="space-y-5">
       {bookings.map((booking) => {
-        const date = formatDate(booking.timeStart);
+        const time = formatDate(booking.timeStart);
         return (
           <div
             key={booking.id}
@@ -52,7 +41,7 @@ export const BookingList: React.FC<BookingListProps> = ({
               <div className="flex flex-row">
                 <p>
                   Ngày hẹn:{" "}
-                  <span className="text-green-400 font-bold">{date}</span>{" "}
+                  <span className="text-green-400 font-bold">{formatDateTime(booking.date)}</span> <span className="text-green-400 font-bold">{time}</span>
                   <span className="mr-2 ml-2">|</span>
                 </p>
                 <p className="text-orange-400 font-semibold">

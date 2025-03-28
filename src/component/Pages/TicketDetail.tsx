@@ -40,18 +40,12 @@ const getStatusLabel = (status: TicketStatus) => {
 };
 
 const TicketDetail: React.FC = () => {
-  const { ticketId } = useParams<{ ticketId: string }>();
+  // const { ticketId } = useParams<{ ticketId: string }>();
+      const { id } = useParams();
+  
   const [ticketData, setTicketData] = useState<TicketData | null>(null);
 //kkklkkkl
-  useEffect(() => {
-    fetch("/ticket.json")
-      .then((res) => res.json())
-      .then((data: TicketData[]) => {
-        const ticket = data.find((t) => t.id === ticketId);
-        setTicketData(ticket || null);
-      })
-      .catch((err) => console.error("Error fetching ticket data:", err));
-  }, [ticketId]);
+
 
   if (!ticketData) {
     return <div className="p-5 text-center text-gray-500">Đang tải dữ liệu...</div>;
@@ -140,8 +134,7 @@ const TicketDetail: React.FC = () => {
               <XCircle className="w-5 h-5" />
               Hủy vé
             </Button>
-          </div>
-        )}
+          </div>                                                   )}
       </div>
     </div>
   );

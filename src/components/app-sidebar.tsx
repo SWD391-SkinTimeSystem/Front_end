@@ -27,6 +27,104 @@ import {
 } from "@/components/ui/sidebar"
 
 // const navigate = useNavigate()
+// sự thay đổi chính sẽ nằm trong đây 
+// ở đây đồng nghĩa là mỗi role khác nhau sẽ có các menu khác nhau
+// làm thế nào để nhận diện các route khác nhau 
+// có thể sử dụng biến global để nhận diện
+// truyền qua props từ tần page xuống. 
+// hay là dùng zustand để nhận diện đâu là thứ cần hiển thị
+// trường hợp login xong sẽ lấy được role của người dùng là ai 
+// từ đó lưu vào zustand persit hoặc lấy từ localstorage để gọi ở đây
+// nhưng hiện tại user chưa trả về đúng nên sẽ dùng truyền qua props để hỗ trợ việc hiển thị 
+
+// const data = {
+//   user: {
+//     name: "Thư Nguyễn",
+//     email: "nguyenthunngoc@gmail.com",
+//     avatar: "/avatars/shadcn.jpg",
+//   },
+//   navMain: [
+//     {
+//       title: "Doanh Thu",
+//       url: "#",
+//       icon: SquareTerminal,
+//       isActive: true,
+//       items: [
+//         {
+//           title: "Dịch vụ",
+//           url: "/admin/so-lieu/dich-vu",
+//         },
+//         {
+//           title: "Sự kiện",
+//           url: "#",
+//         },
+//       ],
+//     },
+//   ],
+//   navSecondary: [
+//     {
+//       title: "Support",
+//       url: "#",
+//       icon: LifeBuoy,
+//     },
+//     {
+//       title: "Feedback",
+//       url: "#",
+//       icon: Send,
+//     },
+//   ],
+//   projects: [
+//     {
+//       name: "Sự kiện",
+//       url: "#",
+//       icon: Tickets,
+//     },
+//     {
+//       name: "Dịch vụ",
+//       url: "#",
+//       icon: CalendarDays,
+//     },
+//     {
+//       name: "Voucher",
+//       url: "#",
+//       icon: TicketPlus,
+//     },
+//   ],
+//   manages: [
+//     {
+//       name: "Nhân viên",
+//       url: "#",
+//       icon: UserRound,
+//     },
+//     {
+//       name: "Skin Therapist",
+//       url: "#",
+//       icon: Users,
+//     },
+//   ],
+//   follow: [
+//     {
+//       name: "Đánh giá dịch vụ",
+//       url: "#",
+//       icon: UserRound,
+//     },
+//     {
+//       name: "Danh sách khách hàng",
+//       url: "#",
+//       icon: Users,
+//     },
+//     {
+//       name: "Lịch làm việc",
+//       url: "#",
+//       icon: CalendarCheck2,
+//     },
+//     {
+//       name: "Người tham gia sự kiện",
+//       url: "#",
+//       icon: TicketCheck,
+//     },
+//   ],
+// }
 const data = {
   user: {
     name: "Thư Nguyễn",
@@ -39,15 +137,19 @@ const data = {
       url: "#",
       icon: SquareTerminal,
       isActive: true,
+      roles: ["admin", "manager"],
       items: [
         {
           title: "Dịch vụ",
           url: "/admin/so-lieu/dich-vu",
+          roles: ["admin"],
         },
         {
           title: "Sự kiện",
-          url: "#",
+          url: "/admin/so-lieu/su-kien",
+          roles: ["admin", "manager"],
         },
+       
       ],
     },
   ],
@@ -56,28 +158,41 @@ const data = {
       title: "Support",
       url: "#",
       icon: LifeBuoy,
+      roles: ["admin", "staff", "therapist"],
     },
+   
     {
       title: "Feedback",
       url: "#",
       icon: Send,
+      roles: ["admin", "staff"],
     },
   ],
   projects: [
+    
     {
       name: "Sự kiện",
       url: "#",
       icon: Tickets,
+      roles: ["admin", "staff"],
     },
     {
       name: "Dịch vụ",
       url: "#",
       icon: CalendarDays,
+      roles: ["admin", "staff"],
     },
     {
       name: "Voucher",
       url: "#",
       icon: TicketPlus,
+      roles: ["admin"],
+    },
+    {
+      name: "Lịch làm việc",
+      url: "#",
+      icon: CalendarCheck2,
+      roles: ["staff"],
     },
   ],
   manages: [
@@ -85,11 +200,25 @@ const data = {
       name: "Nhân viên",
       url: "#",
       icon: UserRound,
+      roles: ["admin"],
+    },
+    {
+      name: "Check in dịch vụ",
+      url: "#",
+      icon: UserRound,
+      roles: ["staff"],
+    },
+    {
+      name: "Check out dịch vụ",
+      url: "#",
+      icon: UserRound,
+      roles: ["staff"],
     },
     {
       name: "Skin Therapist",
       url: "#",
       icon: Users,
+      roles: ["admin", "manager"],
     },
   ],
   follow: [
@@ -97,26 +226,43 @@ const data = {
       name: "Đánh giá dịch vụ",
       url: "#",
       icon: UserRound,
+      roles: ["admin", "therapist"],
     },
     {
       name: "Danh sách khách hàng",
       url: "#",
       icon: Users,
+      roles: ["admin", "staff"],
     },
     {
       name: "Lịch làm việc",
       url: "#",
       icon: CalendarCheck2,
+      roles: ["admin", "therapist"],
     },
     {
       name: "Người tham gia sự kiện",
       url: "#",
       icon: TicketCheck,
+      roles: ["admin", "manager"],
     },
   ],
-}
+};
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+const filterMenuByRole = (menu: any[], role: string) => {
+  return menu.filter((item) => item.roles?.includes(role));
+};
+
+export function AppSidebar({ role, ...props }: { role: string } & React.ComponentProps<typeof Sidebar>) {
+  const filteredData = {
+    ...data,
+    navMain: filterMenuByRole(data.navMain, role),
+    projects: filterMenuByRole(data.projects, role),
+    manages: filterMenuByRole(data.manages, role),
+    follow: filterMenuByRole(data.follow, role),
+    navSecondary: filterMenuByRole(data.navSecondary, role),
+  };
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -137,16 +283,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} label="Danh mục"/>
-        <NavProjects projects={data.manages} label="Quản lý"/>
-        <NavProjects projects={data.follow} label="Theo dõi"/>
-
-        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        <NavMain items={filteredData.navMain} />
+        <NavProjects projects={filteredData.projects} label="Danh mục" />
+        <NavProjects projects={filteredData.manages} label="Quản lý" />
+        <NavProjects projects={filteredData.follow} label="Theo dõi" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
+

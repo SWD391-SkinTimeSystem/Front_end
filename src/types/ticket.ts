@@ -8,7 +8,7 @@ export type TicketData = {
     ticketNumber: string;
     status: string;
   }
-  export type Ticket = {
+export type Ticket = {
     eventId: string;
     price: number;
     paymentMethod: string;
@@ -24,6 +24,7 @@ export type TicketHistory = {
     event_id: string;
     purchase_date: string;
     status: string;
+    event_date: string;
     otp_code: string | null;
 };
 

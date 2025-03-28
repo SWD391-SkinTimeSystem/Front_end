@@ -18,12 +18,13 @@ import { ReactNode } from "react";
 
 interface PageProps {
   children: ReactNode;
+  role: string;
 }
 
-export default function Page({ children }: PageProps) {
+export default function Page({ children, role }: PageProps) {
   return (
     <SidebarProvider>
-      <AppSidebar />
+    <AppSidebar role={role}/>
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">

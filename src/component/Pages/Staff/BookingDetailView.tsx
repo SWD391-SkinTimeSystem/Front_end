@@ -81,6 +81,7 @@ const getEnhancedStatusConfig = (status: string, completedSteps: number, totalSt
 
 const getStepStatusConfig = (status: string) => {
   switch (status.toLowerCase()) {
+
     case 'completed':
       return { color: 'bg-green-100 text-green-800', icon: <CheckCircle2 className="h-4 w-4 mr-1" />, label: 'Đã hoàn thành' };
     case 'notstarted':
@@ -113,6 +114,7 @@ interface BookingDetailViewProps {
   onScheduleNextStep: (bookingId: string, stepIndex: number, date: Date, time: string) => Promise<boolean>;
   fetchAvailableTimeSlots: (date: Date) => Promise<TimeSlot[]>;
 }
+
 
 const BookingDetailView: React.FC<BookingDetailViewProps> = ({ 
   booking, 
@@ -299,6 +301,7 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
                 {statusConfig.icon}
                 {statusConfig.label}
               </Badge>
+
             </div>
           </div>
         </CardHeader>

@@ -12,16 +12,16 @@ interface ServicesProps {
    }
 export default function ServiceCard({ services }: ServicesProps) {
   const navigate = useNavigate(); 
-
+  const serviceId = services.id;
   const handleViewDetails = (serviceId: string) => {
     console.log(`Xem chi tiết dịch vụ với serviceId: ${serviceId}`);
     navigate(`/service-detail/${serviceId}`);
   };
   const handleViewBooking = () => {
-    navigate(`booking`);
+    navigate(`/booking/${serviceId}`);
   };
   return (
-    <Card className="border shadow-none rounded-none mt-3]">
+    <Card className="border shadow-none rounded-none mt-3] cursor-pointer">
       {/* Header */}
       <div className="p-4">
         <p className="text-[10px] text-gray-500">Thẩm mỹ không xâm lấn</p>
@@ -57,7 +57,7 @@ export default function ServiceCard({ services }: ServicesProps) {
           }</p>
           <div className="flex items-center justify-between">
             <Clock size={16}/>
-            <p className="text-gray-500 text-sm m-2"> 1 lần | 65 phút</p>
+            <p className="text-gray-500 text-sm m-2"> {services.serviceDetails?.length} lần | {services.duration} phút</p>
           </div>
 
         </div>
