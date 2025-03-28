@@ -84,24 +84,12 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
     });
   };
 
-
-    
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
     try {
-      // const response = await registerUser({
-        // fullname: formData.fullName,
-        // password: formData.password,
-        // phone: formData.phoneNumber,
-        // dob: `${formData.year}-${formData.month}-${formData.day}`,
-        // gender: formData.gender,
-        // email: formData.email,
-        
-        // isTermOfUseAccepted: formData.agreeTerms,
-      // });
-      console.log(JSON.stringify({
+      const response = await registerUser({
         fullname: formData.fullName,
         password: formData.password,
         phone: formData.phoneNumber,
@@ -109,7 +97,6 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
         gender: formData.gender,
         email: formData.email,
         isTermOfUseAccepted: formData.agreeTerms,
-
       });
       if (response.success) {
         toast.success("Đăng ký thành công");
@@ -129,7 +116,10 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
   };
 
   return (
-    <div className="min-h-[100vh] flex items-center justify-center px-5 lg:px-0 bg-[#e8f2ee]">
+    // <div className="min-h-[100vh] flex items-center justify-center px-5 lg:px-0 bg-[#e8f2ee]">
+<div
+      className="fixed inset-0 flex items-center justify-center px-5  lg:px-0 bg-[#e8f2ee] "
+    >
       <ToastContainer />
       <motion.div
         initial={{ opacity: 0 }}

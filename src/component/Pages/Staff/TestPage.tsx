@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { BookingDetail, CopyBookingDetail } from '../../../types/booking';
+import { BookingDetail} from '../../../types/booking';
 import BookingDetailView from './BookingDetailView';
 // import { BookingService } from './BookingService';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useCopyBookingDetail } from '@/hooks/useCusBooking';
+// import { useCopyBookingDetail } from '@/hooks/useCusBooking';
+import { useBookingDetail } from '@/hooks/useCusBooking';
 import { useTracking } from '@/hooks/useTracking';
 import { trackingService } from '@/services/trackingService';
 // import { addDays } from 'date-fns';
@@ -15,11 +16,12 @@ const TestPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
-  const [booking, setBooking] = useState<CopyBookingDetail | null>(null);
+  const [booking, setBooking] = useState<BookingDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { bookingDetail } = useCopyBookingDetail("0857ffb6-ddfa-4f18-9c59-ecb69a196906");
-  console.log(bookingDetail);
+  const { bookingDetail } = useBookingDetail("15c16d48-62c7-4237-883c-d70b6b533512");
+  // const { bookingDetail } = useCopyBookingDetail("0857ffb6-ddfa-4f18-9c59-ecb69a196906");
+  // console.log(bookingDetail);
   const { fetchCheckin, fetchCheckout } = useTracking();
   
   const searchParams = new URLSearchParams(location.search);

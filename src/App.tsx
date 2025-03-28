@@ -44,10 +44,9 @@ const App = () => {
           <Route path="/staff/*" element={<StaffRoutes />} />
           <Route path="/therapist/*" element={<SkinTherapistRoutes />} />
           <Route path="/admin/*" element={<AdminSystemRoutes />} />
-          <Route path="/admin/*" element={<AdminRoutes />} />
-          <Route path="/bookingDetail" element={<TestPage />} />
+          {/* <Route path="/admin/*" element={<AdminRoutes />} /> */}
+          {/* Test dữ liệu  */}
           <Route path="/eventCheckIn" element={<EventCheckInManager />} />
-          <Route path="/serviceManager" element={<ServiceManagementTable />} />
           <Route path="/eventManager" element={<EventManagerUI />} />
           <Route path="/staff/eventManager" element={<EventManagementUI />} />
           <Route path="/userManagement" element={<UserManagement />} />

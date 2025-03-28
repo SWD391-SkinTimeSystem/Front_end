@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { switchCaseRole } from "@/lib/utils";
 
 const Login: React.FC = () => {
   const [account, setAccount] = useState<string>("");
@@ -45,7 +46,8 @@ const Login: React.FC = () => {
 
       setAuth(response.access_token, response.refresh_token, response.user);
       toast.success(`Chào mừng, ${response.user.fullname}!`);
-      navigate("/");
+      console.log("Đăng nhập thành công:",switchCaseRole(response.access_token));
+      navigate(switchCaseRole(response.access_token));
     } catch (error: any) {
       console.error("Lỗi đăng nhập:", error.message);
       toast.error(error.message || "Đăng nhập thất bại");

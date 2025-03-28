@@ -178,7 +178,7 @@ const data = {
     },
     {
       name: "Dịch vụ",
-      url: "#",
+      url: "service/manage",
       icon: CalendarDays,
       roles: ["admin", "staff"],
     },
@@ -190,7 +190,7 @@ const data = {
     },
     {
       name: "Lịch làm việc",
-      url: "#",
+      url: "calendar",
       icon: CalendarCheck2,
       roles: ["staff"],
     },

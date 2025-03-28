@@ -105,3 +105,38 @@ export const isWithin48Hours = (date: Date): boolean => {
 
   return diffInHours <= 48; // Trả về true nếu nhỏ hơn hoặc bằng 48 giờ
 };
+
+
+export const  decodeJWTManual = (token: string) => {
+  try {
+    const payloadBase64 = token.split(".")[1]; // Lấy phần payload
+    const decodedPayload = JSON.parse(atob(payloadBase64)); // Giải mã base64
+    return decodedPayload;
+  } catch (error) {
+    console.error("Lỗi khi decode token:", error);
+    return null;
+  }
+};
+
+// Ví dụ sử dụng
+
+
+export const switchCaseRole = (accessToken: string): string => {
+  const decodedToken = decodeJWTManual(accessToken);
+  switch (decodedToken.role.toLowerCase()) {
+    case "custommer":
+      return "/";
+    case "manager":
+      return "/manager/";
+    case "therapist":
+      return "/therapist/";
+    case "staff":
+      return "/staff/";
+    case "admin":
+      return "/admin/";
+    default:
+      return "/";
+  }
+};
+
+

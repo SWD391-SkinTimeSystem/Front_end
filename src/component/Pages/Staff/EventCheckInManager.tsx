@@ -111,8 +111,8 @@ const EventCheckInManager = () => {
   const [loading, setLoading] = useState(true);
   const [checkedInCount, setCheckedInCount] = useState(0);
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
-  const {eventDetail} = useEventDetail("08dd6b72-ca9f-4ce9-85aa-4363bd24fb14");
-  const {ticketEvents} = useEvent("08dd6b72-ca9f-4ce9-85aa-4363bd24fb14");
+  const {eventDetail} = useEventDetail("08dd6c8b-859f-4690-8437-0f64a7cadcc1");
+  const {ticketEvents} = useEvent("08dd6c8b-859f-4690-8437-0f64a7cadcc1");
 
   const showNotification = (message: string, type: 'success' | 'error') => {
     setNotification({ message, type });

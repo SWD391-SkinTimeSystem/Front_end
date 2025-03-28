@@ -9,7 +9,6 @@ export type Service = {
      serviceDetails?: ServiceDetailType[];   // Ảnh minh họa (tuỳ chọn)
      serviceImages: string[],
      // feedbacks: null
-     serviceImages: string[];
 };
 
 export type ServiceCategory = {
