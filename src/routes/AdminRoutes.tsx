@@ -6,6 +6,7 @@ import Page from '@/component/Templates/Admin/page';
 import ServiceManagementTable from "@/component/Pages/Manager/ServiceManagementTable";
 import UserManagement from "@/component/Pages/Admin/UserManagement";
 import EventManagerUI from "@/component/Pages/Manager/EventManagerUI";
+import BookingTable from "@/component/Pages/BookingListTable";
 const EventDashboard = lazy(() => import("@/component/Pages/Admin/EventDashboard"));
 const isAmin = true;
 const AdminRoutes: React.FC = () => {
@@ -18,6 +19,8 @@ const AdminRoutes: React.FC = () => {
           <Route path="service" element={<ServiceManagementTable />} />
           <Route path="event" element={<EventManagerUI />} />
           <Route path="user" element={<UserManagement />} />
+          <Route path="bookings" element={<BookingTable />} />
+          <Route path="events" element={<BookingTable />} />
           {/* <Route path="users" element={<AdminUsers />} /> */}
           {/* <Route path="*" element={<Navigate to="/admin/so-lieu/dich-vu" replace />} /> */}
         </Routes>

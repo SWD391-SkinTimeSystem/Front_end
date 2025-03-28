@@ -27,6 +27,17 @@ export const scheduleService = {
             console.error("Error rescheduling:", error);
             throw error;
         }
+    },
+    getTherapistSchedule: async() => {
+        try {
+            console.log("Get scheduleschedule in Service...", );
+            const response = await axiosInstance.get(`${API_URL}`);
+            return response.data;
+        } 
+        catch (error) {
+            console.error("Error get scheduleschedule:", error);
+            throw error;
+        }
     }
 
 };

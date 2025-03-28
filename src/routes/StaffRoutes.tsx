@@ -21,6 +21,7 @@ const StaffRoutes: React.FC = () => {
               <Route path="events" element={<EventManagementUI />} />
               <Route path="event/checkin" element={<EventCheckInManager />} />
               <Route path="bookings" element={<BookingTable />} />
+
               {/* <Route path="users" element={<AdminUsers />} /> */}
               {/* <Route path="*" element={<Navigate to="/admin/so-lieu/dich-vu" replace />} /> */}
             </Routes>

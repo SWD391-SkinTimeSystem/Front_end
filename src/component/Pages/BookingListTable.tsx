@@ -7,6 +7,7 @@ import { CalendarDays, Upload, Filter, Search } from "lucide-react";
 import { useBooking } from "@/hooks/useBooking";
 import { formatEventDate, formatHour } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useAccountStore } from "@/store/useAccountStore";
 
 // const bookings = [
 //   { id: 1, name: "Facial Therapy", therapist: "Dr. John Doe", date: "2025-03-28", time: "10:00 AM" },
@@ -17,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 export default function BookingTable() {
   const { getBooking, bookings, isLoading, berror } = useBooking();
   const [search, setSearch] = useState("");
+  const { account} = useAccountStore();
   const [filterDate, setFilterDate] = useState("All");
   const [filterStatus, setFilterStatus] = useState("All");
   const navigate = useNavigate();
@@ -108,7 +110,9 @@ export default function BookingTable() {
         <TableBody>
           {filteredBookings.length > 0 ? (
             filteredBookings.map((booking, index) => (
-              <TableRow key={booking.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => GoToBookingDetail(booking.id)}>
+              <TableRow key={booking.id} className="hover:bg-gray-50 cursor-pointer" 
+              {...account?.role === "staff" && {onClick: () => GoToBookingDetail(booking.id)}}
+              >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{booking.serviceName}</TableCell>
                 <TableCell>{booking.therapistName}</TableCell>

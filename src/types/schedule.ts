@@ -19,3 +19,17 @@ export type TimeSlot = {
     date: string,
     timeStart: string
   }
+
+
+  export type TherapistSchedule = {
+    id: string;
+    expected_date: string; // YYYY-MM-DD format
+    expected_start_time: string; // HH:mm:ss format
+    expected_end_time: string; // HH:mm:ss format
+    status: string;
+    status_id: number;
+    service_id: string;
+    step_id: string;
+    step_name: string;
+    step_order: number;
+  };

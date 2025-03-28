@@ -11,6 +11,7 @@ const SkinTherapistRoutes: React.FC = () => {
           <Page role = "therapist">
           <Suspense fallback={<h1>Đang tải...</h1>}>
             <Routes>
+              <Route path="*" element={<TherapistBookingTable />} />
               <Route path="so-lieu/dich-vu" element={<ServiceDashboard />} />
               <Route path="calendar" element={<CalendarApp />} />
               <Route path="/booking" element={<TherapistBookingTable />} />

@@ -38,6 +38,7 @@ export type Booking = {
     therapistName: string;
     serviceName: string;
     thumbnail: string;
+    customerName: string;
     isTreatmentPlan: boolean; // Fix lỗi chính tả từ "isTretmentPlan"
     timeStart: string; // Format: HH:MM:SS
     description: string;
