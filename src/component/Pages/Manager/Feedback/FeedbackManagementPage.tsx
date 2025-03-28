@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FeedbackManagement from '../Service/FeedbackManagement';
-import SingleServiceFeedbackManagement from '../Service/SingleServiceFeedback';
+import FeedbackManagement from './FeedbackManagement';
+import SingleServiceFeedbackManagement from './SingleServiceFeedback';
+import TherapistFeedbackManagement from './TherapistFeedbackManagement';
 
 const FeedbackManagementPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('feedbackthera');
-const serviceId = "08dd6c8b-8585-4264-8d89-b8229468c6b8";
+  const [activeTab, setActiveTab] = useState('feedback');
+
   return (
     <div className="container mx-auto p-6 bg-white">
       <Tabs
@@ -14,31 +15,30 @@ const serviceId = "08dd6c8b-8585-4264-8d89-b8229468c6b8";
         className="w-full"
       >
         <TabsList className="relative flex w-full rounded-full bg-green-100 p-1 shadow-md">
-        <TabsTrigger
+          <TabsTrigger
             value="feedback"
             className={`relative flex-1 text-center rounded-full px-4 py-2 font-medium transition-all duration-300 
-      ${activeTab === 'feedback'
+              ${activeTab === 'feedback'
                 ? 'bg-[#326e51] text-white shadow-lg'
                 : 'text-[#326e51] hover:bg-green-200'}`}
           >
             Quản lý feedback system
           </TabsTrigger>
+          
           <TabsTrigger
             value="feedbackthera"
             className={`relative flex-1 text-center rounded-full px-4 py-2 font-medium transition-all duration-300 
-      ${activeTab === 'feedbackthera'
+              ${activeTab === 'feedbackthera'
                 ? 'bg-[#326e51] text-white shadow-lg'
                 : 'text-[#326e51] hover:bg-green-200'}`}
           >
             Quản lý feedback therapist
-            </TabsTrigger>
-
-        
+          </TabsTrigger>
 
           <TabsTrigger
             value="feedbackservice"
             className={`relative flex-1 text-center rounded-full px-4 py-2 font-medium transition-all duration-300 
-      ${activeTab === 'feedbacksingle'
+              ${activeTab === 'feedbackservice'
                 ? 'bg-[#326e51] text-white shadow-lg'
                 : 'text-[#326e51] hover:bg-green-200'}`}
           >
@@ -46,17 +46,17 @@ const serviceId = "08dd6c8b-8585-4264-8d89-b8229468c6b8";
           </TabsTrigger>
         </TabsList>
 
-
-        {/* <TabsContent value="feedbackthera">
-          <ServiceManagementTable />
-        </TabsContent> */}
-
         <TabsContent value="feedback">
           <FeedbackManagement />
         </TabsContent>
 
-        <TabsContent value="feedbacksingle">
-          <SingleServiceFeedbackManagement serviceId = {serviceId}/>
+        <TabsContent value="feedbackthera">
+          <TherapistFeedbackManagement />
+
+        </TabsContent>
+
+        <TabsContent value="feedbackservice">
+          <SingleServiceFeedbackManagement/>
         </TabsContent>
       </Tabs>
     </div>

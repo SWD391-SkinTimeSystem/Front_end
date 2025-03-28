@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
     Card, 
     CardHeader, 
@@ -6,24 +6,25 @@ import {
     CardContent 
   } from "@/components/ui/card";
   
-  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
   
-  import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
   
-  import { 
+import { 
     Select, 
     SelectContent, 
     SelectItem, 
     SelectTrigger, 
     SelectValue 
-  } from "@/components/ui/select";
+} from "@/components/ui/select";
   
 import { 
-  Star, 
-  Filter, 
-  Search, 
-  Calendar, 
-  BarChart 
+    Star, 
+    Filter, 
+    Search, 
+    Calendar, 
+    BarChart,
+    Loader2 
 } from 'lucide-react';
 
 const FeedbackManagement = () => {
@@ -34,100 +35,42 @@ const FeedbackManagement = () => {
     to: null
   });
 
-  const [feedbacks, setFeedbacks] = useState([
-    {
-        review_id: "3c4d5e6f-3456-7891-1121-cdef34567891",
-        user_id: "user-003",
-        therapist_rating: 3,
-        therapist_review: "It was okay. The therapist was friendly but seemed distracted.",
-        service_rating: 4,
-        service_review: "Overall good, but could improve scheduling.",
-        date: "2025-03-23"
-      },
-    {
-      review_id: "1a2b3c4d-1234-5678-9101-abcdef123456",
-      user_id: "user-001",
-      therapist_rating: 5,
-      therapist_review: "Amazing experience! The therapist was very professional.",
-      service_rating: 5,
-      service_review: "Super smooth booking process and great service.",
-      date: "2025-03-25"
-    },
-    {
-      review_id: "2b3c4d5e-2345-6789-1011-bcdef2345678",
-      user_id: "user-002",
-      therapist_rating: 4,
-      therapist_review: "Very relaxing session, but could have been a bit longer.",
-      service_rating: 5,
-      service_review: "The app is easy to use and convenient.",
-      date: "2025-03-24"
-    },
-  
-    {
-      review_id: "4d5e6f7g-4567-8911-1221-def456789123",
-      user_id: "user-004",
-      therapist_rating: 2,
-      therapist_review: "Not satisfied. The therapist seemed inexperienced.",
-      service_rating: 3,
-      service_review: "Had some trouble with the payment process.",
-      date: "2025-03-22"
-    },
-    {
-      review_id: "5e6f7g8h-5678-9111-1321-ef5678912345",
-      user_id: "user-005",
-      therapist_rating: 5,
-      therapist_review: "Best session I’ve ever had! Highly recommend.",
-      service_rating: 5,
-      service_review: "Great customer support and easy booking.",
-      date: "2025-03-21"
-    },
-    {
-      review_id: "6f7g8h9i-6789-1121-1421-f67891234567",
-      user_id: "user-006",
-      therapist_rating: 3,
-      therapist_review: "The therapist was kind but seemed rushed.",
-      service_rating: 4,
-      service_review: "Good experience, but appointment started late.",
-      date: "2025-03-20"
-    },
-    {
-      review_id: "7g8h9i0j-7891-1221-1521-g78912345678",
-      user_id: "user-007",
-      therapist_rating: 4,
-      therapist_review: "Very professional and attentive therapist.",
-      service_rating: 5,
-      service_review: "Great value for money.",
-      date: "2025-03-19"
-    },
-    {
-      review_id: "8h9i0j1k-8911-1321-1621-h89123456789",
-      user_id: "user-008",
-      therapist_rating: 1,
-      therapist_review: "Not a great experience. The therapist was late and unprepared.",
-      service_rating: 2,
-      service_review: "Difficult to contact support when needed.",
-      date: "2025-03-18"
-    },
-    {
-      review_id: "9i0j1k2l-9111-1421-1721-i91234567890",
-      user_id: "user-009",
-      therapist_rating: 5,
-      therapist_review: "Super friendly and knowledgeable therapist!",
-      service_rating: 5,
-      service_review: "Smooth experience from start to finish.",
-      date: "2025-03-17"
-    },
-    {
-      review_id: "0j1k2l3m-1121-1521-1821-j12345678901",
-      user_id: "user-010",
-      therapist_rating: 4,
-      therapist_review: "The therapist was very skilled, but the room was a bit cold.",
-      service_rating: 4,
-      service_review: "Good service, but waiting time should be reduced.",
-      date: "2025-03-16"
-    }
-  ]);
-  
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('http://swd291-api.duckdns.org/api/feedback');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch feedback data');
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          const formattedFeedbacks = result.data.map(feedback => ({
+            ...feedback,
+            service_review: feedback.servicet_review || feedback.service_review
+          }));
+          
+          setFeedbacks(formattedFeedbacks);
+        } else {
+          throw new Error(result.message || 'Unknown error occurred');
+        }
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching feedbacks:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFeedbacks();
+  }, []);
 
   const filteredFeedbacks = useMemo(() => {
     return feedbacks.filter(feedback => {
@@ -152,8 +95,12 @@ const FeedbackManagement = () => {
 
   const feedbackAnalytics = useMemo(() => {
     const totalFeedbacks = filteredFeedbacks.length;
-    const avgTherapistRating = filteredFeedbacks.reduce((sum, f) => sum + f.therapist_rating, 0) / totalFeedbacks;
-    const avgServiceRating = filteredFeedbacks.reduce((sum, f) => sum + f.service_rating, 0) / totalFeedbacks;
+    const avgTherapistRating = totalFeedbacks > 0 
+      ? filteredFeedbacks.reduce((sum, f) => sum + f.therapist_rating, 0) / totalFeedbacks 
+      : 0;
+    const avgServiceRating = totalFeedbacks > 0
+      ? filteredFeedbacks.reduce((sum, f) => sum + f.service_rating, 0) / totalFeedbacks
+      : 0;
 
     return {
       totalFeedbacks,
@@ -162,13 +109,29 @@ const FeedbackManagement = () => {
     };
   }, [filteredFeedbacks]);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500 p-4">
+        Không thể tải dữ liệu phản hồi. Vui lòng thử lại sau.
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-4">
       {/* Analytics Overview */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Feedbacks</CardTitle>
+            <CardTitle className="text-sm font-medium">Tổng số phản hồi</CardTitle>
             <BarChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -177,7 +140,7 @@ const FeedbackManagement = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Therapist Rating</CardTitle>
+            <CardTitle className="text-sm font-medium">Đánh giá TB Therapist</CardTitle>
             <Star className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -186,7 +149,7 @@ const FeedbackManagement = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Service Rating</CardTitle>
+            <CardTitle className="text-sm font-medium">Đánh giá TB Dịch vụ</CardTitle>
             <Star className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -198,9 +161,8 @@ const FeedbackManagement = () => {
       {/* Filtering and Search */}
       <div className="flex space-x-4 mb-6">
         <div className="flex-grow">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <Input 
-           className="pl-10" 
+            className="pl-10" 
             placeholder="Tìm kiếm phản hồi..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
