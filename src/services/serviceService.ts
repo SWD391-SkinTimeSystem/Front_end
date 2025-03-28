@@ -5,8 +5,14 @@ import { Service } from "@/types/services";
 const API_URL = "/service";
 
 export const serviceService = {
-     getListServices : async () => {
-          const response = await axiosInstance.get(`${API_URL}`);
+     getListServices : async (searchKey: null, page: number, pageSize: number) => {
+          const response = await axiosInstance.get(`${API_URL}`, {
+               params: {
+                    searchKey,
+                    page,
+                    pageSize
+               }
+          });
           if(response.data.success) {
 
                return response.data.data;

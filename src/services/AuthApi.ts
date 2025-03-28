@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 import authService from "./authService";
 
-const API_URL = "https://localhost:5063/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: API_URL,
@@ -22,7 +22,7 @@ api.interceptors.request.use(
 );
 
 // Middleware xử lý refresh token khi token hết hạn
-api.interceptors.response.use(
+api.interceptors.response.  (
   (response) => response,
   async (error) => {
     const originalRequest = error.config;

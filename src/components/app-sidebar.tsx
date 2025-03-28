@@ -137,17 +137,18 @@ const data = {
       url: "#",
       icon: SquareTerminal,
       isActive: true,
-      roles: ["admin", "manager"],
+      roles: ["manager"],
       items: [
         {
           title: "Dịch vụ",
-          url: "/admin/so-lieu/dich-vu",
-          roles: ["admin"],
+          url: "/manager/satistic/service",
+          roles: ["manager"],
         },
+     
         {
           title: "Sự kiện",
-          url: "/admin/so-lieu/su-kien",
-          roles: ["admin", "manager"],
+          url: "/manager/satistic/event",
+          roles: ["manager"],
         },
        
       ],
@@ -172,25 +173,31 @@ const data = {
     
     {
       name: "Sự kiện",
-      url: "#",
+      url: "events",
       icon: Tickets,
-      roles: ["admin", "staff"],
+      roles: ["staff"],
+    },
+    {
+      name: "Sự kiện",
+      url: "/manager/event",
+      icon: Tickets,
+      roles: ["manager"],
     },
     {
       name: "Dịch vụ",
-      url: "#",
+      url: "service",
       icon: CalendarDays,
-      roles: ["admin", "staff"],
+      roles: ["manager", "staff"],
     },
     {
       name: "Voucher",
       url: "#",
       icon: TicketPlus,
-      roles: ["admin"],
+      roles: ["manager"],
     },
     {
       name: "Lịch làm việc",
-      url: "#",
+      url: "calendar",
       icon: CalendarCheck2,
       roles: ["staff"],
     },
@@ -198,9 +205,21 @@ const data = {
   manages: [
     {
       name: "Nhân viên",
-      url: "#",
+      url: "/admin/user",
       icon: UserRound,
       roles: ["admin"],
+    },
+    {
+      name: "Dịch vụ của tôi",
+      url: "/therapist/booking",
+      icon: UserRound,
+      roles: ["therapist"],
+    },
+    {
+      name: "Danh sách dịch vụ",
+      url: "/staff/bookings",
+      icon: UserRound,
+      roles: ["staff"],
     },
     {
       name: "Check in dịch vụ",
@@ -218,7 +237,7 @@ const data = {
       name: "Skin Therapist",
       url: "#",
       icon: Users,
-      roles: ["admin", "manager"],
+      roles: ["admin"],
     },
   ],
   follow: [
@@ -226,19 +245,19 @@ const data = {
       name: "Đánh giá dịch vụ",
       url: "#",
       icon: UserRound,
-      roles: ["admin", "therapist"],
+      roles: ["therapist"],
     },
     {
       name: "Danh sách khách hàng",
-      url: "#",
+      url: "/manager/bookings",
       icon: Users,
-      roles: ["admin", "staff"],
+      roles: ["manager", "staff"],
     },
     {
       name: "Lịch làm việc",
-      url: "#",
+      url: "/therapist/calendar",
       icon: CalendarCheck2,
-      roles: ["admin", "therapist"],
+      roles: ["therapist"],
     },
     {
       name: "Người tham gia sự kiện",

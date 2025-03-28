@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 const ServiceDashboard = lazy(() => import("@/component/Pages/Admin/ServiceDashboard"));
 import Page from '@/component/Templates/Admin/page';
+import UserManagement from "@/component/Pages/Admin/UserManagement";
 const isAdminSystem = true;
 const AdminSystemRoutes: React.FC = () => {
      return isAdminSystem ? (
@@ -10,6 +11,7 @@ const AdminSystemRoutes: React.FC = () => {
           <Suspense fallback={<h1>Đang tải...</h1>}>
             <Routes>
               <Route path="so-lieu/dich-vu" element={<ServiceDashboard />} />
+              <Route path="/user/manage" element={<UserManagement />} />
               {/* <Route path="users" element={<AdminUsers />} /> */}
               {/* <Route path="*" element={<Navigate to="/admin/so-lieu/dich-vu" replace />} /> */}
             </Routes>

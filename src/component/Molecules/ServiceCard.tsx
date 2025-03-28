@@ -57,7 +57,7 @@ export default function ServiceCard({ services }: ServicesProps) {
           }</p>
           <div className="flex items-center justify-between">
             <Clock size={16}/>
-            <p className="text-gray-500 text-sm m-2"> 1 lần | 65 phút</p>
+            <p className="text-gray-500 text-sm m-2"> {services.serviceDetails?.length} lần | {services.duration} phút</p>
           </div>
 
         </div>

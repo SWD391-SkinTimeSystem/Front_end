@@ -3,7 +3,7 @@ import { therapistService } from "@/services/therapistService";
 import { Skintherapist } from "@/types/skintherapist";
 import { TherapistAvailabilityResponse } from "@/types/schedule";
 
-export const useTherapist = () => {
+export const useTherapist = (page: number, pageSize: number) => {
   const [therapists, setTherapists] = useState<Skintherapist[]>([]);
   const [schedule, setSchedule] = useState<TherapistAvailabilityResponse | null>(null);
   const [IsTherapistloading, setIsTherapistLoading] = useState<boolean>(true);
@@ -15,8 +15,8 @@ export const useTherapist = () => {
       setIsTherapistLoading(true);
       setIsTherapistError(null);
       try {
-        const data = await therapistService.getListTherapists();
-        setTherapists(data);
+        const data = await therapistService.getListTherapists(page, pageSize);
+        setTherapists(data.content);
       } catch (err) {
         setIsTherapistError("Failed to fetch therapists.");
         console.error(err);

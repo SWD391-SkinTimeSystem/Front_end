@@ -6,15 +6,16 @@ import ServiceCard from "../Molecules/ServiceCard";
 import { Service } from "@/types/services";
 import { useNavigate } from "react-router-dom";
 import { useEvent } from "@/hooks/useEvent";
+import { useEffect } from "react";
 
 interface ListServicesProps {
      services: Service[];
    }
 
 export default function ServiceList({ services = [] }: ListServicesProps) {
-       const { events, loading, error } = useEvent();
-     console.log("Services in ServiceList:", services);
-const navigate = useNavigate()
+       const { events, loading, error } = useEvent(1,10);
+       console.log(events);
+     const navigate = useNavigate()
      return (
           <>
                <div>
