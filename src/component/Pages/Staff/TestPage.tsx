@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { BookingDetail} from '../../../types/booking';
@@ -23,60 +22,34 @@ const TestPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { bookingDetail } = useBookingDetail(id);
-  // const { bookingDetail } = useCopyBookingDetail("0857ffb6-ddfa-4f18-9c59-ecb69a196906");
-  // console.log(bookingDetail);
   const { fetchCheckin, fetchCheckout } = useTracking();
   
   const searchParams = new URLSearchParams(location.search);
   const bookingId = searchParams.get('id') || 'treatment';
   
   useEffect(() => {
-
     const fetchBooking = async () => {
-          setLoading(true);
+      setLoading(true);
       if (bookingDetail && booking !== bookingDetail) {
         bookingDetail.details.sort((a, b) => a.step - b.step);
         setBooking(bookingDetail);
       }
-          try {
-            setError(null);
-          } catch (err) {
-            console.error('Error fetching booking:', err);
-            setError('Không thể tải thông tin lịch hẹn');
-          } finally {
-            setLoading(false);
-          }
-        };
+      try {
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching booking:', err);
+        setError('Không thể tải thông tin lịch hẹn');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        fetchBooking();
-
+    fetchBooking();
   }, [bookingDetail, booking]);
-  
-  // useEffect(() => {
-  //   const fetchBooking = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const data = await getMockBooking(bookingId);
-  //       setBooking(data);
-  //       setError(null);
-  //     } catch (err) {
-  //       console.error('Error fetching booking:', err);
-  //       setError('Không thể tải thông tin lịch hẹn');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (bookingId) {
-  //     fetchBooking();
-  //   }
-  // }, [bookingId]);
 
   const handleBack = () => {
     navigate('/bookings');
   };
-
-
 
   const handleCheckIn = async (bookingId: string, stepIndex: number, code: string): Promise<boolean> => {
     if (!booking) return false;
@@ -84,9 +57,7 @@ const TestPage: React.FC = () => {
     if (code === booking.details[stepIndex].checkInCode) {
       const result = await fetchCheckin(booking.details[stepIndex].scheduleID, code);
       console.log(result);
-      // const updatedBooking = JSON.parse(JSON.stringify(booking)) as CopyBookingDetail;
       toast("Check-in thành công");
-      // setBooking(updatedBooking);
       return true;
     }
     
@@ -106,15 +77,29 @@ const TestPage: React.FC = () => {
   const handleUpdateStatus = async (bookingId: string, stepIndex: number, status: string): Promise<boolean> => {
     if (!booking) return false;
     
+    // Xử lý trường hợp đặc biệt khi stepIndex là -1 (cập nhật trạng thái booking)
+    if (stepIndex === -1) {
+      const updatedBooking = JSON.parse(JSON.stringify(booking)) as BookingDetail;
+      updatedBooking.status = status;
+      setBooking(updatedBooking);
+      console.log(`Updating overall booking status to ${status}`);
+      return true;
+    }
 
-    const updatedBooking = JSON.parse(JSON.stringify(booking)) as CopyBookingDetail;
+    const updatedBooking = JSON.parse(JSON.stringify(booking)) as BookingDetail;
     updatedBooking.details[stepIndex].status = status;
     
-    if (status === "Cancelled" && 
-        updatedBooking.details.every(detail => 
-          detail.status === "Completed" || detail.status === "Cancelled")) {
+    // Kiểm tra xem tất cả các bước đã bị hủy (canceled) hoặc hoàn thành (completed) chưa
+    const allCompletedOrCanceled = updatedBooking.details.every(detail => 
+      detail.status.toLowerCase() === "completed" || detail.status.toLowerCase() === "cancelled" || detail.status.toLowerCase() === "canceled"
+    );
+    
+    // Kiểm tra nếu hủy một bước và có bất kỳ bước nào bị hủy, thì cập nhật trạng thái booking thành "Cancelled"
+    if (status.toLowerCase() === "canceled" || status.toLowerCase() === "cancelled") {
       updatedBooking.status = "Cancelled";
-    } else if (updatedBooking.details.every(detail => detail.status === "Completed")) {
+    } 
+    // Nếu tất cả các bước đều đã hoàn thành, cập nhật trạng thái booking thành "Completed"
+    else if (updatedBooking.details.every(detail => detail.status.toLowerCase() === "completed")) {
       updatedBooking.status = "Completed";
     }
     
@@ -131,8 +116,7 @@ const TestPage: React.FC = () => {
   ): Promise<boolean> => {
     if (!booking) return false;
     
-
-    const updatedBooking = JSON.parse(JSON.stringify(booking)) as CopyBookingDetail;
+    const updatedBooking = JSON.parse(JSON.stringify(booking)) as BookingDetail;
     
     // Update the next step's scheduling information
     updatedBooking.details[stepIndex].reservedDate = date;
@@ -169,37 +153,6 @@ const TestPage: React.FC = () => {
     });
   };
 
-
-  // const renderSampleSelector = () => (
-  //   <div className="flex gap-4 mb-6 flex-wrap">
-  //     <h3 className="w-full font-medium text-gray-700">Chọn mẫu booking để xem:</h3>
-  //     <Button 
-  //       variant={bookingId === 'single' ? 'default' : 'outline'}
-  //       onClick={() => navigate(`${location.pathname}?id=single`)}
-  //     >
-  //       Dịch vụ đơn lẻ
-  //     </Button>
-  //     <Button 
-  //       variant={bookingId === 'treatment' ? 'default' : 'outline'}
-  //       onClick={() => navigate(`${location.pathname}?id=treatment`)}
-  //     >
-  //       Lộ trình điều trị
-  //     </Button>
-  //     <Button 
-  //       variant={bookingId === 'completed' ? 'default' : 'outline'}
-  //       onClick={() => navigate(`${location.pathname}?id=completed`)}
-  //     >
-  //       Đã hoàn thành
-  //     </Button>
-  //     <Button 
-  //       variant={bookingId === 'cancelled' ? 'default' : 'outline'}
-  //       onClick={() => navigate(`${location.pathname}?id=cancelled`)}
-  //     >
-  //       Đã hủy
-  //     </Button>
-  //   </div>
-  // );
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-96">
@@ -217,7 +170,7 @@ const TestPage: React.FC = () => {
         <h3 className="text-xl font-medium text-red-600 mb-4">{error}</h3>
         <Button onClick={() => window.location.reload()}>Thử lại</Button>
       </div>
- );
+    );
   }
 
   if (!booking) {
@@ -231,8 +184,6 @@ const TestPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {/* {renderSampleSelector()} */}
-      
       <BookingDetailView 
         booking={booking}
         onBack={handleBack}

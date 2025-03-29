@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   Card, 
   CardContent, 
-  CardDescription, 
   CardFooter, 
   CardHeader, 
   CardTitle 
@@ -13,12 +12,8 @@ import {
   Clock, 
   Calendar, 
   CheckCircle2, 
-  AlertCircle,
-  ChevronLeft,
-  Printer,
   Check,
   X,
-  Clock3,
   Hourglass
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
@@ -30,11 +25,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { BookingDetail, CopyBookingDetail } from '../../../types/booking';
-import { format, parseISO, addMinutes, addHours, differenceInMinutes, addDays } from "date-fns";
+import { CopyBookingDetail } from '../../../types/booking';
+import { format, addMinutes, differenceInMinutes, addDays } from "date-fns";
 import { vi } from "date-fns/locale";
 import { CheckInOutButton } from './CheckInOutButton';
-// import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 import {
   Dialog,
   DialogContent,
@@ -45,9 +39,8 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { useCheckCheckin, useTracking } from '@/hooks/useTracking';
-import { trackingService } from '@/services/trackingService';
 
+// Utility Functions
 const getEnhancedStatusConfig = (status: string, completedSteps: number, totalSteps: number) => {
   const backendStatus = status.toLowerCase();
   
@@ -81,7 +74,6 @@ const getEnhancedStatusConfig = (status: string, completedSteps: number, totalSt
 
 const getStepStatusConfig = (status: string) => {
   switch (status.toLowerCase()) {
-
     case 'completed':
       return { color: 'bg-green-100 text-green-800', icon: <CheckCircle2 className="h-4 w-4 mr-1" />, label: 'Đã hoàn thành' };
     case 'notstarted':
@@ -115,7 +107,6 @@ interface BookingDetailViewProps {
   fetchAvailableTimeSlots: (date: Date) => Promise<TimeSlot[]>;
 }
 
-
 const BookingDetailView: React.FC<BookingDetailViewProps> = ({ 
   booking, 
   onBack, 
@@ -135,8 +126,6 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [isScheduling, setIsScheduling] = useState(false);
   const [scheduleError, setScheduleError] = useState<string | null>(null);
-  
-  // Date range for next step scheduling
   const [dateRange, setDateRange] = useState<{
     minDate: Date | null;
     maxDate: Date | null;
@@ -144,7 +133,42 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
     minDate: null,
     maxDate: null
   });
-  
+
+  // Cascade Cancellation Function
+  const handleCascadeCancellation = async (canceledStepIndex: number) => {
+    const updatedDetails = [...booking.details];
+    
+    // Hủy các bước từ bước bị hủy trở đi
+    for (let i = canceledStepIndex; i < updatedDetails.length; i++) {
+      if (updatedDetails[i].status.toLowerCase() === 'notstarted') {
+        try {
+          const success = await onUpdateStatus(booking.id, i, 'canceled');
+          if (success) {
+            updatedDetails[i].status = 'canceled';
+          }
+        } catch (error) {
+          console.error(`Failed to cancel step ${i}:`, error);
+        }
+      }
+    }
+    
+    // Cập nhật trạng thái tổng thể của booking thành canceled
+    // Sử dụng onUpdateStatus với stepIndex là -1 để cập nhật trạng thái booking
+    try {
+      // Chúng ta sẽ gọi onUpdateStatus với stepIndex là -1 
+      // để chỉ định đây là cập nhật cho toàn bộ booking
+      const success = await onUpdateStatus(booking.id, -1, 'canceled');
+      if (success) {
+        booking.status = 'canceled';
+      }
+    } catch (error) {
+      console.error('Failed to update booking status:', error);
+    }
+    
+    toast.warning(`Các bước sau bước ${canceledStepIndex + 1} và toàn bộ lịch hẹn đã bị hủy`);
+  };
+
+  // Time-based Effects
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -152,26 +176,26 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
     return () => clearInterval(timer);
   }, []);
   
-  // Check for auto-cancellation
+  // Auto-cancellation Effect
   useEffect(() => {
     booking.details.forEach((detail, index) => {
       if (detail.status.toLowerCase() === 'notstarted' && detail.reservedDate && detail.startTime) {
         const serviceDateTime = parseTime(detail.reservedDate.toString(), detail.startTime);
         const timeLimit = addMinutes(serviceDateTime, 15);
   
-        // Nếu quá thời gian 15 phút mà chưa check-in, auto cancel
         if (currentTime > timeLimit && !checkedInSteps.includes(index)) {
           onUpdateStatus(booking.id, index, 'canceled').then(success => {
             if (success) {
-              // Cập nhật lại booking.details trong state ngay lập tức
               booking.details[index].status = 'canceled';
+              handleCascadeCancellation(index);
             }
           });
         }
       }
     });
   }, [currentTime, booking.details, checkedInSteps, onUpdateStatus]);
-  
+
+  // Booking Progress Calculations
   const completedSteps = booking.details.filter(detail => 
     detail.status.toLowerCase() === 'completed'
   ).length;
@@ -185,52 +209,15 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
   );
   
   const currentStepIndex = booking.details.findIndex(detail => 
-
     detail.status.toLowerCase() === 'notstarted'
   );
 
-  const handleCheckIn = async (bookingId: string, stepIndex: number, code: string) => {
-    const success = await onCheckIn(bookingId, stepIndex, code);
-
-    const isCheckIn = await trackingService.getCheckCheckIn(booking.details[stepIndex].scheduleID);
-    if (success) {
-      setCheckedInSteps(prev => [...prev, stepIndex]);
-      setCheckInTimes(isCheckIn.checkinTime);
-    }
-    return success;
-  };
-  
-
-//   const handleCheckOut = async (bookingId: string, stepIndex: number) => {
-//     const success = await onCheckOut(bookingId, stepIndex);
-    
-//     if (success) {
-//       if (stepIndex < booking.totalStep - 1) {
-//         const nextIndex = stepIndex + 1;
-//         setNextStepIndex(nextIndex);
-        
-//         const minDate = addDays(new Date(), 7); 
-//         const maxDate = addDays(minDate, 7);    
-//         console.log("Checkout success:", success);
-// console.log("Step index:", stepIndex);
-// console.log("Total steps:", booking.totalStep);
-// console.log("Should show dialog:", stepIndex < booking.totalStep - 1);
-//         setDateRange({
-//           minDate,
-//           maxDate
-//         });
-        
-//         setShowScheduleDialog(true);
-//       }
-//     }
-//     return success;
-//   };
+  // Scheduling Handlers
   const handleDateSelect = async (date: Date) => {
     setSelectedDate(date);
     setSelectedTimeSlot(null);
     
     try {
-      // Fetch available time slots for the selected date
       const slots = await fetchAvailableTimeSlots(date);
       setAvailableTimeSlots(slots);
     } catch (error) {
@@ -261,10 +248,8 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
         toast.success("Đã lên lịch thành công cho bước tiếp theo!");
         setShowScheduleDialog(false);
         
-        // Update the booking details in state to reflect the new schedule
         booking.details[nextStepIndex].reservedDate = selectedDate;
         booking.details[nextStepIndex].startTime = selectedTimeSlot;
-        // Calculate end time (assuming 1-hour duration)
         const [hour, minute] = selectedTimeSlot.split(':').map(Number);
         booking.details[nextStepIndex].startEnd = `${hour + 1}:${minute.toString().padStart(2, '0')}`;
       } else {
@@ -277,7 +262,17 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
       setIsScheduling(false);
     }
   };
-  
+
+  // Check-in Handler
+  const handleCheckIn = async (bookingId: string, stepIndex: number, code: string) => {
+    const success = await onCheckIn(bookingId, stepIndex, code);
+    if (success) {
+      setCheckedInSteps(prev => [...prev, stepIndex]);
+      setCheckInTimes(prev => ({...prev, [stepIndex]: new Date()}));
+    }
+    return success;
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <Card className="border border-gray-200 shadow-sm">
@@ -285,7 +280,7 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
           <div className="flex justify-between items-start">
             <div>
               <CardTitle className="text-xl text-green-800">
-                Chi tiết lịch hẹn #{booking.id}
+                Chi tiết lịch hẹn 
               </CardTitle>
             </div>
             <div className="flex flex-col items-end">
@@ -293,7 +288,6 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
                 {statusConfig.icon}
                 {statusConfig.label}
               </Badge>
-
             </div>
           </div>
         </CardHeader>
@@ -350,111 +344,44 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
               </h3>
               
               <div className="space-y-4">
-                {booking.details.map((detail, index)  => {
+                {booking.details.map((detail, index) => {
                   const detailStatus = getStepStatusConfig(detail.status);
                   const isActiveStep = currentStepIndex === index;
                   const isPastStep = index < currentStepIndex;
-                  const check = trackingService.getCheckCheckIn(detail.scheduleID);
-                  // Kiểm tra xem bước này đã checkin chưa
-                  const isStepCheckedIn = check;
                   
-                  // Kiểm tra xem bước trước đã hoàn thành chưa
-                  const isPreviousStepCompleted = index === 0 ||
-                      (index > 0 && booking.details[index - 1].status.toLowerCase() === 'completed');
-                  
-                  // Kiểm tra xem bước hiện tại đã được lên lịch chưa
-                  const isStepScheduled = Boolean(detail.reservedDate && detail.startTime);
-                  
-                  let serviceDateTime;
-                  let serviceEndDateTime;
-                  let checkInWindowStart;
-                  let autoCancelTime;
-                  
-                  if (isStepScheduled) {
-                    // Check thời gian dịch vụ đó
-                    serviceDateTime = parseTime(detail.reservedDate.toString(), detail.startTime);
-                    serviceEndDateTime = parseTime(detail.reservedDate.toString(), detail.startEnd);
-                    
-                    // Check-in window opens 15 minutes before service time
-                    checkInWindowStart = addMinutes(serviceDateTime, -15);
-                    
-                    // Tự động hủy nếu quá 15p kể từ giờ dvu mà chưa checkin
-                    autoCancelTime = addMinutes(serviceDateTime, 15);
-                  }
-                  
-                  // có thể checkin từ trước 15p giờ dvu
-                  const isWithinCheckInWindow = isStepScheduled && 
-                      currentTime >= checkInWindowStart! && 
-                      currentTime <= autoCancelTime!;
-                  
-                  // có thể checkout sau 1h từ giờ checkin
-                  const checkInTime = checkInTimes[index];
-                  const canShowCheckOut = checkInTime && 
-                                          differenceInMinutes(currentTime, checkInTime) >= 1;
-                  
-                  // A step can only be checked in if:
-                  // - It's the active step
-                  // - It's not started
-                  // - Not already checked in
-                  // - Within check-in window
-                  // - Previous step is completed
-                  const canCheckIn = isActiveStep && 
-                                     detail.status.toLowerCase() === 'notstarted' && 
-                                     !isStepCheckedIn &&
-                                     isWithinCheckInWindow &&
-                                     isPreviousStepCompleted &&
-                                     isStepScheduled;
-                  
-                  // A step can only be checked out if:
-                  // - It's been checked in
-                  // - At least an hour has passed since check-in
-                  const canCheckOut = isActiveStep && 
-                                      detail.status.toLowerCase() === 'notstarted' && 
-                                      isStepCheckedIn &&
-                                      canShowCheckOut;
-                  
-                  const isStepCompleted = detail.status.toLowerCase() === 'completed';
                   const isStepCanceled = detail.status.toLowerCase() === 'canceled';
-                  
-                  // For steps that aren't scheduled yet but previous step is completed
-                  const needsScheduling = detail.status.toLowerCase() === 'notstarted' && 
-                                         !isStepScheduled && 
-                                         isPreviousStepCompleted;
+                  const isAfterCanceledStep = index > booking.details.findIndex(d => d.status.toLowerCase() === 'canceled');
                   
                   return (
                     <div 
                       key={index} 
                       className={`p-4 border rounded-lg ${
-                        isStepCompleted ? 'border-green-200 bg-green-50' : 
-                        isStepCanceled ? 'border-red-200 bg-red-50' :
-                        needsScheduling ? 'border-yellow-200 bg-yellow-50' :
-                        isActiveStep ? 'border-blue-200 bg-blue-50' : 'border-gray-200'
+                        isStepCanceled ? 'border-red-200 bg-red-50 opacity-60' : 
+                        isPastStep ? 'border-gray-200 bg-gray-50' :
+                        isActiveStep ? 'border-blue-200 bg-blue-50' : 
+                        'border-gray-200'
                       }`}
                     >
                       <div className="flex justify-between items-center">
                         <div className="flex items-center">
                           <div className={`rounded-full h-8 w-8 flex items-center justify-center mr-3 ${
-                            isStepCompleted ? 'bg-green-500 text-white' : 
                             isStepCanceled ? 'bg-red-500 text-white' :
-                            needsScheduling ? 'bg-yellow-500 text-white' :
-                            isActiveStep ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                            isPastStep ? 'bg-gray-500 text-white' :
+                            isActiveStep ? 'bg-blue-500 text-white' : 
+                            'bg-gray-200 text-gray-700'
                           }`}>
-                            {isStepCompleted ? <Check className="h-5 w-5" /> : 
-                             isStepCanceled ? <X className="h-5 w-5" /> : (index + 1)}
+                            {isStepCanceled ? <X className="h-5 w-5" /> : 
+                             isPastStep ? <Check className="h-5 w-5" /> : (index + 1)}
                           </div>
                           <div>
                             <h4 className="font-medium">{detail.serviceDetailsName}</h4>
-                            {isStepScheduled ? (
+                            {detail.reservedDate && detail.startTime ? (
                               <div className="flex items-center text-sm text-gray-500 mt-1">
                                 <Calendar className="h-4 w-4 mr-1" />
                                 {format(new Date(detail.reservedDate), "dd/MM/yyyy", { locale: vi })}
                                 <span className="mx-2">•</span>
                                 <Clock className="h-4 w-4 mr-1" />
                                 {detail.startTime} - {detail.startEnd}
-                              </div>
-                            ) : needsScheduling ? (
-                              <div className="text-sm text-yellow-600 mt-1">
-                                Cần lên lịch cho bước này
                               </div>
                             ) : (
                               <div className="text-sm text-gray-500 mt-1">
@@ -469,43 +396,14 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
                             {detailStatus.icon}
                             {detailStatus.label}
                           </Badge>
-                          
-                          {needsScheduling && (
-                            <Button 
-                              variant="outline" 
-                              className="text-yellow-600 border-yellow-200 hover:bg-yellow-50"
-                              onClick={() => {
-                                setNextStepIndex(index);
-                                
-                                // Calculate date range for scheduling (7 days from now)
-                                const minDate = addDays(new Date(), 7);
-                                const maxDate = addDays(minDate, 7);
-                                
-                                setDateRange({
-                                  minDate,
-                                  maxDate
-                                });
-                                
-                                setShowScheduleDialog(true);
-                              }}
-                            >
-                              <Calendar className="h-4 w-4 mr-2" />
-                              Lên lịch
-                            </Button>
-                          )}
-                          
-                          {!isStepCanceled && (canCheckIn || canCheckOut) && (
-                            <CheckInOutButton 
-                              bookingId={booking.id}
-                              stepIndex={index}
-                              checkInCode={detail.checkInCode}
-                              isCheckedIn={isStepCheckedIn} 
-                              onCheckIn={handleCheckIn} 
-                              onCheckOut={onCheckOut}
-                            />
-                          )}
                         </div>
                       </div>
+                      
+                      {isStepCanceled && isAfterCanceledStep && (
+                        <div className="text-xs text-red-600 mt-2">
+                          Bước này bị hủy do các bước trước bị hủy
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -527,95 +425,12 @@ const BookingDetailView: React.FC<BookingDetailViewProps> = ({
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion>
+            </Accordion>  
           </div>
-          
-          {/* <div className="flex gap-3">
-            <Button variant="outline" className="text-gray-600">
-              <Printer className="h-4 w-4 mr-2" />
-              In thông tin
-            </Button>
-          </div> */}
         </CardFooter>
       </Card>
-      
-      {/* Schedule Next Step Dialog */}
-      <Dialog open={showScheduleDialog} onOpenChange={setShowScheduleDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Lên lịch cho bước tiếp theo</DialogTitle>
-            <DialogDescription>
-              Chọn ngày và giờ phù hợp cho bước tiếp theo của lộ trình.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>Chọn ngày (có sẵn từ {dateRange.minDate?.toLocaleDateString('vi')})</Label>
-              <div className="flex justify-center p-2">
-                {/* Calendar component for date selection */}
-                <div className="inline-block">
-                  <input
-                    type="date"
-                    className="border rounded p-2"
-                    min={dateRange.minDate?.toISOString().split('T')[0]}
-                    max={dateRange.maxDate?.toISOString().split('T')[0]}
-                    onChange={(e) => handleDateSelect(new Date(e.target.value))}
-                  />
-                </div>
-              </div>
-            </div>
-            
-            {selectedDate && (
-              <div className="space-y-2">
-                <Label>Chọn giờ</Label>
-                <div className="grid grid-cols-4 gap-2">
-                  {availableTimeSlots.map((slot) => (
-                    <Button
-                      key={slot.time}
-                      type="button"
-                      variant={selectedTimeSlot === slot.time ? "default" : "outline"}
-                      className={`${
-                        !slot.available ? 'bg-red-50 text-red-500 border-red-200 cursor-not-allowed' : 
-                        selectedTimeSlot === slot.time ? 'bg-green-600 hover:bg-green-700 text-white' : 
-                        'hover:bg-green-50'
-                      }`}
-                      disabled={!slot.available}
-                      onClick={() => setSelectedTimeSlot(slot.time)}
-                    >
-                      {slot.time}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {scheduleError && (
-              <div className="text-sm text-red-500">{scheduleError}</div>
-            )}
-          </div>
-          
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setShowScheduleDialog(false)}
-            >
-              Hủy
-            </Button>
-            <Button
-              type="button"
-              disabled={isScheduling || !selectedDate || !selectedTimeSlot}
-              className="bg-green-600 hover:bg-green-700 text-white"
-              onClick={handleScheduleConfirm}
-            >
-              {isScheduling ? "Đang xử lý..." : "Xác nhận lịch hẹn"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
 
-export default BookingDetailView;
+export default BookingDetailView; 

@@ -184,7 +184,7 @@ const data = {
     },
     {
       name: "Dịch vụ",
-      url: "service",
+      url: "/manager/service",
       icon: CalendarDays,
       roles: ["admin", "staff"],
     },
@@ -215,7 +215,7 @@ const data = {
       roles: ["therapist"],
     },
     {
-      name: "Danh sách dịch vụ",
+      name: "Danh sách booking",
       url: "/staff/bookings",
       icon: UserRound,
       roles: ["staff"],
@@ -242,13 +242,13 @@ const data = {
   follow: [
     {
       name: "Đánh giá dịch vụ",
-      url: "#",
+      url: "/admin/feedback/manage",
       icon: UserRound,
       roles: ["admin", "therapist"],
     },
     {
-      name: "Danh sách khách hàng",
-      url: "#",
+      name: "Danh sách người dùng",
+      url: "/admin/user/manage",
       icon: Users,
       roles: ["admin", "staff"],
     },

@@ -37,7 +37,7 @@ const UserManagementPage: React.FC = () => {
 
 
         <TabsContent value="users">
-          {/* <UserManagement /> */}
+          <UserManagement />
         </TabsContent>
 
         <TabsContent value="pending">

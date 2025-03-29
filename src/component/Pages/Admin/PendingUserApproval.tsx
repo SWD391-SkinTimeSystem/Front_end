@@ -45,15 +45,22 @@ interface PendingUser {
 const initialPendingUsers: PendingUser[] = [
   {
     id: 'pending-1',
-    username: 'newstaff1',
-    email: 'johndoe@example.com',
+    username: 'diemstaff',
+    email: 'diemstaff@example.com',
     role: 'staff',
     created_time: new Date('2024-03-26').toISOString(),
   },
   {
     id: 'pending-2',
-    username: 'newtherapist1',
-    email: 'janesmith@example.com',
+    username: 'Thư Therapist',
+    email: 'thutherapist@example.com',
+    role: 'skin_therapist',
+    created_time: new Date('2024-03-27').toISOString(),
+  },
+  {
+    id: 'pending-3',
+    username: 'new customer',
+    email: 'customer@example.com',
     role: 'skin_therapist',
     created_time: new Date('2024-03-27').toISOString(),
   }

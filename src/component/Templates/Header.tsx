@@ -25,10 +25,15 @@ const Header: React.FC = () => {
         <header className="flex items-center justify-between px-6 py-4 shadow-md HeaderBackground">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="w-[13rem]">
-              <img src="https://hasaki.vn/v3/images/graphics/logo_site_2024_2.svg" alt="" />
-            </div>
-          </div>
+      <div className="w-[13rem]">
+        <img
+          src="https://hasaki.vn/v3/images/graphics/logo_site_2024_2.svg"
+          alt="Logo"
+          className="cursor-pointer"
+          onClick={() => navigate("/")}
+        />
+      </div>
+    </div>
 
           {/* Center Section: Search bar and Navigation menu */}
           <div className="flex flex-row w-[65%] mx-auto justify-center relative">
@@ -66,16 +71,17 @@ const Header: React.FC = () => {
       <div id="main_menu" className="flex">
         {/* items-center justify-center */}
         <nav className="hidden md:flex items-center text-gray-600 mt-4 md:mt-0 w-[80%] mx-auto">
-          <a href="#" className="flex items-center space-x-1 text-purple-600 font-medium">
+          <a href="/" className="flex items-center space-x-1 text-purple-600 font-medium">
             {/* <LucideUser /> */}
-            <span>Giới thiệu</span>
+            <span        
+            >Giới thiệu</span>
           </a>
-          <a href="#" className="hover:text-purple-600">Dịch vụ</a>
+          <a href="/service" className="hover:text-purple-600"> Dịch vụ</a>
           <a href="#" className="hover:text-purple-600">Bảng giá</a>
           <a href="#" className="hover:text-purple-600">Lộ trình</a>
           <a href="#" className="hover:text-purple-600">Hình ảnh quảng cáo</a>
           <a href="#" className="hover:text-purple-600">Liên hệ</a>
-          <a href="#" className="hover:text-purple-600">Sự kiện</a>
+          <a href="/event" className="hover:text-purple-600">Sự kiện</a>
         </nav>
       </div>
     </>

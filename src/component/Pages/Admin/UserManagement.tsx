@@ -36,7 +36,6 @@ import {
   Trash2,
   UserPlus
 } from 'lucide-react';
-import { AccountDetail } from '@/types/account';
 
 interface User {
   id: string;
@@ -53,47 +52,53 @@ interface User {
   last_modified: string;
 }
 
-const initialUsers: User[] = [
-  {
-    id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    username: 'admin',
-    fullname: 'Admin User',
-    email: 'admin@example.com',
-    role: 'manager',
-    status: 'active',
-    phone: '0123456789',
-    gender: 'male',
-    date_of_birth: '1990-01-01',
-    created_time: new Date('2024-03-20').toISOString(),
-    last_modified: new Date().toISOString()
-  },
-  {
-    id: '3fa85f64-5717-4562-b3fc-2c963f66afa7',
-    username: 'staff1',
-    fullname: 'Staff User',
-    email: 'staff1@example.com',
-    role: 'staff',
-    status: 'active',
-    phone: '0987654321',
-    gender: 'female',
-    date_of_birth: '1995-05-15',
-    created_time: new Date('2024-03-25').toISOString(),
-    last_modified: new Date().toISOString()
-  }
-];
+interface ApiResponse {
+  success: boolean;
+  errorCode: string;
+  message: string;
+  data: {
+    content: User[];
+    itemAmount: number;
+    pageSize: number;
+    pageCount: number;
+    currentPage: number;
+  };
+}
+
+interface CreateUserResponse {
+  success: boolean;
+  errorCode: string;
+  message: string;
+  data: User;
+}
+
+interface DeleteUserResponse {
+  success: boolean;
+  errorCode: string;
+  message: string;
+}
 
 const UserManagement: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [creatingUser, setCreatingUser] = useState(false);
+  const [deletingUser, setDeletingUser] = useState(false);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    pageSize: 10,
+    pageCount: 1,
+    itemAmount: 0
+  });
 
-  const [users, setUsers] = useState<User[]>(initialUsers);
   const [newUser, setNewUser] = useState({
     username: '',
     email: '',
-    password: '12345678', 
-
+    password: '12345678',
     role: 'customer'
   });
-  
+
   const [filters, setFilters] = useState({
     username: null as string | null,
     role: null as string | null,
@@ -107,72 +112,143 @@ const UserManagement: React.FC = () => {
     return re.test(email);
   };
 
+  const fetchUsers = async (page = 1, pageSize = 10) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`http://swd291-api.duckdns.org/api/account/list?page=${page}&page_size=${pageSize}`);
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+      const data: ApiResponse = await response.json();
+
+      if (data.success) {
+        setUsers(data.data.content);
+        setPagination({
+          currentPage: data.data.currentPage,
+          pageSize: data.data.pageSize,
+          pageCount: data.data.pageCount,
+          itemAmount: data.data.itemAmount
+        });
+      } else {
+        setError(data.message || 'Failed to fetch users');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      console.error('Error fetching users:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (users) {
-      setUsers(users?.content ?? []);
-    }
-  }, [users]);
+    fetchUsers();
+  }, []);
 
-  const handleCreateUser = () => {
-    const requiredFields = ['username', 'email', 'role'];
-    const missingFields = requiredFields.filter(field => !newUser[field]?.trim());
-  
+  const handleCreateUser = async () => {
+    const requiredFields = ['username', 'email', 'role', 'password'];
+    const missingFields = requiredFields.filter(field => !newUser[field as keyof typeof newUser]?.toString().trim());
+
     if (missingFields.length > 0) {
       alert(`Please fill in all required fields: ${missingFields.join(', ')}`);
       return;
     }
-  
+
     if (!validateEmail(newUser.email)) {
       alert('Please enter a valid email address');
       return;
     }
-  
 
-    const userToAdd: AccountDetail = {
-      ...newUser,
-      id:'',
-      status: 'active',
-      created_time: new Date().toISOString(),
-      last_modified: new Date().toISOString(),
-      avatar:'',
-      fullname: '', 
-      phone: '', 
-      date_of_birth: '',
-    };
+    setCreatingUser(true);
 
-  console.log(userToAdd)
-    const updatedUsers = [...users, userToAdd];
-    // setUsers(updatedUsers);
+    try {
+      const userData = {
+        username: newUser.username,
+        email: newUser.email,
+        password: newUser.password,
+        role: newUser.role
+      };
 
-  
-    // Reset form về mặc định
-    setNewUser({
-      username: '',
-      email: '',
-      password: '12345678',
-      role: 'customer'
-    });
-  
-    setIsOpen(false);
-  
-    // document.querySelector('button[data-close="true"]')?.dispatchEvent(new MouseEvent('click'));
+      const response = await fetch('http://swd291-api.duckdns.org/api/account/account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data: CreateUserResponse = await response.json();
+
+      if (data.success) {
+        alert('User created successfully!');
+
+        fetchUsers(pagination.currentPage, pagination.pageSize);
+
+        setNewUser({
+          username: '',
+          email: '',
+          password: '12345678',
+          role: 'customer'
+        });
+
+        setIsOpen(false);
+      } else {
+        alert(`Failed to create user: ${data.message}`);
+      }
+    } catch (err) {
+      console.error('Error creating user:', err);
+      alert(err instanceof Error ? err.message : 'An unknown error occurred while creating user');
+    } finally {
+      setCreatingUser(false);
+    }
   };
 
-  // Soft delete user handler
-  const handleSoftDelete = (userId: string) => {
-    setUsers(users.map(user =>
-      user.id === userId
-        ? { ...user, status: 'deleted', last_modified: new Date().toISOString() }
-        : user
-    ));
+  const handleSoftDelete = async (userId: string) => {
+    setDeletingUser(true);
+    try {
+      const response = await fetch(`http://swd291-api.duckdns.org/api/account/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Delete request failed with status ${response.status}`);
+      }
+
+      const data: DeleteUserResponse = await response.json();
+
+      if (data.success) {
+        setUsers(users.map(user =>
+          user.id === userId
+            ? { ...user, status: 'deleted', last_modified: new Date().toISOString() }
+            : user
+        ));
+
+        alert('User deleted successfully!');
+
+        fetchUsers(pagination.currentPage, pagination.pageSize);
+      } else {
+        alert(`Failed to delete user: ${data.message}`);
+      }
+    } catch (err) {
+      console.error('Error deleting user:', err);
+      alert(err instanceof Error ? err.message : 'An unknown error occurred while deleting user');
+    } finally {
+      setDeletingUser(false);
+    }
   };
 
-  // Filtered and sorted users
   const filteredUsers = useMemo(() => {
     return users
-
-      .filter(user => user.status !== 'Deleted')
+      .filter(user =>
+        user.status !== 'deleted' &&
+        user.role !== 'admin'
+      )
       .filter(user =>
         (!filters.username || user.username.toLowerCase().includes(filters.username.toLowerCase())) &&
         (!filters.role || user.role === filters.role) &&
@@ -184,6 +260,12 @@ const UserManagement: React.FC = () => {
         return filters.sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
       });
   }, [users, filters]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= pagination.pageCount) {
+      fetchUsers(newPage, pagination.pageSize);
+    }
+  };
 
   return (
     <div className="container mx-auto p-6 bg-white">
@@ -208,25 +290,24 @@ const UserManagement: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
-
-                  <SelectItem value="custommer">Customer</SelectItem>
+                  <SelectItem value="customer">Customer</SelectItem>
                   <SelectItem value="staff">Staff</SelectItem>
-                  <SelectItem value="therapist">Skin Therapist</SelectItem>
+                  <SelectItem value="skin_therapist">Skin Therapist</SelectItem>
                   <SelectItem value="manager">Manager</SelectItem>
                 </SelectContent>
               </Select>
+
               <Select
                 value={filters.status || "all"}
                 onValueChange={(value) => setFilters({ ...filters, status: value === "all" ? null : value })}
               >
                 <SelectTrigger className="w-40 mr-2">
                   <SelectValue placeholder="Filter by Status" />
-                </SelectTrigger>
+                </SelectTrigger>  
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
-
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
                 </SelectContent>
               </Select>
               <Select
@@ -241,8 +322,8 @@ const UserManagement: React.FC = () => {
                   <SelectItem value="oldest">Oldest First</SelectItem>
                 </SelectContent>
               </Select>
-              <Dialog open={isOpen}
-                onOpenChange={setIsOpen}>
+
+              <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="bg-green-600 text-white hover:bg-green-700">
                     <UserPlus className="mr-2" /> Create User
@@ -265,7 +346,7 @@ const UserManagement: React.FC = () => {
                         required
                       />
                     </div>
-                   
+
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="email" className="text-right">
                         Email*
@@ -279,22 +360,33 @@ const UserManagement: React.FC = () => {
                         required
                       />
                     </div>
-                   
-                 
+
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="password" className="text-right">
+                        Password*
+                      </Label>
+                      <Input
+                        id="password"
+                        type="password"
+                        value={newUser.password}
+                        onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="role" className="text-right">
                         Role*
                       </Label>
                       <Select
                         value={newUser.role}
-
-                        onValueChange={(value) => setNewUser({ ...newUser, role: value as AccountDetail['role'] })}
+                        onValueChange={(value) => setNewUser({ ...newUser, role: value as User['role'] })}
                       >
                         <SelectTrigger className="col-span-3">
                           <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
                         <SelectContent>
-
                           <SelectItem value="customer">Customer</SelectItem>
                           <SelectItem value="staff">Staff</SelectItem>
                           <SelectItem value="skin_therapist">Skin Therapist</SelectItem>
@@ -303,11 +395,11 @@ const UserManagement: React.FC = () => {
                       </Select>
                     </div>
                     <Button
-
                       onClick={handleCreateUser}
                       className="w-full bg-green-600 hover:bg-green-700"
+                      disabled={creatingUser}
                     >
-                      Create User
+                      {creatingUser ? 'Creating...' : 'Create User'}
                     </Button>
                     <DialogClose asChild>
                       <button data-close="true" className="hidden">Close</button>
@@ -319,80 +411,119 @@ const UserManagement: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="w-full overflow-x-auto">
-          <Table className="w-full table-fixed">
-            <TableHeader className="bg-green-200 w-full">
-              <TableRow>
-                <TableHead >Expand</TableHead>
-                <TableHead >Username</TableHead>
-                <TableHead >Email</TableHead>
-                <TableHead >Role</TableHead>
-                <TableHead >Status</TableHead>
-                <TableHead >Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsers
-                .filter((user) => user.role !== "admin")
-                .map((user) => (
-                  <>
-                    <TableRow key={user.id} className="hover:bg-green-50">
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setExpandedUserId(expandedUserId === user.id ? null : user.id)}
-                        >
-                          <ChevronDown className={`h-4 w-4 transition-transform ${expandedUserId === user.id ? 'rotate-180' : 'null'}`} />
-                        </Button>
-                      </TableCell>
-                      <TableCell>{user.username}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.role}</TableCell>
-                      <TableCell>
-                        <span className={`
-                        px-2 py-1 rounded-full text-xs 
-                        ${user.status === 'active' ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800'}
-                      `}>
-                          {user.status}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => {
-                            if (window.confirm("Bạn chắc bạn muốn xóa người dùng này chứ?")) {
-                              handleSoftDelete(user.id);
-                            }
-                          }}
-                          className="text-red-500 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                    {expandedUserId === user.id && (
-                      <TableRow>
-                        <TableCell colSpan={6}>
-                          <div className="p-4 bg-green-50 grid grid-cols-2 gap-4">
-                            <div>
-                              <p><strong>Full Name:</strong> {user.fullname}</p>
-                              <p><strong>Phone:</strong> {user.phone}</p>
+          {loading ? (
+            <div className="text-center py-8">Loading users...</div>
+          ) : error ? (
+            <div className="text-center py-8 text-red-500">{error}</div>
+          ) : (
+            <>
+              <Table className="w-full table-fixed">
+                <TableHeader className="bg-green-200 w-full">
+                  <TableRow>
+                    <TableHead>Expand</TableHead>
+                    <TableHead>Username</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers
+                    .filter((user) => user.role !== "admin")
+                    .map((user) => (
+                      <React.Fragment key={user.id}>
+                        <TableRow className="hover:bg-green-50">
+                          <TableCell>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setExpandedUserId(expandedUserId === user.id ? null : user.id)}
+                            >
+                              <ChevronDown className={`h-4 w-4 transition-transform ${expandedUserId === user.id ? 'rotate-180' : ''}`} />
+                            </Button>
+                          </TableCell>
+                          <TableCell>{user.username}</TableCell>
+                          <TableCell>{user.email}</TableCell>
+                          <TableCell>{user.role}</TableCell>
+                          <TableCell>
+                            <span className={`
+                              px-2 py-1 rounded-full text-xs 
+                              ${user.status === 'active' ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800'}
+                            `}>
+                              {user.status}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                if (window.confirm("Are you sure you want to delete this user?")) {
+                                  handleSoftDelete(user.id);
+                                }
+                              }}
+                              className="text-red-500 hover:bg-red-50"
+                              disabled={deletingUser}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                        {expandedUserId === user.id && (
+                          <TableRow>
+                            <TableCell colSpan={6}>
+                              <div className="p-4 bg-green-50 grid grid-cols-2 gap-4">
+                                <div>
+                                  <p><strong>Full Name:</strong> {user.fullname}</p>
+                                  <p><strong>Phone:</strong> {user.phone}</p>
+                                  <p><strong>Last Modified:</strong> {new Date(user.last_modified).toLocaleString()}</p>
+                                </div>
+                                <div>
+                                  <p><strong>Date of Birth:</strong> {user.date_of_birth}</p>
+                                  <p><strong>Created Time:</strong> {new Date(user.created_time).toLocaleString()}</p>
+                                </div>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </React.Fragment>
+                    ))}
+                </TableBody>
+              </Table>
 
-                              <p><strong>Last Modified:</strong> {user.last_modified}</p>
-                            </div>
-                            <div>
-                              <p><strong>Date of Birth:</strong> {user.date_of_birth}</p>
-                              <p><strong>Created Time:</strong> {new Date(user.created_time).toLocaleString()}</p>
-                            </div>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </>
-                ))}
-            </TableBody>
-          </Table>
+              {/* Pagination Controls */}
+              {pagination.pageCount > 1 && (
+                <div className="flex justify-center mt-4 space-x-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => handlePageChange(pagination.currentPage - 1)}
+                    disabled={pagination.currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+
+                  {Array.from({ length: pagination.pageCount }, (_, i) => i + 1).map(page => (
+                    <Button
+                      key={page}
+                      variant={page === pagination.currentPage ? "default" : "outline"}
+                      onClick={() => handlePageChange(page)}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+
+                  <Button
+                    variant="outline"
+                    onClick={() => handlePageChange(pagination.currentPage + 1)}
+                    disabled={pagination.currentPage === pagination.pageCount}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -4,6 +4,7 @@ import Layout from '@/component/Templates/Layout';
 import FeedbackPage from "@/component/Pages/Feedback";
 import BookingDetail from "@/component/Pages/BookingDetail";
 import BookingPage from "@/component/Pages/BookingPage";
+
 import TestPage from "@/component/Pages/Staff/TestPage";
 import EventCheckInManager from "@/component/Pages/Staff/EventCheckInManager";
 import EventManagementUI from "@/component/Pages/Staff/EventManagementUI";
@@ -13,6 +14,7 @@ import SkincareLandingPage from "@/component/Pages/Manager/TestHome/SkincareLand
 import UserManagementPage from "@/component/Pages/Admin/UserManagementPage";
 import ServiceManagementPage from "@/component/Pages/Manager/Service/ServiceManagementPage";
 import FeedbackManagementPage from "@/component/Pages/Manager/Feedback/FeedbackManagementPage";
+import { DisplayServiceListHome } from "@/features/services";
 
 // import {ServiceList} from "@/component/Pages/Staff/ServiceList";
 const ServiceDetail = lazy(() => import("@/component/Pages/ServiceDetail"));
@@ -48,11 +50,13 @@ const UserRoutes: React.FC = () => {
                     <Routes>
                          <Route path="/service-detail/:serviceId" element={<ServiceDetail />} />
                          <Route path="" element={<DisplayServiceList />} />
+                         <Route path="/service" element={<DisplayServiceListHome />} />
+
                          <Route path="/account/appointment-list" element={<BookingPage />} />
                          <Route path="/account/appointment-detail/:id" element={<BookingDetail />} />
                          {/* <Route path="/account/appointment-list" element={<Appointment />} />
                          <Route path="/account/appointment-detail/:id" element={<AppointmentDetail />} /> */}
-                         <Route path="*" element={<h1>Not Found</h1>} />
+                         {/* <Route path="*" element={<h1>Not Found</h1>} /> */}
                          <Route path="/booking" element={<Booking />} />
                          <Route path="/ticket" element={<MyTickets />} />
                          <Route path="/account/feedback/:bookingId" element={< FeedbackPage />} />
