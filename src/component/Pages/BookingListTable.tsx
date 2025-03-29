@@ -114,7 +114,6 @@ export default function BookingTable() {
           {filteredBookings.length > 0 ? (
             filteredBookings.map((booking, index) => (
               <TableRow key={booking.id} className="hover:bg-gray-50 cursor-pointer" 
-              {...account?.role === "staff" && {onClick: () => GoToBookingDetail(booking.id)}}
               >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{booking.serviceName}</TableCell>
@@ -132,7 +131,7 @@ export default function BookingTable() {
       </Button>
     </TableCell>
     <TableCell>
-      <Button variant="outline" className="text-emerald-700" onClick={() => navigate("/")}>
+      <Button variant="outline" className="text-emerald-700" onClick={() => navigate(`/staff/reschedule/${booking.id}`)}>
         Đổi lịch
       </Button>
     </TableCell>

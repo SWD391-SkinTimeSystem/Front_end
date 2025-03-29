@@ -189,12 +189,7 @@ const data = {
       icon: CalendarDays,
       roles: ["manager"],
     },
-    {
-      name: "Voucher",
-      url: "#",
-      icon: TicketPlus,
-      roles: ["manager"],
-    },
+  
     // {
     //   name: "Lịch làm việc",
     //   url: "calendar",

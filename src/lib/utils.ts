@@ -133,6 +133,7 @@ export const switchCaseRole = (accessToken: string): string => {
     case "therapist":
       return "/therapist/";
     case "staff":
+      console.log("chuyển hướng sang staff");
       return "/staff/";
     case "admin":
       return "/admin/";

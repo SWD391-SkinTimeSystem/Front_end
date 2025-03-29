@@ -11,4 +11,14 @@ export type User = {
      created_time: string; // Có thể đổi thành Date nếu muốn dùng kiểu Date
      last_modified: string; // Tương tự
 };
+
+export type UserData = {
+     email: string;
+     password: string;
+     fullname: string;
+     phone: string;
+     dateOfBirth: string;
+     gender: string;
+     isTermOfUseAccepted: boolean;
+}
    

@@ -8,20 +8,68 @@ import UserManagement from "@/component/Pages/Admin/UserManagement";
 import EventManagerUI from "@/component/Pages/Manager/EventManagerUI";
 import BookingTable from "@/component/Pages/BookingListTable";
 import EventTable from "@/component/Pages/Manager/Event/EventTable";
+import { useAccountStore } from "@/store/useAccountStore";
+import ProtectedRoute from "@/component/Auth/ProtectedRoute";
 const EventDashboard = lazy(() => import("@/component/Pages/Admin/EventDashboard"));
 const isAmin = true;
 const AdminRoutes: React.FC = () => {
+  const { account } = useAccountStore();
+
   return isAmin ? (
     <Page role="manager">
       <Suspense fallback={<h1>Đang tải...</h1>}>
         <Routes>
-          <Route path="satistic/service" element={<ServiceDashboard />} />
-          <Route path="satistic/event" element={<EventDashboard />} />
-          <Route path="service" element={<ServiceManagementTable />} />
-          <Route path="event" element={<EventManagerUI />} />
-          <Route path="user" element={<UserManagement />} />
-          <Route path="bookings" element={<BookingTable />} />
-          <Route path="events" element={<EventTable />} />
+          <Route path="satistic/service" element={
+            <ProtectedRoute allowedRoles={["manager"]}>
+              <ServiceDashboard />
+            </ProtectedRoute>
+
+          } />
+          <Route path="satistic/event" element={
+            <ProtectedRoute allowedRoles={["manager"]}>
+
+              <EventDashboard />
+            </ProtectedRoute>
+
+
+          } />
+          <Route path="service" element={
+            <ProtectedRoute allowedRoles={["manager"]}>
+
+              <ServiceManagementTable />
+            </ProtectedRoute>
+
+          } />
+          <Route path="event" element={
+            <ProtectedRoute allowedRoles={["manager"]}>
+
+              <EventManagerUI />
+            </ProtectedRoute>
+
+          }
+          />
+          <Route path="user" element={
+            <ProtectedRoute allowedRoles={["manager"]}>
+
+              <UserManagement />
+            </ProtectedRoute>
+
+
+          } />
+          <Route path="bookings" element={
+            <ProtectedRoute allowedRoles={["manager"]}>
+
+              <BookingTable />
+            </ProtectedRoute>
+
+          } />
+          <Route path="events" element={
+            <ProtectedRoute allowedRoles={["manager"]}>
+
+              <EventTable />
+            </ProtectedRoute>
+
+          } />
           {/* <Route path="users" element={<AdminUsers />} /> */}
           {/* <Route path="*" element={<Navigate to="/admin/so-lieu/dich-vu" replace />} /> */}
         </Routes>

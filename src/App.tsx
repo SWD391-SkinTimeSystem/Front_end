@@ -17,6 +17,7 @@ import EventManagementUI from "./component/Pages/Staff/EventManagementUI";
 import UserManagement from "./component/Pages/Admin/UserManagement";
 import ServiceManagementTable from "./component/Pages/Manager/ServiceManagementTable";
 import EventManagerUI from "./component/Pages/Manager/EventManagerUI";
+import ServiceManagementPage from "./component/Pages/Manager/ServiceManagementPage";
 const App = () => {
   return ( 
     <>
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/staff/*" element={<StaffRoutes />} />
           <Route path="/therapist/*" element={<SkinTherapistRoutes />} />
           <Route path="/admin/*" element={<AdminSystemRoutes />} />
+          <Route path="/manager/serviceManagement" element={<ServiceManagementPage />} />
           {/* <Route path="/admin/*" element={<AdminRoutes />} /> */}
           {/* Test dữ liệu  */}
           <Route path="/eventCheckIn" element={<EventCheckInManager />} />
@@ -52,16 +54,6 @@ const App = () => {
           <Route path="/staff/eventManager" element={<EventManagementUI />} />
           <Route path="/userManagement" element={<UserManagement />} />
         </Routes>
-        {/* <Routes>
-            <Route
-              path="/login"
-              element={<AuthContainer />}
-            />
-            <Route
-              path="/register"
-              element={<AuthContainer />}
-            />
-          </Routes> */}
       </Router>
 
     </>
