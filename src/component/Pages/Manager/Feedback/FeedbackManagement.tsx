@@ -43,7 +43,7 @@ const FeedbackManagement = () => {
     const fetchFeedbacks = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://swd291-api.duckdns.org/api/feedback');
+        const response = await fetch('http://localhost:5062/api/feedback');
         
         if (!response.ok) {
           throw new Error('Failed to fetch feedback data');

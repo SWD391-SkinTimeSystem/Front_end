@@ -173,45 +173,45 @@ const ServiceDetail = () => {
 
             {/* Service Details Breakdown */}
             <div>
-              {Array.isArray(serviceDetail?.serviceDetails) &&
-                serviceDetail.serviceDetails.map((serviceDetailItem, index) => (
-                  <div key={serviceDetailItem.id}>
-                    <Card className="w-full rounded-none mt-5 border-none shadow-none">
-                      <CardContent className="flex flex-row items-center">
-                        <div className="w-1/2">
-                          <img
-                            src={selectedService?.serviceImages[index].imageURL}
-                            alt="Aqua Mesoderm"
-                            className="w-[300px] h-[200px] object-cover"
-                          />
-                        </div>
-                        <div className="w-1/2">
-                          <h2 className="text-lg font-semibold text-gray-900">
-                            Ngày {serviceDetailItem.step} : {serviceDetailItem.name}
-                          </h2>
-                          <p className="text-sm text-gray-600 mt-2 mb-1">
-                            {serviceDetailItem.description}
-                          </p>
+            {Array.isArray(serviceDetail?.serviceDetails) &&
+  serviceDetail.serviceDetails.map((serviceDetailItem, index) => (
+    <div key={serviceDetailItem.id}>
+      <Card className="w-full rounded-none mt-5 border-none shadow-none">
+        <CardContent className="flex flex-row items-center">
+          <div className="w-1/2">
+            <img
+              src={selectedService?.serviceImages?.[index]?.imageURL || selectedService?.thumbnail || '/path/to/default/image.jpg'}
+              alt={serviceDetailItem.name || "Service step"}
+              className="w-[300px] h-[200px] object-cover"
+            />
+          </div>
+          <div className="w-1/2">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Ngày {serviceDetailItem.step} : {serviceDetailItem.name}
+            </h2>
+            <p className="text-sm text-gray-600 mt-2 mb-1">
+              {serviceDetailItem.description}
+            </p>
 
-                          <div className="bg-orange-500 text-white p-2 mb-4 mt-4 rounded-md flex justify-center items-center gap-2">
-                            <CalendarDays size={20} />
-                            <span className="flex items-center gap-2">
-                              THỰC HIỆN SAU
-                              <span className="bg-black rounded py-1 px-3 text-center">
-                                {serviceDetailItem.dateToNextStep}
-                              </span>
-                              NGÀY
-                            </span>
-                          </div>
+            <div className="bg-orange-500 text-white p-2 mb-4 mt-4 rounded-md flex justify-center items-center gap-2">
+              <CalendarDays size={20} />
+              <span className="flex items-center gap-2">
+                THỰC HIỆN SAU
+                <span className="bg-black rounded py-1 px-3 text-center">
+                  {serviceDetailItem.dateToNextStep}
+                </span>
+                NGÀY
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-                        </div>
-                      </CardContent>
-                    </Card>
+      <Separator />
+      <div className="Seperator h-[15px]"></div>
+    </div>
+  ))}
 
-                    <Separator />
-                    <div className="Seperator h-[15px]"></div>
-                  </div>
-                ))}
             </div>
           </div>
         </TabsContent>

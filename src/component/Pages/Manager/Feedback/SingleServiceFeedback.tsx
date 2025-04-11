@@ -46,7 +46,7 @@ const SingleServiceFeedbackManagement: React.FC = () => {
     const fetchServices = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://swd291-api.duckdns.org/api/service?page=1&pageSize=12');
+        const response = await fetch('http://localhost:5062/api/service?page=1&pageSize=12');
 
         if (!response.ok) {
           throw new Error('Failed to fetch services');
@@ -76,7 +76,7 @@ const SingleServiceFeedbackManagement: React.FC = () => {
   const fetchServiceFeedbacks = async (serviceId: string) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`http://swd291-api.duckdns.org/api/feedback/service/${serviceId}`);
+      const response = await fetch(`http://localhost:5062/api/feedback/service/${serviceId}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch service feedbacks');

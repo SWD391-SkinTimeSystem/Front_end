@@ -197,7 +197,9 @@ const EventManagementUI = () => {
 
   // Check if step 1 form is valid
   const isStep1Valid = () => {
-    return eventForm.date && eventForm.start_time && eventForm.end_time && eventForm.ticket_price > 0 && eventForm.location && eventForm.image_url && eventForm.eventName && eventForm.description;
+    // return eventForm.date && eventForm.start_time && eventForm.end_time && eventForm.ticket_price > 0 && eventForm.location && eventForm.image_url && eventForm.eventName && eventForm.description;
+    return eventForm.date && eventForm.start_time && eventForm.end_time && eventForm.ticket_price > 0 && eventForm.location && eventForm.image_url && eventForm.eventName ;
+
   };
 
 

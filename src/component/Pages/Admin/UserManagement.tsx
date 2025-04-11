@@ -36,7 +36,6 @@ import {
   Trash2,
   UserPlus
 } from 'lucide-react';
-
 interface User {
   id: string;
   username: string;
@@ -115,7 +114,7 @@ const UserManagement: React.FC = () => {
   const fetchUsers = async (page = 1, pageSize = 10) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://swd291-api.duckdns.org/api/account/list?page=${page}&page_size=${pageSize}`);
+      const response = await fetch(`http://localhost:5062/api/account/list?page=${page}&page_size=${pageSize}`);
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
       }
@@ -168,7 +167,7 @@ const UserManagement: React.FC = () => {
         role: newUser.role
       };
 
-      const response = await fetch('http://swd291-api.duckdns.org/api/account/account', {
+      const response = await fetch('http://localhost:5062/api/account/account', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -209,7 +208,7 @@ const UserManagement: React.FC = () => {
   const handleSoftDelete = async (userId: string) => {
     setDeletingUser(true);
     try {
-      const response = await fetch(`http://swd291-api.duckdns.org/api/account/${userId}`, {
+      const response = await fetch(`http://localhost:5062/api/account/${userId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

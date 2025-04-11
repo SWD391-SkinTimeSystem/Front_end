@@ -46,7 +46,7 @@ const TherapistFeedbackManagement: React.FC = () => {
     const fetchTherapists = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://swd291-api.duckdns.org/api/therapist?page=1&page_size=20&status=0');
+        const response = await fetch('http://localhost:5062/api/therapist?page=1&page_size=20&status=0');
         
         if (!response.ok) {
           throw new Error('Không thể tải danh sách chuyên gia');
@@ -77,7 +77,7 @@ const TherapistFeedbackManagement: React.FC = () => {
   const fetchTherapistFeedbacks = async (therapistId: string) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`http://swd291-api.duckdns.org/api/feedback/therapist/${therapistId}`);
+      const response = await fetch(`http://localhost:5062/api/feedback/therapist/${therapistId}`);
       
       if (!response.ok) {
         throw new Error('Không thể tải phản hồi của chuyên gia');

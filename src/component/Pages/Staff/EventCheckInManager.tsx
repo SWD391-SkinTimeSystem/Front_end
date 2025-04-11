@@ -53,8 +53,8 @@ const EventCheckInManager = () => {
   const [checkedInCount, setCheckedInCount] = useState(0);
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
-  const {eventDetail} = useEventDetail("08dd6c8b-859f-4690-8437-0f64a7cadcc1");
-  const {ticketEvents} = useEvent("08dd6c8b-859f-4690-8437-0f64a7cadcc1");
+  const {eventDetail} = useEventDetail("08dd5fd7-0da5-485c-8ac4-af29715d99ce");
+  const {ticketEvents} = useEvent("08dd5fd7-0da5-485c-8ac4-af29715d99ce");
 
   const showNotification = (message: string, type: 'success' | 'error') => {
     setNotification({ message, type });
@@ -244,36 +244,33 @@ const EventCheckInManager = () => {
         </CardHeader>
 
         <CardContent className="pt-4">
-          {/* Check-in Progress */}
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
+         {/* Check-in Progress */}
+<div className="mb-6">
+  <div className="flex justify-between items-center mb-2">
+    <Badge
+      variant={isCheckInAvailable ? "default" : "outline"}
+      className={isCheckInAvailable ? "bg-green-500" : "text-red-500 border-red-500"}
+    >
+      <span className={isCheckInAvailable ? "text-green-600" : "text-red-600"}>
+        {checkCheckInAvailability().message}
+      </span>
+    </Badge>
+  </div>
 
-              <Badge
-                variant={isCheckInAvailable ? "default" : "outline"}
-                className={isCheckInAvailable ? "bg-green-500" : "text-red-500 border-red-500"}
-              >
-                <span className={isCheckInAvailable ? "text-green-600" : "text-red-600"}>
-                  {checkCheckInAvailability().message}
-                </span>
-              </Badge>
-            </div>
-
-            {/* Chỉ hiển thị progress bar nếu check-in đang mở hoặc đã đóng */}
-            {isCheckInAvailable && (
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-medium text-green-700">
-
-                  Trạng thái check-in: {checkedInCount}/{tickets?.content.length} ({Math.round((checkedInCount / (tickets.content).length) * 100)}%)
-                </span>
-                <Progress
-                  value={(checkedInCount / (tickets.content).length) * 100}
-                  className="h-2 bg-gray-200"
-                />
-              </div>
-
-
-            )}
-          </div>
+  {/* Chỉ hiển thị progress bar nếu check-in đang mở hoặc đã đóng */}
+  {isCheckInAvailable && tickets && tickets.content && (
+    <div className="flex justify-between items-center mb-2">
+      <span className="font-medium text-green-700">
+        Trạng thái check-in: {checkedInCount}/{tickets.content.length} 
+        ({Math.round((checkedInCount / tickets.content.length) * 100)}%)
+      </span>
+      <Progress
+        value={(checkedInCount / tickets.content.length) * 100}
+        className="h-2 bg-gray-200"
+      />
+    </div>
+  )}
+</div>
 
 
           {isCheckInAvailable ? (
