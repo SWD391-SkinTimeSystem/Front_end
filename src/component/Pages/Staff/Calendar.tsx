@@ -65,22 +65,6 @@ function CalendarApp() {
     ],
     events: 
      schedules
-//     [
-      
-         
-// { id: '6c6bf966-8aee-4826-9b77-1aa907d6c182', title: 'Đắp mặt nạ thải độc', start: '2025-03-31 00:00', end: '2025-03-31 00:00' },
-
-//       { id: 'c89fe887-5c13-44de-a1ff-4e62f149c9c2', title: 'Làm sạch sâu', start: '2025-04-02 13:30', end: '2025-04-02 14:00' },
-
-//       { id: 'd5276154-66c7-4f37-aeee-324176f2c509', title: 'Làm sạch sâu', start: '2025-03-27 10:00', end: '2025-03-27 10:30' },
-//       {id: '0948c1c7-b879-4add-974c-69f7526e256c', title: 'Đắp mặt nạ thải độc', start: '2025-04-02 00:00', end: '2025-04-02 00:00'},
-//       {id: 'd5276154-66c7-4f37-aeee-324176f2c509', title: 'Làm sạch sâu', start: '2025-03-27 10:00', end: '2025-03-27 10:30'},
-//       {id: 'ad0f9ca2-b0dc-4ea4-a755-afd1ef059f29', title: 'Làm sạch sâu', start: '2025-03-28 10:00', end: '2025-03-28 10:30'},
-//       {id: '98b3caf5-80fd-492f-896d-0fa70b295568', title: 'Cấp ẩm', start: '2025-04-05 00:00', end: '2025-04-05 00:00'},
-      
-
-//     ]
-    
     ,
     plugins: [eventsService],
    

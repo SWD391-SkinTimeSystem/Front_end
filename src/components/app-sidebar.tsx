@@ -163,6 +163,7 @@ const data = {
         },
       ],
     },
+  ],
   projects: [
     
     {
@@ -191,86 +192,86 @@ const data = {
     //   roles: ["staff"],
     // },
   ],
-  manages: [
-    {
-      title: "Người dùng",
-      url: "#",
-      icon: Users,
-      roles: ["admin", "manager"],
-      items: [
-        {
-          title: "Người dùng",
-          url: "/admin/user",
-          roles: ["admin"],
-        },
-        {
-          title: "Nhân viên",
-          url: "/manager/staff",
-          roles: ["manager"],
-        },
-      ],
-    },
-    {
-      title: "Bookings",
-      url: "#",
-      icon: Activity,
-      roles: ["admin", "manager", "staff"],
-      items: [
-        {
-          title: "Danh sách booking",
-          url: "/bookings",
-          roles: ["staff", "admin", "manager"],
-        },
-        {
-          title: "Lịch sử booking",
-          url: "/bookings-history",
-          roles: ["staff", "admin", "manager"],
-        },
-      ],
-    },
-    {
-      title: "Phản hồi & Đánh giá",
-      url: "#",
-      icon: Star,
-      roles: ["admin", "manager", "therapist"],
-      items: [
-        {
-          title: "Đánh giá dịch vụ",
-          url: "/manager/feedback",
-          roles: [ "manager"],
-        },
-        {
-          title: "Đánh giá dịch vụ",
-          url: "/admin/feedback",
-          roles: ["admin"],
-        },
-        {
-          title: "Đánh giá dịch vụ",
-          url: "/therapist/feedback",
-          roles: ["therapist"],
-        },
-      ],
-    },
-    {
-      title: "Voucher",
-      url: "/admin/voucher",
-      icon: TicketPlus,
-      roles: ["admin"],
-    },
+  // manages: [
+  //   {
+  //     title: "Người dùng",
+  //     url: "#",
+  //     icon: Users,
+  //     roles: ["admin", "manager"],
+  //     items: [
+  //       {
+  //         title: "Người dùng",
+  //         url: "/admin/user",
+  //         roles: ["admin"],
+  //       },
+  //       {
+  //         title: "Nhân viên",
+  //         url: "/manager/staff",
+  //         roles: ["manager"],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "Bookings",
+  //     url: "#",
+  //     icon: Activity,
+  //     roles: ["admin", "manager", "staff"],
+  //     items: [
+  //       {
+  //         title: "Danh sách booking",
+  //         url: "/bookings",
+  //         roles: ["staff", "admin", "manager"],
+  //       },
+  //       {
+  //         title: "Lịch sử booking",
+  //         url: "/bookings-history",
+  //         roles: ["staff", "admin", "manager"],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "Phản hồi & Đánh giá",
+  //     url: "#",
+  //     icon: Star,
+  //     roles: ["admin", "manager", "therapist"],
+  //     items: [
+  //       {
+  //         title: "Đánh giá dịch vụ",
+  //         url: "/manager/feedback",
+  //         roles: [ "manager"],
+  //       },
+  //       {
+  //         title: "Đánh giá dịch vụ",
+  //         url: "/admin/feedback",
+  //         roles: ["admin"],
+  //       },
+  //       {
+  //         title: "Đánh giá dịch vụ",
+  //         url: "/therapist/feedback",
+  //         roles: ["therapist"],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "Voucher",
+  //     url: "/admin/voucher",
+  //     icon: TicketPlus,
+  //     roles: ["admin"],
+  //   },
 
-    {
-      title: "Quiz",
-      url: "/therapist/quiz",
-      icon: FileQuestion,
-      roles: ["therapist"],
-    },
-    {
-      title: "SkinType",
-      url: "/therapist/skintype",
-      icon: Layers, 
-      roles: ["therapist"],
-    },
-  ],
+  //   {
+  //     title: "Quiz",
+  //     url: "/therapist/quiz",
+  //     icon: FileQuestion,
+  //     roles: ["therapist"],
+  //   },
+  //   {
+  //     title: "SkinType",
+  //     url: "/therapist/skintype",
+  //     icon: Layers, 
+  //     roles: ["therapist"],
+  //   },
+  // ],
   follow: [
     {
       title: "Booking của tôi",
