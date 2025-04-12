@@ -64,7 +64,7 @@ export const SkinTypeManagementTable: React.FC = () => {
 
   const fetchSkinTypes = async () => {
     try {
-      const response = await fetch('http://swd291-api.duckdns.org/all-decription');
+      const response = await fetch('http://localhost:5062/all-decription');
       const result = await response.json();
       if (result.success) {
         setSkinTypes(result.data);
@@ -95,7 +95,7 @@ export const SkinTypeManagementTable: React.FC = () => {
   
     try {
       console.log("(trước khi call")
-      const response = await fetch('http://swd291-api.duckdns.org/api/skinType', {
+      const response = await fetch('http://localhost:5062/api/skinType', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

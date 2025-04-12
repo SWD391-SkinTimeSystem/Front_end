@@ -3,6 +3,12 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 const ServiceDashboard = lazy(() => import("@/component/Pages/Admin/ServiceDashboard"));
 import Page from '@/component/Templates/Admin/page';
+import UserManagementPage from "@/component/Pages/Admin/UserManagementPage";
+import FeedbackManagementPage from "@/component/Pages/Manager/Feedback/FeedbackManagementPage";
+
+              <Route path="/user/manage" element={<UserManagementPage />} />
+              <Route path="/feedback/manage" element={< FeedbackManagementPage />} />
+            
 import UserManagement from "@/component/Pages/Admin/UserManagement";
 import { useAccountStore } from "@/store/useAccountStore";
 import ProtectedRoute from "@/component/Auth/ProtectedRoute";

@@ -245,36 +245,33 @@ const EventCheckInManager = () => {
         </CardHeader>
 
         <CardContent className="pt-4">
-          {/* Check-in Progress */}
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
+         {/* Check-in Progress */}
+<div className="mb-6">
+  <div className="flex justify-between items-center mb-2">
+    <Badge
+      variant={isCheckInAvailable ? "default" : "outline"}
+      className={isCheckInAvailable ? "bg-green-500" : "text-red-500 border-red-500"}
+    >
+      <span className={isCheckInAvailable ? "text-green-600" : "text-red-600"}>
+        {checkCheckInAvailability().message}
+      </span>
+    </Badge>
+  </div>
 
-              <Badge
-                variant={isCheckInAvailable ? "default" : "outline"}
-                className={isCheckInAvailable ? "bg-green-500" : "text-red-500 border-red-500"}
-              >
-                <span className={isCheckInAvailable ? "text-green-600" : "text-red-600"}>
-                  {checkCheckInAvailability().message}
-                </span>
-              </Badge>
-            </div>
-
-            {/* Chỉ hiển thị progress bar nếu check-in đang mở hoặc đã đóng */}
-            {isCheckInAvailable && (
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-medium text-green-700">
-
-                  Trạng thái check-in: {checkedInCount}/{tickets?.content.length} ({Math.round((checkedInCount / (tickets.content).length) * 100)}%)
-                </span>
-                <Progress
-                  value={(checkedInCount / (tickets.content).length) * 100}
-                  className="h-2 bg-gray-200"
-                />
-              </div>
-
-
-            )}
-          </div>
+  {/* Chỉ hiển thị progress bar nếu check-in đang mở hoặc đã đóng */}
+  {isCheckInAvailable && tickets && tickets.content && (
+    <div className="flex justify-between items-center mb-2">
+      <span className="font-medium text-green-700">
+        Trạng thái check-in: {checkedInCount}/{tickets.content.length} 
+        ({Math.round((checkedInCount / tickets.content.length) * 100)}%)
+      </span>
+      <Progress
+        value={(checkedInCount / tickets.content.length) * 100}
+        className="h-2 bg-gray-200"
+      />
+    </div>
+  )}
+</div>
 
 
           {isCheckInAvailable ? (

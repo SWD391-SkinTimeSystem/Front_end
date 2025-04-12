@@ -13,6 +13,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+
 import { useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 
@@ -22,6 +23,7 @@ interface PageProps {
 }
 
 export default function Page({ children, role }: PageProps) {
+
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);
 

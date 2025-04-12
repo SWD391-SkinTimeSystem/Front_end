@@ -4,6 +4,7 @@ import Layout from '@/component/Templates/Layout';
 import FeedbackPage from "@/component/Pages/Feedback";
 import BookingDetail from "@/component/Pages/BookingDetail";
 import BookingPage from "@/component/Pages/BookingPage";
+
 import TestPage from "@/component/Pages/Staff/TestPage";
 import EventCheckInManager from "@/component/Pages/Staff/EventCheckInManager";
 import EventManagementUI from "@/component/Pages/Staff/EventManagementUI";
@@ -13,12 +14,12 @@ import SkincareLandingPage from "@/component/Pages/Manager/TestHome/SkincareLand
 import UserManagementPage from "@/component/Pages/Admin/UserManagementPage";
 import ServiceManagementPage from "@/component/Pages/Manager/Service/ServiceManagementPage";
 import FeedbackManagementPage from "@/component/Pages/Manager/Feedback/FeedbackManagementPage";
+import { DisplayServiceListHome } from "@/features/services";
 import BookingTable from "@/component/Pages/BookingListTable";
 import FailurePayment from "@/component/Pages/FailurePayment";
 import SuccessPayment from "@/component/Pages/SuccessPayment";
 import { useAccountStore } from "@/store/useAccountStore";
 import Booking from "@/component/Pages/Booking";
-
 // import {ServiceList} from "@/component/Pages/Staff/ServiceList";
 const ServiceDetail = lazy(() => import("@/component/Pages/ServiceDetail"));
 // const ServiceList = lazy(() => import("@/component/Pages/ServiceList"));
@@ -54,6 +55,8 @@ const UserRoutes: React.FC = () => {
                <Suspense fallback={<Loading />}>
                     <Routes>
                          <Route path="" element={<DisplayServiceList />} />
+                         <Route path="/service" element={<DisplayServiceListHome />} />
+                         <Route path="/ticket-detail/:id" element={<TicketDetail />} />
                          <Route path="/account/appointment-list" element={
                               <ProtectedRoute allowedRoles={["customer"]}>
                                    <BookingPage />

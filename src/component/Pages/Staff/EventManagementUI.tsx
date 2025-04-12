@@ -7,17 +7,15 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PlusCircle, Calendar, MapPin, Clock, Users, Tag, Edit, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
-
 import { X, Image as ImageIcon } from "lucide-react";
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, Essentials, Paragraph, Bold, Italic } from 'ckeditor5';
-import { FormatPainter } from 'ckeditor5-premium-features';
+// import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import { ClassicEditor, Essentials, Paragraph, Bold, Italic } from 'ckeditor5';
+// import { FormatPainter } from 'ckeditor5-premium-features';
 
-import 'ckeditor5/ckeditor5.css';
-import 'ckeditor5-premium-features/ckeditor5-premium-features.css';
+// import 'ckeditor5/ckeditor5.css';
+// import 'ckeditor5-premium-features/ckeditor5-premium-features.css';
 import { useEventStatus } from '@/hooks/useEvent';
 import { CreateEvent, EventDetail } from '@/types/event';
 import { eventService } from '@/services/eventService';
@@ -197,7 +195,9 @@ const EventManagementUI = () => {
 
   // Check if step 1 form is valid
   const isStep1Valid = () => {
-    return eventForm.date && eventForm.start_time && eventForm.end_time && eventForm.ticket_price > 0 && eventForm.location && eventForm.image_url && eventForm.eventName && eventForm.description;
+    // return eventForm.date && eventForm.start_time && eventForm.end_time && eventForm.ticket_price > 0 && eventForm.location && eventForm.image_url && eventForm.eventName && eventForm.description;
+    return eventForm.date && eventForm.start_time && eventForm.end_time && eventForm.ticket_price > 0 && eventForm.location && eventForm.image_url && eventForm.eventName ;
+
   };
 
 
@@ -522,7 +522,7 @@ const EventManagementUI = () => {
             </div>
 
             
-            <div className="grid grid-cols-1 gap-2">
+            {/* <div className="grid grid-cols-1 gap-2">
               <CKEditor
                 editor={ClassicEditor}
                 config={{
@@ -535,7 +535,7 @@ const EventManagementUI = () => {
                   setEventForm((prevForm) => ({ ...prevForm, description: data }));
                 }}
               />
-            </div>
+            </div> */}
 
          
 

@@ -19,10 +19,16 @@ export type SkinTypeOptions = {
 
 export type ServiceCategory = {
      serviceGroupId: string,
-    serviceGroupName: string
+     serviceGroupName: string
 
 };
+
+export type SkinTypeOptions = {
+     id: string,
+     nameSkinType: string;
+};
 export type ServiceDetailType = {
+     id: string;
      name: string;
      description: string;
      step: number;

@@ -5,6 +5,13 @@ const ServiceDashboard = lazy(() => import("@/component/Pages/Admin/ServiceDashb
 import Page from '@/component/Templates/Admin/page';
 import CalendarApp from "@/component/Pages/Staff/Calendar";
 import TherapistBookingTable from "@/component/Pages/Therapist/TherapistBooking";
+import SkinTypeManagement from "@/component/Pages/Therapist/SkinTypeManagementTable";
+import QuizManagement from "@/component/Pages/Therapist/QuizManagement";
+
+
+              <Route path="/quiz" element={<QuizManagement />} />
+              <Route path="/skintype" element={<SkinTypeManagement />} />
+            
 import { useAccountStore } from "@/store/useAccountStore";
 import ProtectedRoute from "@/component/Auth/ProtectedRoute";
 const isSkinTherapist = true;

@@ -18,7 +18,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Header />
         <div className="w-[80%] mx-auto">
           <div id="breadcrumb" className="pl-[20px] py-3">
-            <BreadcrumbDemo />
+            {/* <BreadcrumbDemo /> */}
           </div>
         </div>
         <div className="flex flex-row min-h-screen w-[80%] mx-auto">

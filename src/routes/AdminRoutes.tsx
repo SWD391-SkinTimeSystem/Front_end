@@ -6,6 +6,10 @@ import Page from '@/component/Templates/Admin/page';
 import ServiceManagementTable from "@/component/Pages/Manager/ServiceManagementTable";
 import UserManagement from "@/component/Pages/Admin/UserManagement";
 import EventManagerUI from "@/component/Pages/Manager/EventManagerUI";
+import FeedbackManagementPage from "@/component/Pages/Manager/Feedback/FeedbackManagementPage";
+import SkinTypeManagement from "@/component/Pages/Therapist/SkinTypeManagementTable";
+import QuizManagement from "@/component/Pages/Therapist/QuizManagement";
+
 import BookingTable from "@/component/Pages/BookingListTable";
 import EventTable from "@/component/Pages/Manager/Event/EventTable";
 import { useAccountStore } from "@/store/useAccountStore";
@@ -19,6 +23,11 @@ const AdminRoutes: React.FC = () => {
     <Page role="manager">
       <Suspense fallback={<h1>Đang tải...</h1>}>
         <Routes>
+
+          <Route path="feedback" element={<FeedbackManagementPage />} />
+          <Route path="/quiz" element={<QuizManagement />} />
+          <Route path="/skintype" element={<SkinTypeManagement />} />
+
           <Route path="satistic/service" element={
             <ProtectedRoute allowedRoles={["manager"]}>
               <ServiceDashboard />

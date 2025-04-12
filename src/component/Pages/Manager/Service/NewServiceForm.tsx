@@ -301,7 +301,7 @@ export const NewServiceForm = ({ onSuccess, initialData }: ServiceFormProps) => 
           dateToNextStep: Math.max(1, detail.dateToNextStep) // Minimum 1 day
         }))
       };
-  
+
       console.log('Prepared serviceData:', JSON.stringify(serviceData));
   
       const createResponse = await createService(serviceData);
