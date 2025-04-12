@@ -14,8 +14,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
-import { Fragment, ReactNode, useMemo } from "react";
 import { useLocation } from "react-router-dom";
+import { ReactNode } from "react";
 
 interface PageProps {
   children: ReactNode;
@@ -23,63 +23,45 @@ interface PageProps {
 }
 
 export default function Page({ children, role }: PageProps) {
- const location = useLocation();
- const pathname = location.pathname;
- 
- const breadcrumbs = useMemo(() => {
-   const segments = pathname.split('/').filter(segment => segment);
-   
-   return segments.map((segment, index) => {
-     const href = `/${segments.slice(0, index + 1).join('/')}`;
-     
-     const label = segment
-       .split('-')
-       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-       .join(' ');
-     
-     return { href, label };
-   });
- }, [pathname]);
 
- return (
-   <SidebarProvider>
-     <AppSidebar role={role}/>
-     <SidebarInset>
-       <header className="flex h-16 shrink-0 items-center gap-2">
-         <div className="flex items-center gap-2 px-4">
-           <SidebarTrigger className="-ml-1" />
-           <Separator orientation="vertical" className="mr-2 h-4" />
-           <Breadcrumb>
-             <BreadcrumbList>
-               <BreadcrumbItem className="hidden md:block">
-                 <BreadcrumbLink href="/">
-                   Dashboard
-                 </BreadcrumbLink>
-               </BreadcrumbItem>
-               
-               {breadcrumbs.map((breadcrumb, index) => (
-                 <Fragment key={breadcrumb.href}>
-                   <BreadcrumbSeparator className="hidden md:block" />
-                   <BreadcrumbItem className="hidden md:block">
-                     {index === breadcrumbs.length - 1 ? (
-                       <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>
-                     ) : (
-                       <BreadcrumbLink href={breadcrumb.href}>
-                         {breadcrumb.label}
-                       </BreadcrumbLink>
-                     )}
-                   </BreadcrumbItem>
-                 </Fragment>
-               ))}
-               
-              
-             </BreadcrumbList>
-           </Breadcrumb>
-         </div>
-       </header>
-       {/* */}
-       {children}
-     </SidebarInset>
-   </SidebarProvider>
- )
+  const location = useLocation();
+  const pathSegments = location.pathname.split("/").filter(Boolean);
+
+  return (
+    <SidebarProvider>
+      <AppSidebar role={role} />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink>Trang của {role}</BreadcrumbLink>
+                </BreadcrumbItem>
+                {pathSegments.map((segment, index) => {
+                  const href = "/" + pathSegments.slice(0, index + 1).join("/");
+                  const isLast = index === pathSegments.length - 1;
+                  return (
+                    <>
+                      <BreadcrumbSeparator key={`sep-${index}`} />
+                      <BreadcrumbItem key={href}>
+                        {isLast ? (
+                          <BreadcrumbPage>{segment}</BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink href={href}>{segment}</BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                    </>
+                  );
+                })}
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
+  );
 }

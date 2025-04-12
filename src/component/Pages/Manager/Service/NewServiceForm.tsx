@@ -101,13 +101,6 @@ export const NewServiceForm = ({ onSuccess, initialData }: ServiceFormProps) => 
       };
     });
   };
-
-
-
-
-
-
-
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -200,6 +193,7 @@ export const NewServiceForm = ({ onSuccess, initialData }: ServiceFormProps) => 
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newFiles = Array.from(e.target.files);
+      console.log('New gallery files:', newFiles); // Debug log
       setFormData(prev => ({
         ...prev,
         galleryFiles: [...prev.galleryFiles, ...newFiles],
@@ -208,6 +202,7 @@ export const NewServiceForm = ({ onSuccess, initialData }: ServiceFormProps) => 
           ...newFiles.map(file => URL.createObjectURL(file))
         ]
       }));
+      console.log('Gallery files:', formData.galleryFiles); // Debug log
     }
   };
 
@@ -306,8 +301,8 @@ export const NewServiceForm = ({ onSuccess, initialData }: ServiceFormProps) => 
           dateToNextStep: Math.max(1, detail.dateToNextStep) // Minimum 1 day
         }))
       };
-  
-      console.log('Prepared serviceData:', JSON.stringify(serviceData, null, 2));
+
+      console.log('Prepared serviceData:', JSON.stringify(serviceData));
   
       const createResponse = await createService(serviceData);
   

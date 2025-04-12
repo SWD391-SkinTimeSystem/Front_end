@@ -25,7 +25,9 @@ export const formatCurrency = (
 };
 // testcommitdane
 
-
+export const removeSeconds = (time: string): string => {
+  return time.slice(0, -3); // Cắt bỏ 3 ký tự cuối ":00"
+};
 export const formatDate = (date: string) => {
   return date.replace(/-/g, "/");
 };
@@ -131,6 +133,7 @@ export const switchCaseRole = (accessToken: string): string => {
     case "therapist":
       return "/therapist/";
     case "staff":
+      console.log("chuyển hướng sang staff");
       return "/staff/";
     case "admin":
       return "/admin/";

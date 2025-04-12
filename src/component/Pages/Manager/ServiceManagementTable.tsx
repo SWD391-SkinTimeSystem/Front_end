@@ -316,12 +316,14 @@ import {
 import { FormProvider, useForm } from 'react-hook-form';
 import { ServiceDetailModal } from './ServiceDetailModal';
 import { sampleServices, samplePopularServices } from './sampleServices ';
-import { NewServiceForm } from './NewServiceForm';
 import { ServiceWithImages } from '@/types/serviceImage';
 import { useService } from '@/hooks/useService';
 import { aw } from 'node_modules/framer-motion/dist/types.d-6pKw1mTI';
 import { useCategory } from '@/hooks/useCategory';
 import { Service } from '@/types/services';
+import { NewServiceForm } from './Service/ServiceFormForFixing';
+// import { NewServiceForm } from './NewServiceForm';
+// import { NewServiceForm } from './Service/ServiceFormForFixing';
 
 
 interface ServiceDetailType {
@@ -469,7 +471,7 @@ export const ServiceManagementTable: React.FC = () => {
         >
           Quản lý dịch vụ
         </CardTitle>
-        <Button
+        {/* <Button
           className="flex items-center gap-2"
           style={{
             backgroundColor: colors.primary,
@@ -478,7 +480,7 @@ export const ServiceManagementTable: React.FC = () => {
           onClick={() => setShowNewServiceDialog(true)}
         >
           <Plus className="h-5 w-5" /> Thêm dịch vụ
-        </Button>
+        </Button> */}
       </CardHeader>
 
       <CardContent>

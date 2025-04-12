@@ -61,16 +61,18 @@ const data = {
       url: "#",
       icon: BarChart3,
       roles: ["admin", "manager"],
+
       items: [
         {
           title: "Dịch vụ",
-          url: "/admin/so-lieu/dich-vu",
-          roles: ["admin"],
+          url: "/manager/satistic/service",
+          roles: ["manager"],
         },
+     
         {
           title: "Sự kiện",
-          url: "/admin/so-lieu/su-kien",
-          roles: ["admin", "manager"],
+          url: "/manager/satistic/event",
+          roles: ["manager"],
         },
       ],
     },
@@ -161,6 +163,35 @@ const data = {
         },
       ],
     },
+  projects: [
+    
+    {
+      name: "Sự kiện",
+      url: "events",
+      icon: Tickets,
+      roles: ["staff"],
+    },
+    {
+      name: "Sự kiện",
+      url: "/manager/event",
+      icon: Tickets,
+      roles: ["manager"],
+    },
+    {
+      name: "Dịch vụ",
+      url: "service",
+      icon: CalendarDays,
+      roles: ["manager"],
+    },
+  
+    // {
+    //   name: "Lịch làm việc",
+    //   url: "calendar",
+    //   icon: CalendarCheck2,
+    //   roles: ["staff"],
+    // },
+  ],
+  manages: [
     {
       title: "Người dùng",
       url: "#",
@@ -226,6 +257,7 @@ const data = {
       icon: TicketPlus,
       roles: ["admin"],
     },
+
     {
       title: "Quiz",
       url: "/therapist/quiz",
@@ -251,6 +283,34 @@ const data = {
       url: "/manager/quiz",
       icon: FileQuestion, 
       roles: ["manager", "admin"],
+      name: "Đánh giá dịch vụ",
+      url: "#",
+      icon: UserRound,
+      roles: ["therapist"],
+    },
+    {
+      name: "Danh sách khách hàng",
+      url: "/manager/bookings",
+      icon: Users,
+      roles: ["manager"],
+    },
+    {
+      name: "Danh sách sự kiện",
+      url: "/staff/ongoingevent",
+      icon: Users,
+      roles: ["staff"],
+    },
+    {
+      name: "Danh sách khách hàng",
+      url: "/staff/bookings",
+      icon: Users,
+      roles: ["staff"],
+    },
+    {
+      name: "Lịch làm việc",
+      url: "/therapist/calendar",
+      icon: CalendarCheck2,
+      roles: ["therapist"],
     },
     {
       title: "SkinType",

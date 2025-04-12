@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import layerImage from "@/assets/hasaki.png";
 import { Link } from "react-router-dom";
+import { UserData } from "@/types/user";
 
 interface RegisterProps {
   onSuccessfulRegister?: () => void;
@@ -89,22 +90,21 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
     if (!validateForm()) return;
     setLoading(true);
     try {
-      const response = await registerUser({
-        fullname: formData.fullName,
-        password: formData.password,
-        phone: formData.phoneNumber,
-        dob: `${formData.year}-${formData.month}-${formData.day}`,
-        gender: formData.gender,
+      const userData: UserData = {
         email: formData.email,
+        password: formData.password,
+        fullname: formData.fullName,
+        phone: formData.phoneNumber,
+        dateOfBirth: `${formData.year}-${formData.month}-${formData.day}`,
+        gender: formData.gender,
         isTermOfUseAccepted: formData.agreeTerms,
-      });
-      if (response.success) {
+      };
+      console.log(JSON.stringify(userData));
+
+      const response = await registerUser(userData);
+      if (response) {
         toast.success("Đăng ký thành công");
-        if (onSuccessfulRegister) {
-          onSuccessfulRegister(); 
-        } else {
-          navigate("/login");
-        }
+        navigate("/login");
       } else {
         toast.error("Đăng ký thất bại, vui lòng thử lại");
       }
@@ -234,8 +234,11 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
                         >
                           <option value="">Ngày</option>
                           {Array.from({ length: 31 }, (_, i) => (
-                            <option key={i} value={i + 1}>
-                              {i + 1}
+                            <option
+                              key={i}
+                              value={(i + 1).toString().padStart(2, "0")}
+                            >
+                              {(i + 1).toString().padStart(2, "0")}
                             </option>
                           ))}
                         </select>
@@ -249,8 +252,11 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
                         >
                           <option value="">Tháng</option>
                           {Array.from({ length: 12 }, (_, i) => (
-                            <option key={i} value={i + 1}>
-                              {i + 1}
+                            <option
+                              key={i}
+                              value={(i + 1).toString().padStart(2, "0")}
+                            >
+                              {(i + 1).toString().padStart(2, "0")}
                             </option>
                           ))}
                         </select>
@@ -297,17 +303,6 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
                             className="text-teal-500 focus:ring-teal-400"
                           />
                           <span className="text-teal-800">Nữ</span>
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Other"
-                            checked={formData.gender === "Other"}
-                            onChange={handleInputChange}
-                            className="text-teal-500 focus:ring-teal-400"
-                          />
-                          <span className="text-teal-800">Khác</span>
                         </label>
                       </div>
                     </div>
@@ -421,31 +416,6 @@ const Register: React.FC<RegisterProps> = ({ onSuccessfulRegister }) => {
           </CardContent>
         </Card>
 
-        <style jsx>{`
-          @keyframes blob {
-            0% {
-              transform: translate(0px, 0px) scale(1);
-            }
-            33% {
-              transform: translate(30px, -50px) scale(1.1);
-            }
-            66% {
-              transform: translate(-20px, 20px) scale(0.9);
-            }
-            100% {
-              transform: translate(0px, 0px) scale(1);
-            }
-          }
-          .animate-blob {
-            animation: blob 7s infinite;
-          }
-          .animation-delay-2000 {
-            animation-delay: 2s;
-          }
-          .animation-delay-4000 {
-            animation-delay: 4s;
-          }
-        `}</style>
       </motion.div>
     </div>
   );

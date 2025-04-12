@@ -13,6 +13,7 @@ import { useEventDetail } from '@/hooks/useEvent';
 import { set } from 'date-fns';
 import { useEvent, useTicketEvent } from '@/hooks/useTicketEvent';
 import { ticketEvent } from '@/services/ticketEvent';
+import { useParams } from 'react-router-dom';
 
 
 const Notification = ({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) => {
@@ -44,7 +45,7 @@ const Notification = ({ message, type, onClose }: { message: string, type: 'succ
 
 const EventCheckInManager = () => {
   const [event, setEvent] = useState<EventDetail | null>(null);
-
+  const { id } = useParams();
   const [tickets, setTickets] = useState<TicketEvent>();
   const [filteredTickets, setFilteredTickets] = useState<ContentItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,8 +54,8 @@ const EventCheckInManager = () => {
   const [checkedInCount, setCheckedInCount] = useState(0);
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
-  const {eventDetail} = useEventDetail("08dd5fd7-0da5-485c-8ac4-af29715d99ce");
-  const {ticketEvents} = useEvent("08dd5fd7-0da5-485c-8ac4-af29715d99ce");
+  const {eventDetail} = useEventDetail(id);
+  const {ticketEvents} = useEvent(id);
 
   const showNotification = (message: string, type: 'success' | 'error') => {
     setNotification({ message, type });

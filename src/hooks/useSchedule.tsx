@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { scheduleService } from "@/services/scheduleService";
-import { Availability, rescheduleData } from "@/types/schedule";
+import { Availability, rescheduleData, TherapistSchedule } from "@/types/schedule";
 
 export const useAvailability = (condition?: boolean, date?: string) => {
     const [data, setData] = useState<Availability[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [schedule, setSchedule] = useState<TherapistSchedule>();
     const [success, setSuccess] = useState<boolean>(false);
     useEffect(() => {
         if (!condition || !date) return; // Chỉ fetch khi condition = true và có date
@@ -35,5 +36,17 @@ export const useAvailability = (condition?: boolean, date?: string) => {
             console.error("Error rescheduling:", err);
         }
     }
-    return { doSchedule , data, isLoading, error };
+    const getSchedules = async () => {
+        try {
+            console.log("Get scheduleschedule in Hook...", );
+            const response = await scheduleService.getTherapistSchedule();
+            setSchedule(response.data);
+            return response;
+        }
+        catch (error) {
+            console.error("Error get scheduleschedule:", error);
+            throw error;
+        }
+    }
+    return { schedule, doSchedule, data, isLoading, error, success, getSchedules };
 };
