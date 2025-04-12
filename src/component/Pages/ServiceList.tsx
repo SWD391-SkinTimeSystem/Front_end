@@ -6,7 +6,7 @@ import ServiceCard from "../Molecules/ServiceCard";
 import { Service } from "@/types/services";
 import { useNavigate } from "react-router-dom";
 import { useEvent } from "@/hooks/useEvent";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ListServicesProps {
      services: Service[];

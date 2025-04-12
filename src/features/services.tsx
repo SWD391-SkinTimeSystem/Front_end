@@ -1,6 +1,5 @@
 import { useService } from "@/hooks/useService";
 import ServiceList from "@/component/Pages/ServiceList";
-import ServiceListHome from "@/component/Pages/ServiceListHome";
 
 
 export const DisplayServiceList = () => {
@@ -24,6 +23,6 @@ export const DisplayServiceListHome = () => {
      if (error) {
      return <h1>{error}</h1>;
      }
-     return <ServiceListHome services={services } />;
+     return <ServiceList services={services } />;
 
 };

@@ -19,7 +19,6 @@ const SkinTherapistRoutes: React.FC = () => {
               <Route path="/booking" element={<TherapistBookingTable />} />
               <Route path="/quiz" element={<QuizManagement />} />
               <Route path="/skintype" element={<SkinTypeManagement />} />
-
               {/* <Route path="users" element={<AdminUsers />} /> */}
               {/* <Route path="*" element={<Navigate to="/admin/so-lieu/dich-vu" replace />} /> */}
             </Routes>

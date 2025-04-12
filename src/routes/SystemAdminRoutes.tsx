@@ -14,7 +14,6 @@ const AdminSystemRoutes: React.FC = () => {
               <Route path="so-lieu/dich-vu" element={<ServiceDashboard />} />
               <Route path="/user/manage" element={<UserManagementPage />} />
               <Route path="/feedback/manage" element={< FeedbackManagementPage />} />
-
               {/* <Route path="users" element={<AdminUsers />} /> */}
               {/* <Route path="*" element={<Navigate to="/admin/so-lieu/dich-vu" replace />} /> */}
             </Routes>
