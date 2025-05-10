@@ -1,4 +1,3 @@
-import { ChartData } from '@/component/Molecules/BarChart';
 import ExpenseCard from '@/component/Molecules/StatisticsCard';
 import { TableData } from '@/component/Molecules/TableCard';
 import { useEventDashboard } from '@/hooks/useDashboard';
@@ -32,14 +31,14 @@ const EventDashboard: React.FC = () => {
                          </div>
 
                     </div>
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-2">
+                    {/* <div className="grid auto-rows-min gap-4 md:grid-cols-2">
                          <div className="aspect-video rounded-xl bg-muted/50">
-                              {/* <ChartData /> */}
+                              <ChartData />
                          </div>
                          <div className="aspect-video rounded-xl grid  gap-4">
                               <TableData />
                          </div>
-                    </div>
+                    </div> */}
 
                </div>
           </div>

@@ -14,6 +14,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
+import { useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 
 interface PageProps {
@@ -22,9 +23,13 @@ interface PageProps {
 }
 
 export default function Page({ children, role }: PageProps) {
+
+  const location = useLocation();
+  const pathSegments = location.pathname.split("/").filter(Boolean);
+
   return (
     <SidebarProvider>
-    <AppSidebar role={role}/>
+      <AppSidebar role={role} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
@@ -32,22 +37,31 @@ export default function Page({ children, role }: PageProps) {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbLink>Trang của {role}</BreadcrumbLink>
                 </BreadcrumbItem>
+                {pathSegments.map((segment, index) => {
+                  const href = "/" + pathSegments.slice(0, index + 1).join("/");
+                  const isLast = index === pathSegments.length - 1;
+                  return (
+                    <>
+                      <BreadcrumbSeparator key={`sep-${index}`} />
+                      <BreadcrumbItem key={href}>
+                        {isLast ? (
+                          <BreadcrumbPage>{segment}</BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink href={href}>{segment}</BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                    </>
+                  );
+                })}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
-        {/* */}
         {children}
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

@@ -82,7 +82,7 @@ const Booking: React.FC = () => {
      }
      // cho đại 2 giờ đi tạy service sẽ lấy ở đây chứ không phải lấy trong đó. 
      // test thử lấy dữ liệu ra được không . 
-     const { therapists, submitTherapist, schedule, IsTherapistloading, IsTherapistError, fetchAvailableTherapist, fetchTherapistAvailability } = useTherapist();
+     const { therapists, submitTherapist, schedule, IsTherapistloading, IsTherapistError, fetchAvailableTherapist, fetchTherapistAvailability } = useTherapist(1, 11);
      useEffect(() => {
           console.log("selectedTherapist changed:", selectedTherapist);
           fetchTherapistAvailability(selectedTherapist);

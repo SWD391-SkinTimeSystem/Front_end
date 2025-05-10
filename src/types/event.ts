@@ -1,13 +1,13 @@
-export type Event = {
-    event_id: string;
-    title: string;
-    description: string;
-    start_date: string;
-    price: number;
-    start_time: string;
-    location: string;
-    image_url: string;
-};
+// export type Event = {
+//     event_id: string;
+//     title: string;
+//     description: string;
+//     start_date: string;
+//     price: number;
+//     start_time: string;
+//     location: string;
+//     image_url: string;
+// };
 
 export type EventDetail = {
     id: string;
@@ -23,3 +23,38 @@ export type EventDetail = {
     ticket_price: number;
     event_status: string;
   }
+
+export type Event = {
+    // event_id: string;
+    title: string;
+    description: string;
+    start_date: string;
+    start_time: string;
+    end_time: string;
+    // price: number;
+    location: string;
+    image_url: string;
+    total_ticket_amount: number;
+    ticket_price: number;
+
+    event_status: string;
+}
+
+export type EventStatus = {
+    content: EventDetail[];
+    itemAmount: number;
+    pageSize: number;
+    pageCount: number;
+    currentPage: number;
+}
+
+export type CreateEvent = {
+    EventName : string;
+    Description : string;
+    Date  : string;
+    StartTime  : string;
+    EndTime  : string;
+    Location : string;
+    Price : number;
+    Capacity : number;
+}

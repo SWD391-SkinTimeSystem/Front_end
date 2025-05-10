@@ -4,8 +4,14 @@ import { TherapistAvailabilityResponse } from "@/types/schedule";
 const API_URL = "/therapist";
 
 export const therapistService = {
-     getListTherapists: async () => {
-          const response = await axiosInstance.get(`${API_URL}`);
+     getListTherapists: async (page: number, pageSize: number) => {
+          const response = await axiosInstance.get(`${API_URL}`, {
+               params: {
+                    page: page,
+                    page_size: pageSize,
+                    status: 0
+          }
+     });
           if (response.data.success) {
                return response.data.data;
           } else {

@@ -1,4 +1,5 @@
 export type Service = {
+     serviceCategoryID: string,
      id: string;          // Mã dịch vụ
      serviceName: string;        // Tên dịch vụ
      description?: string; // Mô tả dịch vụ (tuỳ chọn)
@@ -6,26 +7,48 @@ export type Service = {
      thumbnail: string;    // Thời gian thực hiện (phút)
      price?: number;   // Loại dịch vụ (tuỳ chọn)
      serviceDetails?: ServiceDetailType[];   // Ảnh minh họa (tuỳ chọn)
-     // serviceImages: [],
+     serviceImages: string[],
+     skintypeIds: string[]; // Danh sách loại da (tuỳ chọn)
      // feedbacks: null
+};
+
+export type SkinTypeOptions = {
+     id: string,
+     name: string,
+}
+
+export type ServiceCategory = {
+     serviceGroupId: string,
+     serviceGroupName: string
 
 };
-// testcommitdane
 
+export type SkinTypeOptions = {
+     id: string,
+     nameSkinType: string;
+};
 export type ServiceDetailType = {
-     id: string;          // Mã dịch vụ
+     id: string;
      name: string;
      description: string;
      step: number;
      duration: number;
      dateToNextStep: number;
 };
-
+export type ServiceImage = {
+     thumbnail?: string;
+     serviceImages?: string[];
+};
 export type Feedback = {
      review_id: string;
      user_id: string;
-     username: string;
+     fullname: string;
      rating: number;
      review: string;
      date: Date;
 };
+
+
+export type ServiceWithImages = Service & ServiceImage;
+
+

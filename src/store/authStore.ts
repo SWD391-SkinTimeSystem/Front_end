@@ -1,8 +1,9 @@
+import { UserData } from "@/types/user";
 import axios from "axios";
 import { create } from "zustand";
 // import { jwtDecode } from "jwt-decode";
 
-const API_URL = "https://localhost:5063/api";
+const API_URL = "http://swd291-api.duckdns.org/api";
 
 interface User {
   id: string;
@@ -20,7 +21,7 @@ interface AuthState {
   accessToken: string | null;
   setAuth: (accessToken: string, refreshToken: string, user: User) => void;
   login: (user: User, accessToken: string) => void;
-  register: (userData: any) => Promise<{ success: boolean }>;
+  register: (userData: UserData) => Promise<{ success: any }>;
   logout: () => void;
 }
 
@@ -53,7 +54,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         `${API_URL}/account/register`,
         userData
       );
-      return { success: response.status === 201 };
+      return { success: response.data.success };
     } catch (error) {
       console.error("Register failed:", error);
       return { success: false };
