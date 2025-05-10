@@ -1,0 +1,29 @@
+[
+    {
+      "id": "1",
+      "title": "Workshop Chăm Sóc Da Cơ Bản",
+      "description": "Học cách chăm sóc da mặt đúng cách từ chuyên gia.",
+      "date": "2025-03-10",
+      "time": "14:00",
+      "location": "TP. Hồ Chí Minh",
+      "image": "https://source.unsplash.com/400x300/?skincare,workshop",
+      "ticketPrice": 200000,
+      "totalTickets": 100,
+      "availableTickets": 50,
+      "eventStatus": "Open"
+    },
+    {
+      "id": "2",
+      "title": "Talkshow: Bí Quyết Chăm Sóc Da Khỏe Đẹp",
+      "description": "Gặp gỡ và giao lưu với chuyên gia hàng đầu về chăm sóc da.",
+      "date": "2025-03-15",
+      "time": "18:00",
+      "location": "Hà Nội",
+      "image": "https://source.unsplash.com/400x300/?beauty,talkshow",
+      "ticketPrice": 150000,
+      "totalTickets": 100,
+      "availableTickets": 50,
+      "eventStatus": "Open"
+    }
+  ]
+  
